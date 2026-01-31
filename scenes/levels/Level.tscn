@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dte41yq56gi4u" path="res://scenes/levels/level.gd" id="1_cq0rv"]
 [ext_resource type="PackedScene" uid="uid://8vwu5i52l856" path="res://scenes/system/game_camera.tscn" id="2_d25mt"]
-[ext_resource type="TileSet" uid="uid://cxbku7clobpa" path="res://tilesets/tileset_real.tres" id="3_jvuwd"]
+[ext_resource type="TileSet" uid="uid://cxbku7clobpa" path="res://tilesets/tileset_terrain.tres" id="3_jvuwd"]
 [ext_resource type="Script" uid="uid://c7b1xfu55p5mn" path="res://scripts/tilemap_navigation.gd" id="4_6158f"]
+[ext_resource type="TileSet" uid="uid://cpiu136cl3wdd" path="res://tilesets/tileset_walls.tres" id="5_5n3p8"]
 [ext_resource type="PackedScene" uid="uid://bjahstm66rjpf" path="res://entities/player/player_instantiator.tscn" id="7_a3ws7"]
 
 [node name="Level" type="Node2D" unique_id=1461630359 groups=["level"]]
@@ -32,22 +33,8 @@ tile_set = ExtResource("3_jvuwd")
 script = ExtResource("4_6158f")
 metadata/_edit_lock_ = true
 
-[node name="water" type="TileMapLayer" parent="Layers" unique_id=1632028355]
-tile_set = ExtResource("3_jvuwd")
-metadata/_edit_lock_ = true
-
-[node name="terrain2" type="TileMapLayer" parent="Layers" unique_id=98402360]
-tile_set = ExtResource("3_jvuwd")
-metadata/_edit_lock_ = true
-
 [node name="walls" type="TileMapLayer" parent="Layers" unique_id=2138029903]
-tile_set = ExtResource("3_jvuwd")
-metadata/_edit_lock_ = true
-
-[node name="top" type="TileMapLayer" parent="Layers" unique_id=1561796201]
-z_index = 10
-tile_set = ExtResource("3_jvuwd")
-y_sort_origin = 10
+tile_set = ExtResource("5_5n3p8")
 metadata/_edit_lock_ = true
 
 [node name="Props" type="Node2D" parent="." unique_id=1741009082]
