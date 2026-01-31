@@ -1,12 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://flashlight_cone_001"]
+[gd_scene format=3 uid="uid://xvksl7732ws6"]
 
-[ext_resource type="Script" path="res://components/flashlight_cone.gd" id="1_flashlight"]
+[ext_resource type="Script" uid="uid://bsfse8j07dafj" path="res://components/flashlight_cone.gd" id="1_flashlight"]
 
-[node name="FlashlightCone" type="Node2D"]
+[node name="FlashlightCone" type="Node2D" unique_id=126119990]
 script = ExtResource("1_flashlight")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=635446091]
 texture_filter = 1
-shadow_enabled = false
-energy = 1.5
 color = Color(1, 0.95, 0.8, 1)
+energy = 1.5

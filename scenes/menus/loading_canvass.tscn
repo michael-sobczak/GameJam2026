@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dlhusdwr5j6cg"]
+[gd_scene format=3 uid="uid://dlhusdwr5j6cg"]
 
 [ext_resource type="Script" uid="uid://duseef0fgl6mm" path="res://scripts/loading_screen.gd" id="1_nyegf"]
 
@@ -494,16 +494,16 @@ _data = {
 &"wipe_to_right": SubResource("Animation_5sryv")
 }
 
-[node name="LoadingScreen" type="CanvasLayer"]
+[node name="LoadingScreen" type="CanvasLayer" unique_id=733771135]
 script = ExtResource("1_nyegf")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1747213677]
 anchors_preset = 9
 anchor_bottom = 1.0
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1315335917]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -511,11 +511,11 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1261554449]
 layout_mode = 2
 alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer/VBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer/VBoxContainer" unique_id=1643953981]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 20)
 layout_mode = 2
@@ -523,13 +523,11 @@ theme_override_styles/background = SubResource("StyleBoxFlat_17cna")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ljhlj")
 show_percentage = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1281241978]
 unique_name_in_owner = true
-libraries = {
-&"": SubResource("AnimationLibrary_4w84n")
-}
+libraries/ = SubResource("AnimationLibrary_4w84n")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=752717617]
 wait_time = 3.0
 one_shot = true
 

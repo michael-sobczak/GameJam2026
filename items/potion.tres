@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataItem" load_steps=4 format=3 uid="uid://mf5aad3itbvr"]
+[gd_resource type="Resource" script_class="DataItem" format=3 uid="uid://mf5aad3itbvr"]
 
 [ext_resource type="Script" uid="uid://c4bqaul5q71nh" path="res://items/data_item.gd" id="1_ej3gy"]
 
@@ -13,4 +13,3 @@ region = Rect2(36, 36, 36, 36)
 resource_name = "potion"
 script = ExtResource("1_ej3gy")
 icon = SubResource("AtlasTexture_8h85v")
-hide_from_inventory = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bybfkbp6hi8r0"]
+[gd_scene format=3 uid="uid://bybfkbp6hi8r0"]
 
 [ext_resource type="Script" uid="uid://cxv8qmtjvqbe4" path="res://components/transfer.gd" id="1_hh1eg"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="2_1i106"]
@@ -10,34 +10,34 @@
 resource_local_to_scene = true
 size = Vector2(64, 32)
 
-[node name="Transfer_01" type="Node2D" groups=["destination"]]
+[node name="Transfer_01" type="Node2D" unique_id=200925567 groups=["destination"]]
 script = ExtResource("1_hh1eg")
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="." unique_id=976458882]
 z_index = -1
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 script = ExtResource("2_hh1eg")
-metadata/_custom_type_script = ExtResource("2_hh1eg")
+metadata/_custom_type_script = "uid://bgm8n3pwwbymt"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=605269334]
 shape = SubResource("RectangleShape2D_hh1eg")
 debug_color = Color(0.580392, 0.45098, 0.823529, 0.419608)
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=1560497909 node_paths=PackedStringArray("current_state")]
 script = ExtResource("2_1i106")
 current_state = NodePath("interact")
 
-[node name="interact" type="Node" parent="StateMachine" node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="interact" type="Node" parent="StateMachine" unique_id=2038887965 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("3_byffi")
 interaction_area = NodePath("../../InteractionArea")
 one_shot = false
 on_completion = [NodePath("../call_transfer")]
 
-[node name="call_transfer" type="Node" parent="StateMachine" node_paths=PackedStringArray("node", "on_completion")]
+[node name="call_transfer" type="Node" parent="StateMachine" unique_id=280280979 node_paths=PackedStringArray("node", "on_completion")]
 script = ExtResource("6_hh1eg")
 node = NodePath("../..")
 method_name = "transfer"
 on_completion = [NodePath("../interact")]
-metadata/_custom_type_script = ExtResource("6_hh1eg")
+metadata/_custom_type_script = "uid://dd2m5xedjwd4m"

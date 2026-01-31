@@ -12,10 +12,6 @@ config_version=5
 
 tile_bit_tools/output/show_user_messages=false
 
-[animation]
-
-compatibility/default_parent_skeleton_in_mesh_instance_3d=true
-
 [application]
 
 config/name="Heist Mask Game"
