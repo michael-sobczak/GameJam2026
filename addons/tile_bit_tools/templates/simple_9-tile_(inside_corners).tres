@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cxmb3yewhpcou"]
+[gd_resource type="Resource" format=3 uid="uid://cxmb3yewhpcou"]
 
 [ext_resource type="Script" uid="uid://pxjra48wq80s" path="res://addons/tile_bit_tools/core/template_bit_data.gd" id="1_00o4j"]
 
@@ -93,5 +93,4 @@ Vector2i(2, 2): {
 }
 }
 }
-terrain_set = -1
 terrain_mode = 1
