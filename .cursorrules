@@ -1,0 +1,197 @@
+# Cursor Rules — Godot 4.6 Top‑Down 2D Game (GDScript-first)
+
+You are an AI pair programmer working in a Godot 4.6 top-down 2D game repository.
+Optimize for: maintainability, small safe diffs, editor friendliness, and VCS friendliness.
+
+───────────────────────────────────────────────────────────────────────────────
+0) How to work (agent workflow)
+───────────────────────────────────────────────────────────────────────────────
+- Start every task with:
+  1) A 3–7 bullet plan.
+  2) The exact files you expect to touch.
+  3) A short “manual test plan” (how to verify in Godot).
+- Prefer incremental changes over large refactors. If a refactor is necessary, do it in steps.
+- Never invent scene trees, node names, input actions, autoload names, or resource paths.
+  Inspect the repository structure first.
+- If something must be added to Project Settings (Input Map, Autoloads, Layers),
+  explicitly call it out and keep it minimal.
+- Keep diffs VCS-friendly: avoid reformatting unrelated .tscn/.tres files.
+
+───────────────────────────────────────────────────────────────────────────────
+1) Target tech constraints
+───────────────────────────────────────────────────────────────────────────────
+- Engine: Godot 4.6 stable.
+- Primary language: GDScript (typed where practical).
+- Use Godot 4.x idioms:
+  - await (not yield),
+  - @export / @onready,
+  - CharacterBody2D (not KinematicBody2D),
+  - TileMapLayer (not TileMap for new work).
+- Use StringName literals (&"like_this") for action names and frequently-used keys.
+
+───────────────────────────────────────────────────────────────────────────────
+2) Repository layout conventions (preferred)
+───────────────────────────────────────────────────────────────────────────────
+Keep a predictable, scalable structure (adjust to existing repo if different):
+
+res://
+  addons/                  # third-party addons (commit them)
+  assets/
+    art/
+    audio/
+    fonts/
+    shaders/
+  scenes/
+    game/                  # main game scenes (main, world, boot)
+    levels/                # level scenes
+    actors/
+      player/
+      enemies/
+      npcs/
+    props/
+    ui/
+    fx/
+  scripts/
+    core/                  # core systems/services
+    actors/
+    ui/
+    utils/
+  resources/
+    data/                  # .tres/.res data assets (items, stats, etc.)
+    themes/
+  tests/                   # if using a test addon
+
+Rules:
+- Prefer colocating a script with its primary scene OR using scripts/ with consistent mapping.
+  Do not mix approaches randomly.
+- Keep scenes small and composable; avoid “god scenes”.
+
+───────────────────────────────────────────────────────────────────────────────
+3) GDScript code style (must follow)
+───────────────────────────────────────────────────────────────────────────────
+- Follow the Godot GDScript style guide:
+  - Use Tabs for indentation (do not convert to spaces).
+  - Naming:
+    - snake_case: variables, functions
+    - PascalCase: class_name / types
+    - SCREAMING_SNAKE_CASE: constants
+  - Keep lines readable; prefer guard clauses and small functions.
+- Prefer typed GDScript for public APIs and core gameplay logic:
+  - typed members, parameters, and return types
+  - typed arrays (Array[Foo]) when helpful
+
+Recommended top-of-file member ordering:
+1) class_name + extends
+2) signals
+3) enums
+4) constants
+5) @export vars
+6) regular vars
+7) @onready vars
+8) built-in callbacks (_ready/_process/_physics_process)
+9) public methods
+10) private helpers (prefix with _)
+
+───────────────────────────────────────────────────────────────────────────────
+4) Warnings, docs, and self-documenting code
+───────────────────────────────────────────────────────────────────────────────
+- Keep the project warning level healthy. Do not “paper over” warnings.
+- Only ignore warnings with @warning_ignore* when justified, and leave a short reason comment.
+- Use GDScript documentation comments (##) for:
+  - Script/class responsibility (top-of-file)
+  - Exported vars (so editor tooltips are meaningful)
+  - Non-obvious public methods
+
+───────────────────────────────────────────────────────────────────────────────
+5) Scenes, dependencies, and node references (Godot best practices)
+───────────────────────────────────────────────────────────────────────────────
+Encapsulation:
+- A scene should manage its own children.
+- Avoid reaching “up” the tree with ../ in node paths to access a parent’s internals.
+  Prefer signals, dependency injection via exported NodePaths/refs, or scene unique nodes.
+
+Referencing nodes safely:
+- Prefer caching node references with @onready.
+- Prefer Scene Unique Nodes (%UniqueName) for references that would otherwise be brittle
+  under reparenting/reshuffling.
+- Avoid find_child/find_children in hot paths; if used, cache results.
+
+Communication:
+- Prefer signals for decoupling (UI ↔ gameplay, actors ↔ managers).
+- Avoid tight coupling via hard-coded paths between unrelated scenes.
+
+───────────────────────────────────────────────────────────────────────────────
+6) Top-down movement rules (CharacterBody2D)
+───────────────────────────────────────────────────────────────────────────────
+- Do NOT set position directly for CharacterBody2D movement.
+- Handle movement in _physics_process().
+- Use move_and_slide() for top-down movement (typical).
+- Prefer Input.get_vector("left","right","up","down") (or project equivalents).
+- Consider motion_mode = MOTION_MODE_FLOATING for pure top-down so collisions act like walls.
+
+Canonical pattern (adapt to repo):
+- velocity = Input.get_vector(...) * speed
+- move_and_slide()
+
+───────────────────────────────────────────────────────────────────────────────
+7) Tilemaps (Godot 4.6)
+───────────────────────────────────────────────────────────────────────────────
+- New work MUST use TileMapLayer nodes (TileMap is deprecated).
+- Separate concerns by layers (visuals vs collisions vs navigation).
+- TileMapLayer.changed can fire often: do not run heavy logic directly in it.
+  If reacting to changes, debounce or defer (call_deferred / end-of-frame).
+
+Navigation:
+- Prefer baked navigation (NavigationRegion2D / NavigationServer2D) when appropriate.
+- Avoid stacking/“layering” multiple 2D navigation meshes on the same map.
+
+───────────────────────────────────────────────────────────────────────────────
+8) Render ordering for top-down (Y-sort + Z)
+───────────────────────────────────────────────────────────────────────────────
+- For top-down overlap (player behind/in front of props), use y_sort_enabled on the
+  appropriate parent CanvasItem (often the world/actors parent).
+- Remember: y-sorting is relative only when nodes share the same z_index.
+- Avoid relying solely on scene-tree order for draw ordering.
+
+───────────────────────────────────────────────────────────────────────────────
+9) Data-driven design: Resources > Nodes for static data
+───────────────────────────────────────────────────────────────────────────────
+- Prefer Resource subclasses for static/config data (items, stats, abilities, tuning).
+- Keep behavior in Nodes/Scripts; keep data in Resources.
+- Prefer external .tres resources for reuse; use built-in resources sparingly.
+
+Loading:
+- Use preload for frequently-instanced scenes/resources (PackedScene, textures).
+- Use load for dynamic/late-bound content.
+
+───────────────────────────────────────────────────────────────────────────────
+10) Autoloads / globals
+───────────────────────────────────────────────────────────────────────────────
+- Keep autoloads small and service-like (e.g., SaveManager, AudioBus, SceneLoader).
+- Avoid putting level- or actor-specific gameplay logic into autoloads.
+- Prefer scene-owned nodes + signals, or resources for shared data/config.
+
+───────────────────────────────────────────────────────────────────────────────
+11) Performance & robustness
+───────────────────────────────────────────────────────────────────────────────
+- Avoid per-frame work unless necessary; prefer signals/timers/state transitions.
+- Avoid allocating every frame (repeated string building, repeated get_node calls, etc.).
+- Cache node references and frequently-used resources.
+
+───────────────────────────────────────────────────────────────────────────────
+12) Version control & repo hygiene (Godot 4.1+)
+───────────────────────────────────────────────────────────────────────────────
+- Do not commit generated cache:
+  - Ignore .godot/
+  - Ignore *.translation (imported binary translations)
+- Prefer Godot’s generated VCS metadata (.gitignore/.gitattributes) when available.
+- Use Git LFS for large binary assets (textures/audio/models) if repo size matters.
+
+───────────────────────────────────────────────────────────────────────────────
+13) Definition of “done” for any change
+───────────────────────────────────────────────────────────────────────────────
+A change is only complete when it includes:
+- Code + scene/resource edits needed for the feature
+- Clear notes about any Project Settings changes required
+- A short manual test plan (what to run, what to click, expected outcome)
+- No new warnings/errors introduced (or explicitly justified if unavoidable)
