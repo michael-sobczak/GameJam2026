@@ -70,10 +70,7 @@ position = Vector2(480, 224)
 [node name="Potion" parent="Props" parent_id_path=PackedInt32Array(1741009082) index="3" unique_id=1472757819 instance=ExtResource("6_hwx4o")]
 position = Vector2(288, 168)
 
-[node name="AnimationPlayer" parent="Props/Potion" index="2"]
-autoplay = &"idle"
-
-[node name="picked" parent="Props/Potion/StateMachine" index="2" node_paths=PackedStringArray("on_completion")]
+[node name="picked" parent="Props/Potion/StateMachine" parent_id_path=PackedInt32Array(1472757819, 1303891590) index="2" unique_id=2091076134 node_paths=PackedStringArray("on_completion")]
 on_completion = [NodePath("../idle")]
 delay_completion = Vector2(3, 3)
 

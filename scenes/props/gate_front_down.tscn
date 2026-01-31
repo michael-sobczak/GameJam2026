@@ -4,5 +4,5 @@
 
 [node name="Gate_Front" unique_id=881490361 instance=ExtResource("1_imb12")]
 
-[node name="StateMachine" parent="." index="2" node_paths=PackedStringArray("current_state")]
+[node name="StateMachine" parent="." index="2" unique_id=1249547462 node_paths=PackedStringArray("current_state")]
 current_state = NodePath("idle_down")

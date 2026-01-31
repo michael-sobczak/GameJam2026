@@ -62,7 +62,7 @@ metadata/_custom_type_script = "uid://bgm8n3pwwbymt"
 shape = SubResource("CircleShape2D_4uq14")
 debug_color = Color(0.627451, 0.52549, 0.2, 0.419608)
 
-[node name="interact" type="Node" parent="Props/Gate_Front/StateMachine/idle_up" index="0" unique_id=1041624615 node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="interact" type="Node" parent="Props/Gate_Front/StateMachine/idle_up" parent_id_path=PackedInt32Array(56127561, 173618181) index="0" unique_id=1041624615 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("7_akxd2")
 interaction_area = NodePath("../../../InteractionArea")
 action_trigger = "interact"

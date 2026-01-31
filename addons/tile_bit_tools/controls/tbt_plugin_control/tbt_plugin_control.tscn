@@ -40,13 +40,10 @@ script = ExtResource("6_mie0u")
 anchors_preset = 0
 
 [node name="SaveTemplateDialog" parent="SaveDialogContainer" unique_id=226790446 instance=ExtResource("3_p4ion")]
-transparent_bg = true
-visible = false
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_3by6e")
 
 [node name="EditDialogContainer" type="Control" parent="." unique_id=1040191367]
 anchors_preset = 0
 
 [node name="EditTemplateDialog" parent="EditDialogContainer" unique_id=204421519 instance=ExtResource("4_qymya")]
-transparent_bg = true
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_3by6e")
