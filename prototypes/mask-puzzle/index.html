@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mask Puzzle</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <p class="eyebrow">Game Jam 2026</p>
+        <h1>Mask Puzzle</h1>
+        <p class="subtitle">
+          Theme: Eclipse Festival. Restore the ceremonial mask by placing the
+          four symbol pieces in their matching slots.
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="instructions">
+          <p><strong>How to play</strong></p>
+          <ul>
+            <li>Drag a piece onto the slot with the same symbol name.</li>
+            <li>Placed pieces lock into the mask.</li>
+            <li>Fill all slots to complete the theme.</li>
+          </ul>
+        </div>
+
+        <div id="status" class="status" aria-live="polite">
+          Pieces placed: 0 / 4
+        </div>
+
+        <button id="reset" class="reset" type="button">Reset Pieces</button>
+      </section>
+
+      <section id="play-area" class="play-area" aria-label="Mask puzzle board">
+        <div id="mask" class="mask" aria-hidden="true">
+          <div class="slot" data-accept="sun" style="--x: 35%; --y: 35%;">
+            <span>Sun</span>
+          </div>
+          <div class="slot" data-accept="moon" style="--x: 65%; --y: 35%;">
+            <span>Moon</span>
+          </div>
+          <div class="slot" data-accept="ember" style="--x: 35%; --y: 65%;">
+            <span>Ember</span>
+          </div>
+          <div class="slot" data-accept="star" style="--x: 65%; --y: 65%;">
+            <span>Star</span>
+          </div>
+        </div>
+
+        <div id="pieces" class="pieces" aria-label="Puzzle pieces">
+          <div class="piece" data-piece="moon" style="--x: 80%; --y: 22%;">
+            <div class="symbol">Moon</div>
+            <p>Crescent light</p>
+          </div>
+          <div class="piece" data-piece="sun" style="--x: 80%; --y: 42%;">
+            <div class="symbol">Sun</div>
+            <p>Golden ray</p>
+          </div>
+          <div class="piece" data-piece="star" style="--x: 80%; --y: 62%;">
+            <div class="symbol">Star</div>
+            <p>Night spark</p>
+          </div>
+          <div class="piece" data-piece="ember" style="--x: 80%; --y: 82%;">
+            <div class="symbol">Ember</div>
+            <p>Warm glow</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>

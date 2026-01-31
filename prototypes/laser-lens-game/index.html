@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laser Lens Lab</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Rajdhani:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0a0d14;
+        --panel: #111827;
+        --accent: #00e5ff;
+        --accent-soft: rgba(0, 229, 255, 0.2);
+        --grid: rgba(120, 255, 255, 0.15);
+        --text: #e6f6ff;
+        --danger: #ff6b6b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Rajdhani", sans-serif;
+        background: radial-gradient(circle at top, #111827, #05070c 60%);
+        color: var(--text);
+        display: flex;
+        align-items: stretch;
+      }
+
+      .app {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 16px;
+        padding: 24px;
+      }
+
+      .panel {
+        background: rgba(10, 16, 28, 0.9);
+        border: 1px solid rgba(0, 229, 255, 0.2);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 0 24px rgba(0, 229, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          transparent 92%,
+          rgba(0, 255, 255, 0.08) 96%,
+          transparent 100%
+        );
+        background-size: 100% 10px;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 26px;
+        margin: 0 0 8px;
+        color: var(--accent);
+        letter-spacing: 1px;
+      }
+
+      h2 {
+        margin: 18px 0 8px;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: rgba(230, 246, 255, 0.85);
+      }
+
+      .level-meta {
+        display: grid;
+        gap: 8px;
+        font-size: 15px;
+      }
+
+      .level-controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      button {
+        font-family: "Orbitron", sans-serif;
+        background: rgba(0, 229, 255, 0.12);
+        border: 1px solid rgba(0, 229, 255, 0.4);
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      button:hover {
+        background: rgba(0, 229, 255, 0.3);
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+      }
+
+      .inventory {
+        display: grid;
+        gap: 10px;
+      }
+
+      .inventory-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 229, 255, 0.25);
+        background: rgba(0, 229, 255, 0.05);
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .inventory-item.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+      }
+
+      .inventory-item .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+      }
+
+      .inventory-item .icon {
+        font-size: 20px;
+        filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6));
+      }
+
+      .inventory-count {
+        font-family: "Orbitron", sans-serif;
+        color: var(--accent);
+      }
+
+      .instructions {
+        font-size: 14px;
+        line-height: 1.4;
+        opacity: 0.9;
+      }
+
+      .game-area {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .grid {
+        position: relative;
+        width: min(720px, 100%);
+        aspect-ratio: 1 / 1;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        border-radius: 18px;
+        border: 1px solid rgba(0, 229, 255, 0.35);
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), transparent);
+        overflow: hidden;
+      }
+
+      .cell {
+        border: 1px solid var(--grid);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: #c8f6ff;
+        user-select: none;
+      }
+
+      .cell.obstacle {
+        background: rgba(255, 107, 107, 0.15);
+        border-color: rgba(255, 107, 107, 0.5);
+      }
+
+      .cell.target {
+        border-color: rgba(255, 255, 255, 0.5);
+        animation: pulse 1.6s ease-in-out infinite;
+      }
+
+      .cell.source {
+        background: rgba(0, 229, 255, 0.12);
+      }
+
+      .lens {
+        font-size: 26px;
+        filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6));
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      canvas {
+        position: absolute;
+        inset: 0;
+      }
+
+      .scanlines {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          transparent 92%,
+          rgba(0, 255, 255, 0.12) 96%,
+          transparent 100%
+        );
+        background-size: 100% 8px;
+        mix-blend-mode: screen;
+        opacity: 0.35;
+      }
+
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Orbitron", sans-serif;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+
+      .status-bar .win {
+        color: #7dff9b;
+        text-shadow: 0 0 8px rgba(125, 255, 155, 0.8);
+        animation: pulse 1.6s ease-in-out infinite;
+      }
+
+      .drag-ghost {
+        position: fixed;
+        pointer-events: none;
+        font-size: 26px;
+        color: #c8f6ff;
+        text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 16px rgba(0, 229, 255, 0.8);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section class="panel">
+        <h1>Laser Lens Lab</h1>
+        <div class="level-meta">
+          <div id="level-name"></div>
+          <div id="level-desc"></div>
+        </div>
+        <div class="level-controls">
+          <button id="prev-level">Prev</button>
+          <button id="next-level">Next</button>
+          <button id="reset-level">Reset</button>
+        </div>
+        <h2>Inventory</h2>
+        <div class="inventory" id="inventory"></div>
+        <h2>Controls</h2>
+        <div class="instructions">
+          Drag lenses from the inventory onto the grid.<br />
+          Right-click a placed lens to remove it.<br />
+          Click &amp; drag placed lenses to reposition them.<br />
+          Guide the laser to hit every target with the exact color.
+        </div>
+      </section>
+      <section class="game-area panel">
+        <div class="status-bar">
+          <div id="level-index"></div>
+          <div id="win-state"></div>
+        </div>
+        <div class="grid" id="grid">
+          <canvas id="beam-canvas"></canvas>
+          <div class="overlay scanlines"></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const GRID_SIZE = 10;
+      const COLORS = {
+        1: { label: "Red", rgb: "255, 80, 80" },
+        2: { label: "Green", rgb: "140, 255, 140" },
+        4: { label: "Blue", rgb: "120, 190, 255" },
+        7: { label: "White", rgb: "255, 255, 255" },
+      };
+
+      const LENS_DEFS = {
+        mirrorSlash: { icon: "／", name: "Mirror Slash" },
+        mirrorBackslash: { icon: "＼", name: "Mirror Backslash" },
+        prism: { icon: "△", name: "Prism" },
+        filterRed: { icon: "◈", name: "Filter Red", color: 1 },
+        filterGreen: { icon: "◈", name: "Filter Green", color: 2 },
+        filterBlue: { icon: "◈", name: "Filter Blue", color: 4 },
+        combiner: { icon: "⬡", name: "Combiner" },
+      };
+
+      const LEVELS = [
+        {
+          name: "First Light",
+          description: "Simple direct path.",
+          sources: [{ x: 1, y: 5, dir: 1, color: 7 }],
+          targets: [{ x: 8, y: 5, color: 7 }],
+          obstacles: [],
+          inventory: [],
+        },
+        {
+          name: "Reflection",
+          description: "Basic mirror usage around obstacles.",
+          sources: [{ x: 1, y: 6, dir: 1, color: 7 }],
+          targets: [{ x: 5, y: 2, color: 7 }],
+          obstacles: [
+            { x: 5, y: 6 },
+            { x: 4, y: 6 },
+            { x: 6, y: 6 },
+          ],
+          inventory: [{ type: "mirrorSlash", count: 2 }],
+        },
+        {
+          name: "Color Filter",
+          description: "Filter white light to the target color.",
+          sources: [{ x: 1, y: 5, dir: 1, color: 7 }],
+          targets: [{ x: 8, y: 5, color: 1 }],
+          obstacles: [],
+          inventory: [{ type: "filterRed", count: 1 }],
+        },
+        {
+          name: "Maze Runner",
+          description: "Navigate through an obstacle course.",
+          sources: [{ x: 1, y: 8, dir: 1, color: 7 }],
+          targets: [{ x: 8, y: 1, color: 7 }],
+          obstacles: [
+            { x: 3, y: 8 },
+            { x: 3, y: 7 },
+            { x: 3, y: 6 },
+            { x: 3, y: 5 },
+            { x: 5, y: 5 },
+            { x: 6, y: 5 },
+            { x: 7, y: 5 },
+            { x: 7, y: 4 },
+            { x: 7, y: 3 },
+            { x: 7, y: 2 },
+          ],
+          inventory: [
+            { type: "mirrorSlash", count: 2 },
+            { type: "mirrorBackslash", count: 2 },
+          ],
+        },
+        {
+          name: "Spectrum Split",
+          description: "Use prism + filters together.",
+          sources: [{ x: 1, y: 5, dir: 1, color: 7 }],
+          targets: [{ x: 8, y: 2, color: 2 }],
+          obstacles: [{ x: 6, y: 5 }],
+          inventory: [
+            { type: "prism", count: 1 },
+            { type: "filterGreen", count: 1 },
+            { type: "mirrorSlash", count: 1 },
+          ],
+        },
+        {
+          name: "Double Bounce",
+          description: "Complex reflection puzzle.",
+          sources: [{ x: 8, y: 8, dir: 3, color: 7 }],
+          targets: [{ x: 2, y: 1, color: 7 }],
+          obstacles: [{ x: 4, y: 8 }, { x: 4, y: 7 }, { x: 4, y: 6 }],
+          inventory: [
+            { type: "mirrorSlash", count: 1 },
+            { type: "mirrorBackslash", count: 2 },
+          ],
+        },
+        {
+          name: "Color Mix",
+          description: "Combine RGB lasers into white.",
+          sources: [
+            { x: 1, y: 2, dir: 1, color: 1 },
+            { x: 1, y: 5, dir: 1, color: 2 },
+            { x: 1, y: 8, dir: 1, color: 4 },
+          ],
+          targets: [{ x: 8, y: 5, color: 7 }],
+          obstacles: [{ x: 5, y: 2 }, { x: 5, y: 8 }],
+          inventory: [
+            { type: "combiner", count: 1 },
+            { type: "mirrorSlash", count: 2 },
+            { type: "mirrorBackslash", count: 2 },
+          ],
+        },
+        {
+          name: "The Labyrinth",
+          description: "Master puzzle with all mechanics.",
+          sources: [{ x: 1, y: 1, dir: 1, color: 7 }],
+          targets: [
+            { x: 8, y: 2, color: 1 },
+            { x: 8, y: 5, color: 2 },
+            { x: 8, y: 8, color: 7 },
+          ],
+          obstacles: [
+            { x: 4, y: 1 },
+            { x: 4, y: 2 },
+            { x: 4, y: 3 },
+            { x: 4, y: 4 },
+            { x: 6, y: 5 },
+            { x: 6, y: 6 },
+            { x: 6, y: 7 },
+            { x: 3, y: 7 },
+            { x: 3, y: 8 },
+          ],
+          inventory: [
+            { type: "mirrorSlash", count: 2 },
+            { type: "mirrorBackslash", count: 2 },
+            { type: "prism", count: 1 },
+            { type: "filterRed", count: 1 },
+            { type: "filterGreen", count: 1 },
+            { type: "combiner", count: 1 },
+          ],
+        },
+      ];
+
+      const gridEl = document.getElementById("grid");
+      const inventoryEl = document.getElementById("inventory");
+      const levelNameEl = document.getElementById("level-name");
+      const levelDescEl = document.getElementById("level-desc");
+      const levelIndexEl = document.getElementById("level-index");
+      const winStateEl = document.getElementById("win-state");
+      const beamCanvas = document.getElementById("beam-canvas");
+      const ctx = beamCanvas.getContext("2d");
+
+      let levelIndex = 0;
+      let grid = [];
+      let inventory = {};
+      let activeItem = null;
+      let dragging = null;
+      let ghostEl = null;
+
+      const dirs = [
+        { x: 0, y: -1 },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 },
+      ];
+
+      function initGrid() {
+        grid = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => null);
+        gridEl.innerHTML = "";
+        gridEl.appendChild(beamCanvas);
+        const overlay = document.createElement("div");
+        overlay.className = "overlay scanlines";
+        gridEl.appendChild(overlay);
+        for (let y = 0; y < GRID_SIZE; y += 1) {
+          for (let x = 0; x < GRID_SIZE; x += 1) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.x = x;
+            cell.dataset.y = y;
+            gridEl.appendChild(cell);
+          }
+        }
+        resizeCanvas();
+      }
+
+      function resizeCanvas() {
+        const rect = gridEl.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        beamCanvas.width = rect.width * dpr;
+        beamCanvas.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function loadLevel(index) {
+        levelIndex = (index + LEVELS.length) % LEVELS.length;
+        const level = LEVELS[levelIndex];
+        initGrid();
+        inventory = {};
+        level.inventory.forEach((item) => {
+          inventory[item.type] = item.count;
+        });
+        levelNameEl.textContent = level.name;
+        levelDescEl.textContent = level.description;
+        levelIndexEl.textContent = `Level ${levelIndex + 1} / ${LEVELS.length}`;
+        activeItem = null;
+        renderInventory();
+        renderStaticCells();
+        update();
+      }
+
+      function renderInventory() {
+        inventoryEl.innerHTML = "";
+        Object.entries(inventory).forEach(([type, count]) => {
+          const item = document.createElement("div");
+          item.className = "inventory-item";
+          if (activeItem === type) item.classList.add("active");
+          const label = document.createElement("div");
+          label.className = "label";
+          const icon = document.createElement("span");
+          icon.className = "icon";
+          icon.textContent = LENS_DEFS[type].icon;
+          const name = document.createElement("span");
+          name.textContent = LENS_DEFS[type].name;
+          label.append(icon, name);
+          const qty = document.createElement("span");
+          qty.className = "inventory-count";
+          qty.textContent = count;
+          item.appendChild(label);
+          item.appendChild(qty);
+          item.addEventListener("click", () => {
+            if (dragging) return;
+            activeItem = activeItem === type ? null : type;
+            renderInventory();
+          });
+          item.addEventListener("pointerdown", (event) => {
+            if (count <= 0) return;
+            startInventoryDrag(type, event);
+          });
+          inventoryEl.appendChild(item);
+        });
+      }
+
+      function renderStaticCells() {
+        const level = LEVELS[levelIndex];
+        const cells = gridEl.querySelectorAll(".cell");
+        cells.forEach((cell) => {
+          cell.className = "cell";
+          cell.textContent = "";
+        });
+        level.obstacles.forEach((pos) => {
+          const cell = getCellEl(pos.x, pos.y);
+          cell.classList.add("obstacle");
+          cell.textContent = "▣";
+        });
+        level.targets.forEach((pos) => {
+          const cell = getCellEl(pos.x, pos.y);
+          cell.classList.add("target");
+          cell.style.color = `rgb(${COLORS[pos.color].rgb})`;
+          cell.textContent = "◎";
+        });
+        level.sources.forEach((pos) => {
+          const cell = getCellEl(pos.x, pos.y);
+          cell.classList.add("source");
+          cell.style.color = `rgb(${COLORS[pos.color].rgb})`;
+          cell.textContent = "◆";
+        });
+      }
+
+      function getCellEl(x, y) {
+        return gridEl.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+      }
+
+      function gridIndex(x, y) {
+        return y * GRID_SIZE + x;
+      }
+
+      function placeLens(x, y, type) {
+        grid[gridIndex(x, y)] = { type };
+      }
+
+      function removeLens(x, y) {
+        grid[gridIndex(x, y)] = null;
+      }
+
+      function handleGridPointerDown(event) {
+        const cell = event.target.closest(".cell");
+        if (!cell) return;
+        const x = Number(cell.dataset.x);
+        const y = Number(cell.dataset.y);
+        const level = LEVELS[levelIndex];
+        if (event.button === 2) {
+          const lens = grid[gridIndex(x, y)];
+          if (lens) {
+            removeLens(x, y);
+            inventory[lens.type] = (inventory[lens.type] || 0) + 1;
+            renderInventory();
+            update();
+          }
+          return;
+        }
+
+        const isStatic = level.obstacles.some((o) => o.x === x && o.y === y);
+        if (isStatic) return;
+
+        const lens = grid[gridIndex(x, y)];
+        if (lens) {
+          dragging = { type: lens.type, fromX: x, fromY: y, fromInventory: false };
+          removeLens(x, y);
+          spawnGhost(lens.type, event.clientX, event.clientY);
+          update();
+          return;
+        }
+
+        if (activeItem && inventory[activeItem] > 0) {
+          placeLens(x, y, activeItem);
+          inventory[activeItem] -= 1;
+          renderInventory();
+          update();
+        }
+      }
+
+      function handleGridPointerMove(event) {
+        if (!dragging || !ghostEl) return;
+        ghostEl.style.left = `${event.clientX}px`;
+        ghostEl.style.top = `${event.clientY}px`;
+      }
+
+      function handleGridPointerUp(event) {
+        if (!dragging) return;
+        const cell = event.target.closest(".cell");
+        if (cell) {
+          const x = Number(cell.dataset.x);
+          const y = Number(cell.dataset.y);
+          const level = LEVELS[levelIndex];
+          const isBlocked =
+            level.obstacles.some((o) => o.x === x && o.y === y) ||
+            level.sources.some((o) => o.x === x && o.y === y) ||
+            level.targets.some((o) => o.x === x && o.y === y);
+          if (!isBlocked && !grid[gridIndex(x, y)]) {
+            placeLens(x, y, dragging.type);
+            if (dragging.fromInventory) {
+              inventory[dragging.type] -= 1;
+              renderInventory();
+            }
+          } else if (!dragging.fromInventory) {
+            placeLens(dragging.fromX, dragging.fromY, dragging.type);
+          }
+        } else {
+          if (!dragging.fromInventory) {
+            placeLens(dragging.fromX, dragging.fromY, dragging.type);
+          }
+        }
+        cleanupDrag();
+        update();
+      }
+
+      function spawnGhost(type, x, y) {
+        ghostEl = document.createElement("div");
+        ghostEl.className = "drag-ghost";
+        ghostEl.textContent = LENS_DEFS[type].icon;
+        document.body.appendChild(ghostEl);
+        ghostEl.style.left = `${x}px`;
+        ghostEl.style.top = `${y}px`;
+      }
+
+      function startInventoryDrag(type, event) {
+        dragging = { type, fromInventory: true };
+        activeItem = type;
+        renderInventory();
+        spawnGhost(type, event.clientX, event.clientY);
+      }
+
+      function cleanupDrag() {
+        if (ghostEl) ghostEl.remove();
+        ghostEl = null;
+        dragging = null;
+      }
+
+      function update() {
+        renderLenses();
+        renderBeams();
+      }
+
+      function renderLenses() {
+        const cells = gridEl.querySelectorAll(".cell");
+        cells.forEach((cell) => {
+          const x = Number(cell.dataset.x);
+          const y = Number(cell.dataset.y);
+          const lens = grid[gridIndex(x, y)];
+          if (lens) {
+            cell.textContent = LENS_DEFS[lens.type].icon;
+            cell.classList.add("lens");
+          } else if (!cell.classList.contains("obstacle") && !cell.classList.contains("target") && !cell.classList.contains("source")) {
+            cell.textContent = "";
+            cell.classList.remove("lens");
+          }
+        });
+      }
+
+      function renderBeams() {
+        const rect = gridEl.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+
+        const { segments, targetsHit } = traceBeams();
+        segments.forEach((segment) => drawSegment(segment, rect));
+
+        const level = LEVELS[levelIndex];
+        const allTargetsHit = level.targets.every((t) => targetsHit.has(`${t.x},${t.y}`));
+        winStateEl.textContent = allTargetsHit ? "TARGET LOCKED" : "";
+        if (allTargetsHit) winStateEl.classList.add("win");
+        else winStateEl.classList.remove("win");
+      }
+
+      function drawSegment(segment, rect) {
+        const { from, to, color } = segment;
+        const cellW = rect.width / GRID_SIZE;
+        const cellH = rect.height / GRID_SIZE;
+        const x1 = from.x * cellW + cellW / 2;
+        const y1 = from.y * cellH + cellH / 2;
+        const x2 = to.x * cellW + cellW / 2;
+        const y2 = to.y * cellH + cellH / 2;
+        const rgb = COLORS[color].rgb;
+
+        ctx.strokeStyle = `rgba(${rgb}, 0.7)`;
+        ctx.shadowColor = `rgba(${rgb}, 0.9)`;
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+      }
+
+      function traceBeams() {
+        const level = LEVELS[levelIndex];
+        const segments = [];
+        const targetsHit = new Set();
+        const combinerState = {};
+        const queue = level.sources.map((s) => ({ ...s }));
+
+        while (queue.length > 0) {
+          const beam = queue.shift();
+          const key = `${beam.x},${beam.y},${beam.dir},${beam.color}`;
+          beam.steps = (beam.steps || 0) + 1;
+          if (beam.steps > GRID_SIZE * GRID_SIZE * 2) continue;
+
+          const dir = dirs[beam.dir];
+          const next = { x: beam.x + dir.x, y: beam.y + dir.y };
+          if (next.x < 0 || next.y < 0 || next.x >= GRID_SIZE || next.y >= GRID_SIZE) {
+            continue;
+          }
+
+          segments.push({ from: { x: beam.x, y: beam.y }, to: next, color: beam.color });
+
+          if (level.obstacles.some((o) => o.x === next.x && o.y === next.y)) {
+            continue;
+          }
+
+          const target = level.targets.find((t) => t.x === next.x && t.y === next.y);
+          if (target && beam.color === target.color) {
+            targetsHit.add(`${target.x},${target.y}`);
+          }
+
+          const lens = grid[gridIndex(next.x, next.y)];
+          if (!lens) {
+            queue.push({ x: next.x, y: next.y, dir: beam.dir, color: beam.color, steps: beam.steps });
+            continue;
+          }
+
+          if (lens.type === "mirrorSlash") {
+            const map = [1, 0, 3, 2];
+            queue.push({ x: next.x, y: next.y, dir: map[beam.dir], color: beam.color, steps: beam.steps });
+            continue;
+          }
+
+          if (lens.type === "mirrorBackslash") {
+            const map = [3, 2, 1, 0];
+            queue.push({ x: next.x, y: next.y, dir: map[beam.dir], color: beam.color, steps: beam.steps });
+            continue;
+          }
+
+          if (lens.type === "prism") {
+            if (beam.color === 7) {
+              const left = (beam.dir + 3) % 4;
+              const right = (beam.dir + 1) % 4;
+              queue.push({ x: next.x, y: next.y, dir: left, color: 1, steps: beam.steps });
+              queue.push({ x: next.x, y: next.y, dir: beam.dir, color: 2, steps: beam.steps });
+              queue.push({ x: next.x, y: next.y, dir: right, color: 4, steps: beam.steps });
+            } else {
+              queue.push({ x: next.x, y: next.y, dir: beam.dir, color: beam.color, steps: beam.steps });
+            }
+            continue;
+          }
+
+          if (lens.type.startsWith("filter")) {
+            const mask = LENS_DEFS[lens.type].color;
+            const filtered = beam.color & mask;
+            if (filtered) {
+              queue.push({ x: next.x, y: next.y, dir: beam.dir, color: filtered, steps: beam.steps });
+            }
+            continue;
+          }
+
+          if (lens.type === "combiner") {
+            const combinerKey = `${next.x},${next.y}`;
+            combinerState[combinerKey] = (combinerState[combinerKey] || 0) | beam.color;
+            const combined = combinerState[combinerKey];
+            queue.push({ x: next.x, y: next.y, dir: beam.dir, color: combined, steps: beam.steps });
+          }
+        }
+
+        return { segments, targetsHit };
+      }
+
+      function handleContextMenu(event) {
+        event.preventDefault();
+      }
+
+      document.getElementById("prev-level").addEventListener("click", () => loadLevel(levelIndex - 1));
+      document.getElementById("next-level").addEventListener("click", () => loadLevel(levelIndex + 1));
+      document.getElementById("reset-level").addEventListener("click", () => loadLevel(levelIndex));
+
+      gridEl.addEventListener("pointerdown", handleGridPointerDown);
+      window.addEventListener("pointermove", handleGridPointerMove);
+      window.addEventListener("pointerup", handleGridPointerUp);
+      gridEl.addEventListener("contextmenu", handleContextMenu);
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        update();
+      });
+
+      loadLevel(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,185 @@
+:root {
+  color-scheme: light dark;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background: #0f1013;
+  color: #f4f1e6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #242833, #0f1013 65%);
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header h1 {
+  margin: 8px 0 6px;
+  font-size: 2.4rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.85;
+  max-width: 620px;
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.instructions ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.status {
+  font-weight: 600;
+  color: #f8d87b;
+}
+
+.reset {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.reset:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.play-area {
+  position: relative;
+  min-height: 520px;
+  background: rgba(10, 10, 12, 0.7);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.mask {
+  position: absolute;
+  inset: 40px 35% 40px 40px;
+  border-radius: 48% 52% 46% 54% / 55% 55% 45% 45%;
+  background: linear-gradient(160deg, rgba(248, 216, 123, 0.15), rgba(116, 195, 248, 0.15));
+  border: 2px solid rgba(248, 216, 123, 0.4);
+  box-shadow: 0 0 40px rgba(248, 216, 123, 0.15);
+}
+
+.slot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: 110px;
+  height: 90px;
+  border-radius: 22px;
+  border: 2px dashed rgba(248, 216, 123, 0.6);
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(248, 216, 123, 0.85);
+}
+
+.slot.filled {
+  border-style: solid;
+  background: rgba(248, 216, 123, 0.1);
+}
+
+.pieces {
+  position: absolute;
+  inset: 0;
+}
+
+.piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  width: 140px;
+  padding: 12px 14px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.piece:active {
+  cursor: grabbing;
+}
+
+.piece.dragging {
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
+.piece.placed {
+  cursor: default;
+  background: rgba(248, 216, 123, 0.22);
+  border-color: rgba(248, 216, 123, 0.5);
+}
+
+.symbol {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 820px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .reset {
+    justify-self: start;
+  }
+
+  .play-area {
+    min-height: 640px;
+  }
+
+  .mask {
+    inset: 32px 32px 280px 32px;
+  }
+
+  .piece {
+    width: 150px;
+  }
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mask Builder</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="game">
+      <header class="header">
+        <div>
+          <h1>Mask Builder</h1>
+          <p class="subtitle">
+            Play cards from your hand to craft a mask. Reach the target quality
+            before you run out of plays.
+          </p>
+        </div>
+        <div class="level-info">
+          <div id="levelLabel">Level 1</div>
+          <div id="targetLabel">Target: 0</div>
+        </div>
+      </header>
+
+      <section class="status">
+        <div class="pill">Quality: <span id="scoreLabel">0</span></div>
+        <div class="pill">Plays Left: <span id="playsLabel">0</span></div>
+        <div class="pill">Deck: <span id="deckLabel">0</span></div>
+        <div class="pill">Hand: <span id="handLabel">0</span></div>
+      </section>
+
+      <section class="mask-area">
+        <h2>Your Mask</h2>
+        <div class="mask-grid" id="maskGrid"></div>
+        <div id="bonusLabel" class="bonus"></div>
+        <div class="generated-art">
+          <div class="image-status" id="imageStatus">
+            Complete the mask to generate art.
+          </div>
+          <img id="generatedImage" alt="" />
+        </div>
+      </section>
+
+      <section class="hand-area">
+        <h2>Your Hand</h2>
+        <div class="hand" id="hand"></div>
+      </section>
+
+      <section class="controls">
+        <button id="resetButton">Restart Level</button>
+        <button id="nextButton" disabled>Next Level</button>
+        <div id="message" class="message" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
