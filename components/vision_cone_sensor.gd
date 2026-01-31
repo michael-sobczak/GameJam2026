@@ -113,19 +113,22 @@ func _scan_for_targets():
 	if not enabled:
 		return
 	
-	var current_visible = []
+	var current_visible: Array[Node2D] = []
 	var targets = get_tree().get_nodes_in_group(target_group)
 	
 	for target in targets:
+		if not target is Node2D:
+			continue
 		if target == get_parent():  # Don't detect self
 			continue
 		
-		if can_see(target):
-			current_visible.append(target)
-			if not visible_targets.has(target):
+		var target_node2d = target as Node2D
+		if can_see(target_node2d):
+			current_visible.append(target_node2d)
+			if not visible_targets.has(target_node2d):
 				# Newly detected target
-				visible_targets.append(target)
-				target_seen.emit(target)
+				visible_targets.append(target_node2d)
+				target_seen.emit(target_node2d)
 	
 	# Check for lost targets
 	for target in visible_targets.duplicate():

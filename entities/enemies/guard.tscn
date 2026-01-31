@@ -1,0 +1,82 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="PackedScene" path="res://entities/entity.tscn" id="1_entity"]
+[ext_resource type="Script" path="res://entities/enemies/guard_entity.gd" id="2_guard"]
+[ext_resource type="Script" path="res://components/vision_cone_sensor.gd" id="3_vision"]
+[ext_resource type="Script" path="res://scripts/state_machine/state_machine.gd" id="4_sm"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_guard_sentry.gd" id="5_sentry"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_guard_patrol.gd" id="6_patrol"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_guard_chase.gd" id="7_chase"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_guard_investigate.gd" id="8_investigate"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_guard_return.gd" id="9_return"]
+[ext_resource type="Script" path="res://scripts/state_machine/states/state_callable.gd" id="10_callable"]
+[ext_resource type="Script" path="res://components/health_controller.gd" id="11_health"]
+[ext_resource type="Script" path="res://components/alert_indicator.gd" id="12_alert"]
+
+[node name="Guard" instance=ExtResource("1_entity")]
+script = ExtResource("2_guard")
+max_speed = 100.0
+friction = 1500.0
+chase_speed = 200.0
+patrol_speed = 100.0
+forget_time = 3.0
+investigate_time = 2.0
+pause_at_waypoint = 1.0
+patrol_loop = true
+home_facing = Vector2(0, 1)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+target_desired_distance = 4.0
+
+[node name="Perception" type="Node2D" parent="."]
+script = ExtResource("3_vision")
+scan_rate_hz = 10.0
+target_group = &"vision_target"
+los_blocking_collision_mask = 1
+
+[node name="AlertIndicator" type="Node2D" parent="."]
+z_index = 10
+script = ExtResource("12_alert")
+show_duration = 2.0
+offset = Vector2(0, -70)
+bounce_animation = true
+
+[node name="HealthController" type="Node2D" parent="." node_paths=PackedStringArray("on_hp_0")]
+script = ExtResource("11_health")
+max_hp = 20
+recovery_time = 0.2
+on_hp_0 = NodePath("../GuardStates/death")
+
+[node name="GuardStates" type="Node" parent="."]
+script = ExtResource("4_sm")
+current_state = NodePath("sentry")
+
+[node name="sentry" type="Node" parent="GuardStates" node_paths=PackedStringArray("on_completion")]
+script = ExtResource("5_sentry")
+on_completion = [NodePath("chase"), NodePath("patrol")]
+
+[node name="patrol" type="Node" parent="GuardStates" node_paths=PackedStringArray("on_completion")]
+script = ExtResource("6_patrol")
+pause_at_waypoint = 1.0
+on_completion = [NodePath("chase")]
+
+[node name="chase" type="Node" parent="GuardStates" node_paths=PackedStringArray("on_completion")]
+script = ExtResource("7_chase")
+target_update_rate_hz = 10.0
+on_completion = [NodePath("investigate")]
+
+[node name="investigate" type="Node" parent="GuardStates" node_paths=PackedStringArray("on_completion")]
+script = ExtResource("8_investigate")
+investigate_time = 2.0
+on_completion = [NodePath("chase"), NodePath("return")]
+
+[node name="return" type="Node" parent="GuardStates" node_paths=PackedStringArray("on_completion")]
+script = ExtResource("9_return")
+on_completion = [NodePath("sentry"), NodePath("patrol")]
+
+[node name="death" type="Node" parent="GuardStates"]
+script = ExtResource("10_callable")
+node = NodePath("../..")
+method_name = "queue_free"
+send_statemachine_params = false

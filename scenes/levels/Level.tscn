@@ -20,6 +20,8 @@ position = Vector2(320, 180)
 limit_left = 0
 limit_top = 0
 
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=9876543210]
+
 [node name="Layers" type="Node2D" parent="." unique_id=562545212]
 unique_name_in_owner = true
 z_index = -1
