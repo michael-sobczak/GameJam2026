@@ -117,3 +117,12 @@ func clear_tilemap_layers():
 	for node in tilemap_layers.get_children():
 		if node is TileMapLayer:
 			node.clear()
+
+
+func end_level() -> void:
+	print("reached end of level")
+	pass
+
+
+func _on_goal_reached() -> void:
+	end_level()
