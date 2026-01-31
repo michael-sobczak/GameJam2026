@@ -1,10 +1,10 @@
-[gd_resource type="TileSet" load_steps=12 format=3 uid="uid://bqgpil207dwjc"]
+[gd_resource type="TileSet" format=3 uid="uid://bqgpil207dwjc"]
 
-[ext_resource type="Texture2D" uid="uid://bw8ud1bx0dghi" path="res://tilesets/water_01.png" id="1_mfufm"]
-[ext_resource type="Texture2D" uid="uid://ccqljfa4il8cv" path="res://tilesets/grounds.png" id="2_x2wcm"]
-[ext_resource type="Texture2D" uid="uid://c0h7homjn6wb1" path="res://tilesets/grounds_s.png" id="3_7iim6"]
-[ext_resource type="Texture2D" uid="uid://brbr8siturqlw" path="res://tilesets/walls.png" id="4_1migf"]
-[ext_resource type="Texture2D" uid="uid://dngk8b56hq57c" path="res://tilesets/tops.png" id="5_4lrqb"]
+[ext_resource type="Texture2D" uid="uid://c7pjtkeiqeu1m" path="res://tilesets/water_01.png" id="1_mfufm"]
+[ext_resource type="Texture2D" uid="uid://dlisisg0n7ii7" path="res://tilesets/grounds.png" id="2_x2wcm"]
+[ext_resource type="Texture2D" uid="uid://c0sjvsxtyn031" path="res://tilesets/grounds_s.png" id="3_7iim6"]
+[ext_resource type="Texture2D" uid="uid://byyv6sap8jcld" path="res://tilesets/walls.png" id="4_1migf"]
+[ext_resource type="Texture2D" uid="uid://dvlphak18oirm" path="res://tilesets/tops.png" id="5_4lrqb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xmlbm"]
 texture = ExtResource("1_mfufm")
