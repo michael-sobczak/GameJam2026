@@ -10,6 +10,8 @@ extends CharacterEntity
 var player_id: int = 1 ## A unique id that is assigned to the player on creation. Player 1 will have player_id = 1 and each additional player will have an incremental id, 2, 3, 4, and so on.
 var equipped = 0 ## The id of the weapon equipped by the player.
 
+@onready var flashlight: FlashlightCone = $FlashlightCone
+
 func _ready():
 	super._ready()
 	Globals.transfer_start.connect(func(): 
@@ -17,6 +19,12 @@ func _ready():
 	)
 	Globals.transfer_complete.connect(func(): on_transfer_end.enable())
 	Globals.destination_found.connect(func(destination_path): _move_to_destination(destination_path))
+	
+	# Sync flashlight with facing direction
+	if flashlight:
+		direction_changed.connect(_update_flashlight_aim)
+		_update_flashlight_aim(facing)
+	
 	receive_data(DataManager.get_player_data(player_id))
 
 ##Get the player data to save.
@@ -62,3 +70,8 @@ func disable_entity(value: bool, delay = 0.0):
 	await get_tree().create_timer(delay).timeout
 	stop()
 	input_enabled = !value
+
+## Update flashlight aim direction when player facing changes.
+func _update_flashlight_aim(direction: Vector2):
+	if flashlight:
+		flashlight.set_aim_direction(direction)

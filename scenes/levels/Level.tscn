@@ -12,6 +12,9 @@ position = Vector2(-4.82253e-07, 2.05796e-08)
 script = ExtResource("1_cq0rv")
 metadata/_edit_lock_ = true
 
+[node name="AmbientDarkness" type="CanvasModulate" parent="." unique_id=1741009083]
+color = Color(0.05, 0.05, 0.05, 1)
+
 [node name="GameCamera2D" parent="." unique_id=1631091264 instance=ExtResource("2_d25mt")]
 position = Vector2(320, 180)
 limit_left = 0
