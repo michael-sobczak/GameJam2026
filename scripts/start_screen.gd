@@ -14,7 +14,6 @@ func _ready() -> void:
 	version_num.text = "v%s" % version
 	user_prefs = UserPrefs.load_or_create()
 	_check_continue()
-	TranslationServer.set_locale(user_prefs.language)
 	quit_button.visible = OS.get_name() != "Web"
 
 func _check_continue():
