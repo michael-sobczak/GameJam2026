@@ -11,7 +11,8 @@ var destination_name: String ## Used when moving between levels to get the right
 var player_id: int ## Used when moving between levels to save the player facing direction.
 
 func _ready():
-	darkness.color = Color.BLACK
+	if not Engine.is_editor_hint():
+		darkness.color = Color.BLACK
 
 	# Ensure NavigationRegion2D exists for guard pathfinding
 	var nav_region: NavigationRegion2D = get_node_or_null("NavigationRegion2D")
@@ -120,3 +121,12 @@ func clear_tilemap_layers():
 	for node in tilemap_layers.get_children():
 		if node is TileMapLayer:
 			node.clear()
+
+
+func end_level() -> void:
+	print("reached end of level")
+	pass
+
+
+func _on_goal_reached() -> void:
+	end_level()

@@ -20,6 +20,8 @@
 [ext_resource type="Script" uid="uid://dd2m5xedjwd4m" path="res://scripts/state_machine/states/state_callable.gd" id="14_gx6sm"]
 [ext_resource type="PackedScene" uid="uid://05uhe60taf6a" path="res://components/inventory.tscn" id="15_gx6sm"]
 [ext_resource type="PackedScene" uid="uid://xvksl7732ws6" path="res://components/flashlight_cone.tscn" id="16_flashlight"]
+[ext_resource type="Script" path="res://components/mask_effect_manager.gd" id="17_mask_effect"]
+[ext_resource type="PackedScene" path="res://components/inventory_slot_hud.tscn" id="18_slot_hud"]
 
 [sub_resource type="Resource" id="Resource_3wlsy"]
 script = ExtResource("3_yqrof")
@@ -678,3 +680,8 @@ health_controller = NodePath("../HealthController")
 disabled = false
 
 [node name="FlashlightCone" parent="." index="14" unique_id=1733046864 instance=ExtResource("16_flashlight")]
+
+[node name="MaskEffectManager" type="Node" parent="." index="15"]
+script = ExtResource("17_mask_effect")
+
+[node name="InventorySlotHUD" parent="." index="16" unique_id=582248342 instance=ExtResource("18_slot_hud")]
