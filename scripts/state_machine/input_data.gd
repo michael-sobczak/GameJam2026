@@ -7,6 +7,10 @@ extends Resource
 @export var function_args: Array = [] ## An array of arguments to pass when calling the function.
 
 func check_input(event: InputEvent, node_ref: Node):
+	# Check if action exists in InputMap before checking it
+	if not InputMap.has_action(action):
+		return  # Silently skip if action doesn't exist
+	
 	if mode == "Pressed" and event.is_action_pressed(action) or mode == "Released" and event.is_action_released(action):
 		_call_function(node_ref)
 

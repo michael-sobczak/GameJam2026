@@ -11,6 +11,8 @@ var player_id: int = 1 ## A unique id that is assigned to the player on creation
 var equipped = 0 ## The id of the weapon equipped by the player.
 
 @onready var flashlight: FlashlightCone = $FlashlightCone
+@onready var mask_effect_manager: MaskEffectManager = $MaskEffectManager
+@onready var inventory_slot_hud: InventorySlotHUD = $InventorySlotHUD
 
 func _ready():
 	super._ready()
@@ -25,7 +27,27 @@ func _ready():
 		direction_changed.connect(_update_flashlight_aim)
 		_update_flashlight_aim(facing)
 	
+	# Setup inventory slot HUD
+	if inventory_slot_hud:
+		print("PlayerEntity: Found InventorySlotHUD")
+		if inventory:
+			print("PlayerEntity: Setting inventory on HUD")
+			inventory_slot_hud.set_inventory(inventory)
+			inventory_slot_hud.item_used.connect(_on_mask_item_used)
+		else:
+			print("PlayerEntity: Warning - No inventory found")
+	else:
+		print("PlayerEntity: Warning - InventorySlotHUD not found!")
+	
 	receive_data(DataManager.get_player_data(player_id))
+	
+	# Initialize starting inventory if empty (after loading save data)
+	if inventory and inventory.items.is_empty():
+		_initialize_starting_inventory()
+	
+	# Refresh HUD after inventory is set up
+	if inventory_slot_hud and inventory:
+		inventory_slot_hud._refresh_slots()
 
 ##Get the player data to save.
 func get_data():
@@ -81,3 +103,65 @@ func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed(&"flashlight"):
 		if flashlight:
 			flashlight.set_enabled(not flashlight.enabled)
+
+## Initialize player's starting inventory with mask items.
+func _initialize_starting_inventory():
+	if not inventory:
+		print("PlayerEntity: Cannot initialize inventory - inventory is null")
+		return
+	
+	print("PlayerEntity: Initializing starting inventory...")
+	
+	# Create Night Vision Mask item
+	var night_vision_mask = DataMaskItem.new()
+	night_vision_mask.resource_name = "Night Vision Mask"
+	night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
+	night_vision_mask.effect_duration = 5.0
+	night_vision_mask.icon = _create_simple_icon(32, Color(0.0, 1.0, 0.4, 1.0))  # Green square
+	print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
+	
+	# Create Disguise Mask item
+	var disguise = DataMaskItem.new()
+	disguise.resource_name = "Disguise Mask"
+	disguise.mask_type = DataMaskItem.MaskType.DISGUISE
+	disguise.effect_duration = 5.0
+	disguise.icon = _create_simple_icon(32, Color(0.6, 0.2, 0.8, 1.0))  # Purple square
+	print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
+	
+	# Add items to inventory
+	inventory.add_item(night_vision_mask, 3)
+	inventory.add_item(disguise, 3)
+	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
+	
+	# Refresh HUD
+	if inventory_slot_hud:
+		print("PlayerEntity: Refreshing inventory slot HUD...")
+		inventory_slot_hud._refresh_slots()
+	else:
+		print("PlayerEntity: Warning - inventory_slot_hud is null, cannot refresh")
+
+## Create a simple colored icon texture.
+func _create_simple_icon(size: int, color: Color) -> AtlasTexture:
+	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
+	image.fill(color)
+	
+	var texture = ImageTexture.create_from_image(image)
+	var atlas = AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2(0, 0, size, size)
+	return atlas
+
+## Handle mask item usage.
+func _on_mask_item_used(item: DataItem):
+	if not item is DataMaskItem:
+		return
+	
+	var mask_item = item as DataMaskItem
+	if not mask_effect_manager:
+		return
+	
+	match mask_item.mask_type:
+		DataMaskItem.MaskType.NIGHT_VISION:
+			mask_effect_manager.apply_night_vision(mask_item.effect_duration)
+		DataMaskItem.MaskType.DISGUISE:
+			mask_effect_manager.apply_disguise(mask_item.effect_duration)
