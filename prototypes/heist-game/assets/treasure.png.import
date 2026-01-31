@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5xyniwimtobq"
-path="res://.godot/imported/treasure.png-c775ae1bc1cfb22185bd484a20f684ce.ctex"
+path="res://.godot/imported/treasure.png-e29a74ee498702a49532d66925a3f647.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://heist-game/assets/treasure.png"
-dest_files=["res://.godot/imported/treasure.png-c775ae1bc1cfb22185bd484a20f684ce.ctex"]
+source_file="res://prototypes/heist-game/assets/treasure.png"
+dest_files=["res://.godot/imported/treasure.png-e29a74ee498702a49532d66925a3f647.ctex"]
 
 [params]
 
