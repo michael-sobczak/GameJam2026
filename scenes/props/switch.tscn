@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://dvci1ecg1e7l"]
+[gd_scene format=3 uid="uid://dvci1ecg1e7l"]
 
-[ext_resource type="Texture2D" uid="uid://wbxf50llw7yc" path="res://scenes/props/lever.png" id="2_jt7g7"]
+[ext_resource type="Texture2D" uid="uid://bhx41p7bdvvhc" path="res://scenes/props/lever.png" id="2_jt7g7"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="3_05j5n"]
 [ext_resource type="Script" uid="uid://bgm8n3pwwbymt" path="res://scripts/interaction_area.gd" id="3_y5wia"]
 [ext_resource type="Script" uid="uid://btmy7sadqiuav" path="res://scripts/state_machine/states/state_animation.gd" id="4_k6m0m"]
@@ -100,52 +100,50 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_y5wia"]
 radius = 32.0
 
-[node name="Switch" type="Node2D"]
+[node name="Switch" type="Node2D" unique_id=73389760]
 
-[node name="BaseSprite" type="Sprite2D" parent="."]
+[node name="BaseSprite" type="Sprite2D" parent="." unique_id=1627323304]
 position = Vector2(0, -8)
 texture = ExtResource("2_jt7g7")
 hframes = 2
 
-[node name="Handle" type="Marker2D" parent="."]
+[node name="Handle" type="Marker2D" parent="." unique_id=1913867903]
 rotation = -0.610865
 
-[node name="HandleSprite" type="Sprite2D" parent="Handle"]
+[node name="HandleSprite" type="Sprite2D" parent="Handle" unique_id=330298495]
 position = Vector2(0, -10)
 texture = ExtResource("2_jt7g7")
 hframes = 2
 frame = 1
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1759922538]
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=2030793251]
 position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_dlfxg")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_ch07o")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=86841968]
+libraries/ = SubResource("AnimationLibrary_ch07o")
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="." unique_id=1682265621]
 z_index = -1
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 script = ExtResource("3_y5wia")
-metadata/_custom_type_script = ExtResource("3_y5wia")
+metadata/_custom_type_script = "uid://bgm8n3pwwbymt"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=535714829]
 shape = SubResource("CircleShape2D_y5wia")
 debug_color = Color(0.634013, 0.524733, 0.158317, 0.42)
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state") groups=["save"]]
+[node name="StateMachine" type="Node" parent="." unique_id=1036602892 node_paths=PackedStringArray("current_state") groups=["save"]]
 script = ExtResource("3_05j5n")
 current_state = NodePath("idle_off")
 
-[node name="idle_off" type="Node" parent="StateMachine" node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="idle_off" type="Node" parent="StateMachine" unique_id=485831865 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("4_t1oes")
 interaction_area = NodePath("../../InteractionArea")
 action_trigger = "interact"
@@ -153,18 +151,18 @@ one_shot = false
 reset_delay = 0.1
 on_completion = [NodePath("../on")]
 
-[node name="animation_idle_off" type="Node" parent="StateMachine/idle_off" node_paths=PackedStringArray("animation_player")]
+[node name="animation_idle_off" type="Node" parent="StateMachine/idle_off" unique_id=1511788744 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_k6m0m")
 animation_player = NodePath("../../../AnimationPlayer")
 animation = "idle_off"
 
-[node name="on" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="on" type="Node" parent="StateMachine" unique_id=1313478678 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_k6m0m")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "on"
 on_completion = [NodePath("../idle_on")]
 
-[node name="idle_on" type="Node" parent="StateMachine" node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="idle_on" type="Node" parent="StateMachine" unique_id=1226088369 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("4_t1oes")
 interaction_area = NodePath("../../InteractionArea")
 action_trigger = "interact"
@@ -172,12 +170,12 @@ one_shot = false
 reset_delay = 0.1
 on_completion = [NodePath("../off")]
 
-[node name="animation_idle_on" type="Node" parent="StateMachine/idle_on" node_paths=PackedStringArray("animation_player")]
+[node name="animation_idle_on" type="Node" parent="StateMachine/idle_on" unique_id=1269696328 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_k6m0m")
 animation_player = NodePath("../../../AnimationPlayer")
 animation = "idle_on"
 
-[node name="off" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="off" type="Node" parent="StateMachine" unique_id=1161897397 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_k6m0m")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "off"

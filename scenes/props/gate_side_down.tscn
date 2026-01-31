@@ -1,9 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://d35eedf4c6er5"]
+[gd_scene format=3 uid="uid://d35eedf4c6er5"]
 
 [ext_resource type="PackedScene" uid="uid://cbl0vbjiosfi0" path="res://scenes/props/gate_side_up.tscn" id="1_lyu40"]
 
-[node name="Gate_Side" instance=ExtResource("1_lyu40")]
-start_state_index = 1
+[node name="Gate_Side" unique_id=878755852 instance=ExtResource("1_lyu40")]
 
-[node name="StateMachine" parent="." index="2" node_paths=PackedStringArray("current_state")]
+[node name="StateMachine" parent="." index="2" unique_id=1249547462 node_paths=PackedStringArray("current_state")]
 current_state = NodePath("idle_down")

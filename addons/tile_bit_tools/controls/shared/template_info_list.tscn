@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://j24kxq3gk7ry"]
+[gd_scene format=3 uid="uid://j24kxq3gk7ry"]
 
 [ext_resource type="Script" uid="uid://b32f4e4nvjlwh" path="res://addons/tile_bit_tools/controls/shared/template_info_list.gd" id="1_6r84n"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n7nl4"]
 
-[node name="TemplateInfoList" type="ItemList"]
+[node name="TemplateInfoList" type="ItemList" unique_id=1282742273]
 size_flags_horizontal = 3
 focus_mode = 0
 mouse_filter = 2

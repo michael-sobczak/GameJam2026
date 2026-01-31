@@ -1,13 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://05uhe60taf6a"]
+[gd_scene format=3 uid="uid://05uhe60taf6a"]
 
 [ext_resource type="Script" uid="uid://ip5yyw3utf0f" path="res://components/inventory.gd" id="1_4mxsq"]
 
-[node name="Inventory" type="CanvasLayer"]
+[node name="Inventory" type="CanvasLayer" unique_id=547895049]
 process_mode = 3
 layer = 10
 script = ExtResource("1_4mxsq")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=691538663]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,7 +18,7 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="ItemList" type="ItemList" parent="MarginContainer"]
+[node name="ItemList" type="ItemList" parent="MarginContainer" unique_id=506886422]
 layout_mode = 2
 max_columns = 10
 same_column_width = true

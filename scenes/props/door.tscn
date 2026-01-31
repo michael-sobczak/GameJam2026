@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://sqqjx0j33xse"]
+[gd_scene format=3 uid="uid://sqqjx0j33xse"]
 
-[ext_resource type="Texture2D" uid="uid://d26pe861y7rye" path="res://scenes/props/door.png" id="1_fpb0w"]
+[ext_resource type="Texture2D" uid="uid://c3b34al00tdxb" path="res://scenes/props/door.png" id="1_fpb0w"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="2_a78jy"]
 [ext_resource type="Script" uid="uid://cmc5vhgmy6nat" path="res://scripts/state_machine/states/state_interact.gd" id="3_gxend"]
 [ext_resource type="Script" uid="uid://bgm8n3pwwbymt" path="res://scripts/interaction_area.gd" id="3_mctn1"]
@@ -136,65 +136,63 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mctn1"]
 size = Vector2(96, 26)
 
-[node name="Door" type="Sprite2D"]
+[node name="Door" type="Sprite2D" unique_id=1865083467]
 texture = ExtResource("1_fpb0w")
 hframes = 4
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=576406941]
 position = Vector2(0, -50)
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1722720756]
 z_index = -1
 position = Vector2(0, 45)
 shape = SubResource("RectangleShape2D_0wjin")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_230oi")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=102004193]
+libraries/ = SubResource("AnimationLibrary_230oi")
 speed_scale = 0.3
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="." unique_id=1953200845]
 z_index = -1
 position = Vector2(0, 44)
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 script = ExtResource("3_mctn1")
-metadata/_custom_type_script = ExtResource("3_mctn1")
+metadata/_custom_type_script = "uid://bgm8n3pwwbymt"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=1199168507]
 shape = SubResource("RectangleShape2D_mctn1")
 debug_color = Color(0.619608, 0.52549, 0.27451, 0.419608)
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=1030815921 node_paths=PackedStringArray("current_state")]
 script = ExtResource("2_a78jy")
 current_state = NodePath("closed")
 
-[node name="closed" type="Node" parent="StateMachine" node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="closed" type="Node" parent="StateMachine" unique_id=1584313616 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("3_gxend")
 interaction_area = NodePath("../../InteractionArea")
 action_trigger = "interact"
 on_completion = [NodePath("../open")]
 
-[node name="animation_closed" type="Node" parent="StateMachine/closed" node_paths=PackedStringArray("animation_player")]
+[node name="animation_closed" type="Node" parent="StateMachine/closed" unique_id=1310105842 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_eh4fy")
 animation_player = NodePath("../../../AnimationPlayer")
 animation = "closed"
 
-[node name="open" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="open" type="Node" parent="StateMachine" unique_id=1293594643 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_eh4fy")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "open"
 on_completion = [NodePath("../opened")]
 
-[node name="opened" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player")]
+[node name="opened" type="Node" parent="StateMachine" unique_id=1137754376 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_eh4fy")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "opened"
 
-[node name="close" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="close" type="Node" parent="StateMachine" unique_id=1205698152 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_eh4fy")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "close"
