@@ -19,6 +19,7 @@
 [ext_resource type="Script" uid="uid://b4jgftt0t4d1e" path="res://scripts/state_machine/states/state_impulse.gd" id="12_m3ydn"]
 [ext_resource type="Script" uid="uid://dd2m5xedjwd4m" path="res://scripts/state_machine/states/state_callable.gd" id="14_gx6sm"]
 [ext_resource type="PackedScene" uid="uid://05uhe60taf6a" path="res://components/inventory.tscn" id="15_gx6sm"]
+[ext_resource type="PackedScene" path="res://components/flashlight_cone.tscn" id="16_flashlight"]
 
 [sub_resource type="Resource" id="Resource_3wlsy"]
 script = ExtResource("3_yqrof")
@@ -678,3 +679,5 @@ health_controller = NodePath("../HealthController")
 
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
 disabled = false
+
+[node name="FlashlightCone" parent="." index="14" instance=ExtResource("16_flashlight")]
