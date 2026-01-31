@@ -50,8 +50,6 @@ anchors_preset = -1
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -52.0
-offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -71,7 +69,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
-text = "new_game"
+text = "New Game"
 
 [node name="Continue" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=1463526949]
 unique_name_in_owner = true
@@ -81,7 +79,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
-text = "continue"
+text = "Continue"
 
 [node name="Settings" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=643295456]
 custom_minimum_size = Vector2(150, 40)
@@ -89,7 +87,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
-text = "settings"
+text = "Settings"
 
 [node name="Quit" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=1441577256]
 unique_name_in_owner = true
@@ -98,7 +96,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
-text = "quit"
+text = "Quit"
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1895709668]
 layout_mode = 1
