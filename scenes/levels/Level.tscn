@@ -14,14 +14,15 @@ script = ExtResource("1_cq0rv")
 metadata/_edit_lock_ = true
 
 [node name="AmbientDarkness" type="CanvasModulate" parent="." unique_id=1741009083]
-color = Color(0.05, 0.05, 0.05, 1)
+unique_name_in_owner = true
+color = Color(1.0, 1.0, 1.0, 1.0)
 
 [node name="GameCamera2D" parent="." unique_id=1631091264 instance=ExtResource("2_d25mt")]
 position = Vector2(320, 180)
 limit_left = 0
 limit_top = 0
 
-[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=9876543210]
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1286608618]
 
 [node name="Layers" type="Node2D" parent="." unique_id=562545212]
 unique_name_in_owner = true
