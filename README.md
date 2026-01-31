@@ -28,7 +28,7 @@ Godot version 4.4 or later is required, as the code utilizes [typed dictionaries
 
 Read the [documentation](https://alchemy-pot.web.app/resources/godot-2d-topdown-template).
 
-To explore a specific topic in more detail, you can refer directly to the code—**all key properties and functions are fully documented**.  
+To explore a specific topic in more detail, you can refer directly to the code—**all key properties and functions are fully documented**.
 
 When starting your own project, you can safely remove all scenes that begin with **"playground_"**, as they are only meant for demonstration purposes. Then, set your desired starting level by configuring the **`start_level`** property in the `start_screen.tscn` scene.
 
@@ -60,10 +60,6 @@ Seamlessly move between scenes, whether transitioning from a title screen to a l
 
 Save and load user preferences, such as music and sound effect volumes or selected language. Effortlessly implement multi-language support and game localization.
 
-## [Dialogue System](https://alchemy-pot.web.app/godot-2d-topdown-template/dialogue-system)
-
-Integrate a robust dialogue system to display message boxes and manage dialogues between game characters, enhancing narrative depth and player engagement.
-
 ## [Tilemaps and Levels](https://alchemy-pot.web.app/godot-2d-topdown-template/tilemaps-and-levels)
 
 If you plan to use Tilemaps and the pre-built Level scene to build your levels, here you can discover some useful tips to create new levels and setting up autotiles in no time.
@@ -74,7 +70,6 @@ Simplify testing with a configurable debugger. Test features like saving session
 
 ## 🙏 Credits
 
-- **nathanhoad** for [Godot Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager)
 - **baconandgames** for [Godot4 Game Template](https://github.com/baconandgames/godot4-game-template)
 - **dandeliondino** for [Tile Bit Tools](https://github.com/dandeliondino/tile_bit_tools)
 

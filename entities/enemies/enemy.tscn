@@ -1,22 +1,19 @@
-[gd_scene load_steps=65 format=3 uid="uid://2c84y1k62jlc"]
+[gd_scene format=3 uid="uid://2c84y1k62jlc"]
 
 [ext_resource type="PackedScene" uid="uid://d2nwo602rnihe" path="res://entities/entity.tscn" id="1_ftgfs"]
 [ext_resource type="Shader" uid="uid://blugt5j7e8tag" path="res://shaders/flash.gdshader" id="2_fvxof"]
 [ext_resource type="Script" uid="uid://bc7pmqpgxatnh" path="res://items/weapons/data_weapon.gd" id="2_gj3y3"]
-[ext_resource type="Texture2D" uid="uid://cwgxsewe67xym" path="res://entities/enemies/enemy-1.png" id="2_yaoeo"]
-[ext_resource type="Texture2D" uid="uid://2hk61pfrsnoq" path="res://entities/player/chara-hero.png" id="4_msovg"]
+[ext_resource type="Texture2D" uid="uid://hmqmbxhdyx6t" path="res://entities/enemies/enemy-1.png" id="2_yaoeo"]
+[ext_resource type="Texture2D" uid="uid://2us16ikdxggi" path="res://entities/player/chara-hero.png" id="4_msovg"]
 [ext_resource type="Script" uid="uid://igey4j36or78" path="res://components/health_controller.gd" id="5_ipr6v"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="6_gj3y3"]
 [ext_resource type="Script" uid="uid://dd2m5xedjwd4m" path="res://scripts/state_machine/states/state_callable.gd" id="7_56i32"]
 
 [sub_resource type="Resource" id="Resource_56i32"]
 script = ExtResource("2_gj3y3")
-power = 1
-speed = 0.5
-hide_from_inventory = false
 metadata/_custom_type_script = "uid://bc7pmqpgxatnh"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_msovg"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gj3y3"]
 resource_local_to_scene = true
 shader = ExtResource("2_fvxof")
 shader_parameter/flash_color = Color(1, 1, 1, 1)
@@ -234,7 +231,7 @@ region = Rect2(40, 150, 40, 50)
 atlas = ExtResource("2_yaoeo")
 region = Rect2(80, 150, 40, 50)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_sb13e"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_56i32"]
 resource_local_to_scene = true
 animations = [{
 "frames": [{
@@ -506,14 +503,17 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Enemy1" instance=ExtResource("1_ftgfs")]
+[node name="Enemy1" unique_id=1124506097 instance=ExtResource("1_ftgfs")]
 weapon = SubResource("Resource_56i32")
 max_speed = 100.0
 friction = 1500.0
 
 [node name="AnimatedSprite2D" parent="." index="2"]
-material = SubResource("ShaderMaterial_msovg")
-sprite_frames = SubResource("SpriteFrames_sb13e")
+material = SubResource("ShaderMaterial_gj3y3")
+sprite_frames = SubResource("SpriteFrames_56i32")
+
+[node name="AnimationPlayer" parent="." index="5"]
+autoplay = &"char-idle/down"
 
 [node name="HurtBox" parent="." index="8" node_paths=PackedStringArray("health_controller")]
 health_controller = NodePath("../HealthController")
@@ -521,18 +521,18 @@ health_controller = NodePath("../HealthController")
 [node name="CollisionShape2D" parent="HurtBox" index="0"]
 disabled = false
 
-[node name="HealthController" type="Node2D" parent="." index="9" node_paths=PackedStringArray("on_hp_0")]
+[node name="HealthController" type="Node2D" parent="." index="9" unique_id=114339419 node_paths=PackedStringArray("on_hp_0")]
 script = ExtResource("5_ipr6v")
 max_hp = 10
 recovery_time = 0.2
 on_hp_0 = NodePath("../EnemyStates/death")
 metadata/_custom_type_script = "uid://igey4j36or78"
 
-[node name="EnemyStates" type="Node" parent="." index="10"]
+[node name="EnemyStates" type="Node" parent="." index="10" unique_id=370626953]
 script = ExtResource("6_gj3y3")
 metadata/_custom_type_script = "uid://dp66ice2hhj8n"
 
-[node name="death" type="Node" parent="EnemyStates" index="0" node_paths=PackedStringArray("node")]
+[node name="death" type="Node" parent="EnemyStates" index="0" unique_id=480078670 node_paths=PackedStringArray("node")]
 script = ExtResource("7_56i32")
 node = NodePath("../..")
 method_name = "queue_free"
