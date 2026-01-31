@@ -1,21 +1,11 @@
 extends Area2D
 signal goal_reached
 
+var _triggered := false
 
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-func _on_body_entered(body):
-	if body.is_in_group("player"):
-		print("goal collided with player")
-		goal_reached.emit()
-		monitoring = false
+func _on_body_entered(body: Node) -> void:
+	if _triggered or not body.is_in_group("player"):
+		return
+	_triggered = true
+	set_deferred("monitoring", false)
+	goal_reached.emit()
