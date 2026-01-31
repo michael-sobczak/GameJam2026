@@ -45,9 +45,8 @@ func _update_cone_texture():
 	if not light or not cone_profile:
 		return
 	
-	# Create a simple cone texture if none exists
-	if not light.texture:
-		light.texture = _create_cone_texture()
+	# Always regenerate cone texture to ensure correct orientation
+	light.texture = _create_cone_texture()
 
 func _create_cone_texture() -> Texture2D:
 	# Create a simple cone/wedge texture programmatically
@@ -64,7 +63,7 @@ func _create_cone_texture() -> Texture2D:
 	var half_fov_rad = deg_to_rad(cone_profile.fov_degrees / 2.0)
 	var max_dist = size / 2.0
 	
-	# Draw cone shape pointing downward (toward positive Y in screen space)
+	# Draw cone shape pointing UP (angle = -PI/2) in texture space
 	for y in range(size):
 		for x in range(size):
 			var dx = x - center_x
@@ -77,8 +76,8 @@ func _create_cone_texture() -> Texture2D:
 			# Calculate angle from center (0 = right, PI/2 = down, -PI/2 = up)
 			var angle = atan2(dy, dx)
 			
-			# Check if within FOV (cone points down, so center angle is PI/2)
-			var center_angle = PI / 2.0  # Downward direction
+			# Check if within FOV (cone points UP, so center angle is -PI/2)
+			var center_angle = -PI / 2.0  # Upward direction
 			var angle_diff = abs(angle - center_angle)
 			
 			# Normalize angle difference to [0, PI]
@@ -107,7 +106,10 @@ func set_aim_direction(direction: Vector2):
 ## @param angle: Angle in radians (0 = right, PI/2 = down, -PI/2 = up)
 func set_aim_angle(angle: float):
 	_current_aim_angle = angle
-	rotation = angle + (PI / 2.0)  # Adjust so 0 points down (top-down convention)
+	# Texture points UP (-PI/2), rotate to desired angle
+	# rotation = desired_angle - texture_base_angle = angle - (-PI/2) = angle + PI/2
+	if light:
+		light.rotation = angle + (PI / 2.0)
 	aim_changed.emit(angle)
 
 ## Enable or disable the flashlight.
