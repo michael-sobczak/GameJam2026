@@ -75,3 +75,9 @@ func disable_entity(value: bool, delay = 0.0):
 func _update_flashlight_aim(direction: Vector2):
 	if flashlight:
 		flashlight.set_aim_direction(direction)
+
+## Handle flashlight toggle input.
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed(&"flashlight"):
+		if flashlight:
+			flashlight.set_enabled(not flashlight.enabled)
