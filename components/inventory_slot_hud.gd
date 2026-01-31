@@ -65,11 +65,17 @@ func _input(event: InputEvent) -> void:
 	
 	# Handle slot selection with Q (left) and E (right)
 	if event.keycode == KEY_Q:
+		var old_index = selected_slot_index
 		selected_slot_index = max(0, selected_slot_index - 1)
+		if selected_slot_index != old_index:
+			AudioManager.play_sfx("inventory_select")
 		_update_slot_selection()
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_E:
+		var old_index = selected_slot_index
 		selected_slot_index = min(SLOT_COUNT - 1, selected_slot_index + 1)
+		if selected_slot_index != old_index:
+			AudioManager.play_sfx("inventory_select")
 		_update_slot_selection()
 		get_viewport().set_input_as_handled()
 	# Handle item usage (spacebar)
@@ -209,6 +215,9 @@ func _use_selected_item() -> void:
 	var content_item: ContentItem = inventory.items[selected_slot_index]
 	if not content_item or content_item.quantity <= 0:
 		return
+	
+	# Play item use sound
+	AudioManager.play_sfx("item_use")
 	
 	# Emit signal for item usage (handled by player entity)
 	item_used.emit(content_item.item)

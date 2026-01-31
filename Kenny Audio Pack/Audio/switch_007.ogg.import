@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cqqtk6aiib6me"
+path="res://.godot/imported/switch_007.ogg-af60b7dbac2baef3105825e7706e29a6.oggvorbisstr"
+
+[deps]
+
+source_file="res://Kenny Audio Pack/Audio/switch_007.ogg"
+dest_files=["res://.godot/imported/switch_007.ogg-af60b7dbac2baef3105825e7706e29a6.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

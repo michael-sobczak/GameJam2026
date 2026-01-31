@@ -112,6 +112,9 @@ func _on_target_seen(target: Node2D):
 		forget_timer = 0.0
 		target_spotted.emit(target)
 		
+		# Play alert sound
+		AudioManager.play_sfx("guard_alert")
+		
 		# Show alert indicator
 		if alert_indicator:
 			alert_indicator.show_indicator()

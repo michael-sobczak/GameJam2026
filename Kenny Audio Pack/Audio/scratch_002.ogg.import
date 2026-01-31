@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dhm4a51frihoy"
+path="res://.godot/imported/scratch_002.ogg-e22035c0a67af777d698cae67e7a7607.oggvorbisstr"
+
+[deps]
+
+source_file="res://Kenny Audio Pack/Audio/scratch_002.ogg"
+dest_files=["res://.godot/imported/scratch_002.ogg-e22035c0a67af777d698cae67e7a7607.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

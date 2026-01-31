@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://xh3a3itnnuon"
+path="res://.godot/imported/open_004.ogg-7b186c6566db9f246c517c33f5e7116b.oggvorbisstr"
+
+[deps]
+
+source_file="res://Kenny Audio Pack/Audio/open_004.ogg"
+dest_files=["res://.godot/imported/open_004.ogg-7b186c6566db9f246c517c33f5e7116b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

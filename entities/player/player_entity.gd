@@ -103,6 +103,7 @@ func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed(&"flashlight"):
 		if flashlight:
 			flashlight.set_enabled(not flashlight.enabled)
+			AudioManager.play_sfx("flashlight_toggle")
 
 ## Initialize player's starting inventory with mask items.
 func _initialize_starting_inventory():

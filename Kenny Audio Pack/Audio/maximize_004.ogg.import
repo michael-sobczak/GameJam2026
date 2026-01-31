@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dn2e0sby3sqq8"
+path="res://.godot/imported/maximize_004.ogg-61f12b5166c61d86b40e3f2cc2c6f17e.oggvorbisstr"
+
+[deps]
+
+source_file="res://Kenny Audio Pack/Audio/maximize_004.ogg"
+dest_files=["res://.godot/imported/maximize_004.ogg-61f12b5166c61d86b40e3f2cc2c6f17e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

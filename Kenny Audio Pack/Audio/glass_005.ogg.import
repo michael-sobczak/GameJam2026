@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://qe2x5yc8a5uj"
+path="res://.godot/imported/glass_005.ogg-390cf1d6b9eb058c34855c7d159ca91d.oggvorbisstr"
+
+[deps]
+
+source_file="res://Kenny Audio Pack/Audio/glass_005.ogg"
+dest_files=["res://.godot/imported/glass_005.ogg-390cf1d6b9eb058c34855c7d159ca91d.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

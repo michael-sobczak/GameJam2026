@@ -20,6 +20,7 @@ func apply_night_vision(duration: float):
 	
 	night_vision_active = true
 	night_vision_started.emit(duration)
+	AudioManager.play_sfx("night_vision_on")
 	
 	# Find and brighten the AmbientDarkness node
 	var current_level = Globals.get_current_level()
@@ -58,6 +59,7 @@ func _remove_night_vision():
 	
 	night_vision_active = false
 	night_vision_ended.emit()
+	AudioManager.play_sfx("night_vision_off")
 	
 	if night_vision_overlay:
 		night_vision_overlay.queue_free()
@@ -74,6 +76,7 @@ func apply_disguise(duration: float):
 	
 	disguise_active = true
 	disguise_started.emit(duration)
+	AudioManager.play_sfx("disguise_on")
 	
 	# Remove player from vision_target group so guards can't see them
 	var players = Globals.get_players()
@@ -92,6 +95,7 @@ func _remove_disguise():
 	
 	disguise_active = false
 	disguise_ended.emit()
+	AudioManager.play_sfx("disguise_off")
 	
 	# Re-add player to vision_target group
 	var players = Globals.get_players()
