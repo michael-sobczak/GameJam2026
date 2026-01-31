@@ -16,10 +16,10 @@ var user_prefs: UserPrefs
 
 func _ready():
 	_populate_language_dropdown()
-	
+
 	# load (or create) file with these saved preferences
 	user_prefs = UserPrefs.load_or_create()
-	
+
 	# set saved values (will be default values if first load)
 	if music_slider:
 		music_slider.value = user_prefs.music_volume
@@ -29,7 +29,6 @@ func _ready():
 		var lang = Globals.get_selected_language()
 		var lang_index = Const.LANGUAGES.find(lang)
 		language_dropdown.selected = lang_index
-		TranslationServer.set_locale(lang)
 
 func _process(_delta):
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -59,7 +58,6 @@ func _on_language_dropdown_item_selected(_index):
 	var lang = Const.LANGUAGES[_index]
 	user_prefs.language = lang
 	language_changed.emit(lang)
-	TranslationServer.set_locale(lang)
 
 func _notification(what):
 	match what:
