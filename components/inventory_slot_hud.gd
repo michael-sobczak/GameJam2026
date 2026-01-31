@@ -54,17 +54,21 @@ func _input(event: InputEvent) -> void:
 	if not inventory:
 		return
 	
-	# Handle slot selection
-	if event.is_action_pressed(&"ui_left"):
+	# Only handle key events
+	if not event is InputEventKey or not event.pressed:
+		return
+	
+	# Handle slot selection with Q (left) and E (right)
+	if event.keycode == KEY_Q:
 		selected_slot_index = max(0, selected_slot_index - 1)
 		_update_slot_selection()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed(&"ui_right"):
+	elif event.keycode == KEY_E:
 		selected_slot_index = min(SLOT_COUNT - 1, selected_slot_index + 1)
 		_update_slot_selection()
 		get_viewport().set_input_as_handled()
 	# Handle item usage (spacebar)
-	elif event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
+	elif event.keycode == KEY_SPACE:
 		_use_selected_item()
 		get_viewport().set_input_as_handled()
 
