@@ -107,29 +107,38 @@ func _unhandled_input(event: InputEvent):
 ## Initialize player's starting inventory with mask items.
 func _initialize_starting_inventory():
 	if not inventory:
+		print("PlayerEntity: Cannot initialize inventory - inventory is null")
 		return
+	
+	print("PlayerEntity: Initializing starting inventory...")
 	
 	# Create Night Vision Mask item
 	var night_vision_mask = DataMaskItem.new()
 	night_vision_mask.resource_name = "Night Vision Mask"
 	night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
 	night_vision_mask.effect_duration = 5.0
-	night_vision_mask.icon = _create_simple_icon(32, Color(0.0, 1.0, 0.4, 1.0))  # Green circle
+	night_vision_mask.icon = _create_simple_icon(32, Color(0.0, 1.0, 0.4, 1.0))  # Green square
+	print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
 	
-	# Create Disguise item
+	# Create Disguise Mask item
 	var disguise = DataMaskItem.new()
-	disguise.resource_name = "Disguise"
+	disguise.resource_name = "Disguise Mask"
 	disguise.mask_type = DataMaskItem.MaskType.DISGUISE
 	disguise.effect_duration = 5.0
 	disguise.icon = _create_simple_icon(32, Color(0.6, 0.2, 0.8, 1.0))  # Purple square
+	print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
 	
 	# Add items to inventory
 	inventory.add_item(night_vision_mask, 3)
 	inventory.add_item(disguise, 3)
+	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
 	
 	# Refresh HUD
 	if inventory_slot_hud:
+		print("PlayerEntity: Refreshing inventory slot HUD...")
 		inventory_slot_hud._refresh_slots()
+	else:
+		print("PlayerEntity: Warning - inventory_slot_hud is null, cannot refresh")
 
 ## Create a simple colored icon texture.
 func _create_simple_icon(size: int, color: Color) -> AtlasTexture:

@@ -49,6 +49,11 @@ func _ready() -> void:
 		var first_panel = slot_scenes[0].get_node_or_null("Background")
 		if first_panel:
 			print("InventorySlotHUD: First panel size: %s, visible: %s, modulate: %s" % [first_panel.size, first_panel.visible, first_panel.modulate])
+	
+	# Refresh slots now that they're created (in case inventory was set before slots existed)
+	if inventory:
+		print("InventorySlotHUD: Inventory already set, refreshing slots...")
+		_refresh_slots()
 
 func _input(event: InputEvent) -> void:
 	if not inventory:
@@ -112,9 +117,11 @@ func _refresh_slots() -> void:
 			var label = slot.get_node_or_null("QuantityLabel")
 			if icon:
 				icon.texture = content_item.item.icon
+				icon.visible = true
+				print("InventorySlotHUD: Slot %d icon set, texture: %s, visible: %s" % [i, icon.texture, icon.visible])
 			if label:
 				label.text = str(content_item.quantity)
-				label.visible = content_item.quantity > 1
+				label.visible = true  # Always show quantity
 			print("InventorySlotHUD: Slot %d filled with %s x%d" % [i, content_item.item.resource_name, content_item.quantity])
 
 ## Create a single slot UI element.
@@ -155,7 +162,7 @@ func _create_slot(index: int) -> Control:
 	# Item icon
 	var icon = TextureRect.new()
 	icon.name = "ItemIcon"
-	icon.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	slot.add_child(icon)
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
