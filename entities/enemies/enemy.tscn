@@ -508,17 +508,14 @@ weapon = SubResource("Resource_56i32")
 max_speed = 100.0
 friction = 1500.0
 
-[node name="AnimatedSprite2D" parent="." index="2"]
+[node name="AnimatedSprite2D" parent="." index="2" unique_id=121589457]
 material = SubResource("ShaderMaterial_gj3y3")
 sprite_frames = SubResource("SpriteFrames_56i32")
 
-[node name="AnimationPlayer" parent="." index="5"]
-autoplay = &"char-idle/down"
-
-[node name="HurtBox" parent="." index="8" node_paths=PackedStringArray("health_controller")]
+[node name="HurtBox" parent="." index="8" unique_id=2093563570 node_paths=PackedStringArray("health_controller")]
 health_controller = NodePath("../HealthController")
 
-[node name="CollisionShape2D" parent="HurtBox" index="0"]
+[node name="CollisionShape2D" parent="HurtBox" index="0" unique_id=547947174]
 disabled = false
 
 [node name="HealthController" type="Node2D" parent="." index="9" unique_id=114339419 node_paths=PackedStringArray("on_hp_0")]

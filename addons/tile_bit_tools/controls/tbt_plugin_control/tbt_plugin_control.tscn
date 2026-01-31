@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bfp7f4bvgp636"]
+[gd_scene format=3 uid="uid://bfp7f4bvgp636"]
 
 [ext_resource type="Script" uid="uid://cbusu2qsn8gms" path="res://addons/tile_bit_tools/controls/tbt_plugin_control/tbt_plugin_control.gd" id="1_6xv2q"]
 [ext_resource type="Script" uid="uid://b0bnn47cwnuy2" path="res://addons/tile_bit_tools/controls/tbt_plugin_control/template_manager.gd" id="2_aj7pp"]
@@ -21,30 +21,32 @@ shadow_color = Color(0, 0, 0, 0.3)
 shadow_size = 8
 anti_aliasing = false
 
-[node name="TBTPlugin" type="Control"]
+[node name="TBTPlugin" type="Control" unique_id=655317662]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_6xv2q")
 
-[node name="TemplateManager" type="Node" parent="."]
+[node name="TemplateManager" type="Node" parent="." unique_id=1099178122]
 script = ExtResource("2_aj7pp")
 
-[node name="TilesManager" type="Node" parent="."]
+[node name="TilesManager" type="Node" parent="." unique_id=1894447721]
 script = ExtResource("5_v5epd")
 
-[node name="ThemeUpdater" type="Control" parent="."]
+[node name="ThemeUpdater" type="Control" parent="." unique_id=1315551435]
 anchors_preset = 0
 script = ExtResource("6_mie0u")
 
-[node name="SaveDialogContainer" type="Control" parent="."]
+[node name="SaveDialogContainer" type="Control" parent="." unique_id=555016566]
 anchors_preset = 0
 
-[node name="SaveTemplateDialog" parent="SaveDialogContainer" instance=ExtResource("3_p4ion")]
+[node name="SaveTemplateDialog" parent="SaveDialogContainer" unique_id=226790446 instance=ExtResource("3_p4ion")]
+transparent_bg = true
 visible = false
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_3by6e")
 
-[node name="EditDialogContainer" type="Control" parent="."]
+[node name="EditDialogContainer" type="Control" parent="." unique_id=1040191367]
 anchors_preset = 0
 
-[node name="EditTemplateDialog" parent="EditDialogContainer" instance=ExtResource("4_qymya")]
+[node name="EditTemplateDialog" parent="EditDialogContainer" unique_id=204421519 instance=ExtResource("4_qymya")]
+transparent_bg = true
 theme_override_styles/embedded_border = SubResource("StyleBoxFlat_3by6e")

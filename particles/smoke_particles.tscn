@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://bvi5a0lq3brjw"]
+[gd_scene format=3 uid="uid://bvi5a0lq3brjw"]
 
-[ext_resource type="Texture2D" uid="uid://8o8o0dbabo06" path="res://particles/smoke.png" id="1_xcu40"]
+[ext_resource type="Texture2D" uid="uid://dflyilobv7pxn" path="res://particles/smoke.png" id="1_xcu40"]
 
 [sub_resource type="Gradient" id="Gradient_d3wgh"]
 offsets = PackedFloat32Array(0, 0.186782, 0.41954, 0.701149)
@@ -38,9 +38,9 @@ scale_max = 0.2
 scale_curve = SubResource("CurveTexture_md7r8")
 color_ramp = SubResource("GradientTexture1D_ohfl1")
 
-[node name="SmokeParticles" type="GPUParticles2D"]
+[node name="SmokeParticles" type="GPUParticles2D" unique_id=597976573]
 emitting = false
 amount = 16
-process_material = SubResource("ParticleProcessMaterial_2lg75")
 texture = ExtResource("1_xcu40")
 lifetime = 0.8
+process_material = SubResource("ParticleProcessMaterial_2lg75")

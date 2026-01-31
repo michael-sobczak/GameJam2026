@@ -20,7 +20,7 @@ metadata/_custom_type_script = ExtResource("9_6gsca")
 
 [node name="Playground_03" unique_id=990146114 instance=ExtResource("1_1wluo")]
 
-[node name="GameCamera2D" parent="." index="0" unique_id=1631091264]
+[node name="GameCamera2D" parent="." index="1" unique_id=1631091264]
 limit_left = -256
 limit_top = -128
 limit_right = 576

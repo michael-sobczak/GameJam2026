@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://cg11jqxohxkdv"]
+[gd_scene format=3 uid="uid://cg11jqxohxkdv"]
 
-[ext_resource type="Texture2D" uid="uid://dks6ukqiocu3p" path="res://scenes/props/blocks.png" id="1_5cyoo"]
+[ext_resource type="Texture2D" uid="uid://3yjv13lmbyiq" path="res://scenes/props/blocks.png" id="1_5cyoo"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="2_4jk5e"]
 [ext_resource type="Script" uid="uid://btmy7sadqiuav" path="res://scripts/state_machine/states/state_animation.gd" id="4_h0g83"]
 
@@ -131,7 +131,7 @@ _data = {
 &"up": SubResource("Animation_muw3c")
 }
 
-[node name="Gate_Front" type="Sprite2D"]
+[node name="Gate_Front" type="Sprite2D" unique_id=193562570]
 y_sort_enabled = true
 texture = ExtResource("1_5cyoo")
 offset = Vector2(0, -13)
@@ -140,41 +140,39 @@ frame = 3
 region_enabled = true
 region_rect = Rect2(0, 0, 192, 48)
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=58077888]
 position = Vector2(0, 2)
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=854134853]
 z_index = -1
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_pt5lc")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_w6wxc")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1570302835]
+libraries/ = SubResource("AnimationLibrary_w6wxc")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state") groups=["save"]]
+[node name="StateMachine" type="Node" parent="." unique_id=1249547462 node_paths=PackedStringArray("current_state") groups=["save"]]
 script = ExtResource("2_4jk5e")
 current_state = NodePath("idle_up")
 
-[node name="idle_up" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player")]
+[node name="idle_up" type="Node" parent="StateMachine" unique_id=173618181 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_h0g83")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "idle_up"
 
-[node name="down" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="down" type="Node" parent="StateMachine" unique_id=1237648933 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_h0g83")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "down"
 on_completion = [NodePath("../idle_down")]
 
-[node name="idle_down" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player")]
+[node name="idle_down" type="Node" parent="StateMachine" unique_id=855834023 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("4_h0g83")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "idle_down"
 
-[node name="up" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player", "on_completion")]
+[node name="up" type="Node" parent="StateMachine" unique_id=1987490255 node_paths=PackedStringArray("animation_player", "on_completion")]
 script = ExtResource("4_h0g83")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "up"

@@ -1,8 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://cqw82ociq0p1m"]
+[gd_scene format=3 uid="uid://cqw82ociq0p1m"]
 
 [ext_resource type="Script" uid="uid://6jad587efd0c" path="res://scenes/props/get_contents.gd" id="2_srvdt"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="3_g7kv4"]
-[ext_resource type="Texture2D" uid="uid://bercby56x5j58" path="res://scenes/props/objs1.png" id="3_qb7gm"]
+[ext_resource type="Texture2D" uid="uid://nbpf0jpg7wkd" path="res://scenes/props/objs1.png" id="3_qb7gm"]
 [ext_resource type="Script" uid="uid://bgm8n3pwwbymt" path="res://scripts/interaction_area.gd" id="3_srvdt"]
 [ext_resource type="Script" uid="uid://cmc5vhgmy6nat" path="res://scripts/state_machine/states/state_interact.gd" id="4_i4duu"]
 [ext_resource type="Script" uid="uid://btmy7sadqiuav" path="res://scripts/state_machine/states/state_animation.gd" id="5_d4kg4"]
@@ -92,51 +92,49 @@ _data = {
 &"picked": SubResource("Animation_eura6")
 }
 
-[node name="Item" type="Sprite2D"]
+[node name="Item" type="Sprite2D" unique_id=1577207864]
 texture = ExtResource("3_qb7gm")
 hframes = 3
 region_enabled = true
 region_rect = Rect2(0, 0, 108, 36)
 script = ExtResource("2_srvdt")
 
-[node name="InteractionArea" type="Area2D" parent="."]
+[node name="InteractionArea" type="Area2D" parent="." unique_id=1722363569]
 z_index = -1
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 script = ExtResource("3_srvdt")
-metadata/_custom_type_script = ExtResource("3_srvdt")
+metadata/_custom_type_script = "uid://bgm8n3pwwbymt"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=1198835800]
 shape = SubResource("CircleShape2D_10tvr")
 debug_color = Color(0.658824, 0.513726, 0, 0.419608)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1459663373]
 deterministic = true
-libraries = {
-&"": SubResource("AnimationLibrary_tjjem")
-}
-autoplay = "idle"
+libraries/ = SubResource("AnimationLibrary_tjjem")
+autoplay = &"idle"
 speed_scale = 0.15
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state") groups=["save"]]
+[node name="StateMachine" type="Node" parent="." unique_id=895297807 node_paths=PackedStringArray("current_state") groups=["save"]]
 script = ExtResource("3_g7kv4")
 current_state = NodePath("idle")
 
-[node name="idle" type="Node" parent="StateMachine" node_paths=PackedStringArray("interaction_area", "on_completion")]
+[node name="idle" type="Node" parent="StateMachine" unique_id=226132839 node_paths=PackedStringArray("interaction_area", "on_completion")]
 script = ExtResource("4_i4duu")
 interaction_area = NodePath("../../InteractionArea")
 on_completion = [NodePath("../get_contents")]
 
-[node name="get_contents" type="Node" parent="StateMachine" node_paths=PackedStringArray("node", "on_completion")]
+[node name="get_contents" type="Node" parent="StateMachine" unique_id=767079607 node_paths=PackedStringArray("node", "on_completion")]
 script = ExtResource("7_5dcdc")
 node = NodePath("../..")
 method_name = "get_contents"
 await_signal_to_complete = "contents_got"
 on_completion = [NodePath("../picked")]
-metadata/_custom_type_script = ExtResource("7_5dcdc")
+metadata/_custom_type_script = "uid://dd2m5xedjwd4m"
 
-[node name="picked" type="Node" parent="StateMachine" node_paths=PackedStringArray("animation_player")]
+[node name="picked" type="Node" parent="StateMachine" unique_id=1075017649 node_paths=PackedStringArray("animation_player")]
 script = ExtResource("5_d4kg4")
 animation_player = NodePath("../../AnimationPlayer")
 animation = "picked"
