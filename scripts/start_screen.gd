@@ -1,6 +1,8 @@
 class_name StartScreen extends Control
 
-@export_file("*.tscn") var start_level = "" ## The level from which the game starts when starting a new game (deprecated, use level selection).
+const LEVEL_NAME_FORMAT := "Level %s"
+
+@export_file("*.tscn") var level_files: Array[String] = []
 
 var user_prefs: UserPrefs
 
@@ -9,51 +11,20 @@ var user_prefs: UserPrefs
 @onready var quit_button: Button = %Quit
 @onready var version_num: Label = %VersionNum
 
-var level_files: Array[String] = []
 
 func _ready() -> void:
 	var version = ProjectSettings.get_setting("application/config/version")
 	version_num.text = "v%s" % version
 	user_prefs = UserPrefs.load_or_create()
-	_find_level_files()
 	_create_level_buttons()
 	_check_continue()
-	quit_button.visible = OS.get_name() != "Web"
-
-## Finds all level scene files in the scenes/levels/ directory.
-func _find_level_files():
-	var levels_dir = "res://scenes/levels/"
-	var dir = DirAccess.open(levels_dir)
-	
-	if not dir:
-		push_error("Could not open levels directory: %s" % levels_dir)
-		return
-	
-	# Files to exclude (base scenes, scripts, temp files)
-	var exclude_names = ["Level.tscn", "level.gd", "level.gd.uid"]
-	
-	dir.list_dir_begin()
-	var file_name = dir.get_next()
-	
-	while file_name != "":
-		# Only include .tscn files that aren't excluded
-		if file_name.ends_with(".tscn") and file_name not in exclude_names and not file_name.ends_with(".tmp"):
-			var full_path = levels_dir + file_name
-			level_files.append(full_path)
-		
-		file_name = dir.get_next()
-	
-	# Sort levels by name for consistent ordering
-	level_files.sort()
-	
-	print("Found %d level files: %s" % [level_files.size(), level_files])
 
 ## Creates buttons for each level file found.
 func _create_level_buttons():
 	if not level_container:
 		push_error("LevelContainer not found in start screen")
 		return
-	
+
 	# Get button styles from existing buttons (Continue button has the styles)
 	# Use get_theme_stylebox to get the effective style (including overrides)
 	var normal_style: StyleBox = null
@@ -66,32 +37,32 @@ func _create_level_buttons():
 			normal_style = normal_style.duplicate()
 		if hover_style:
 			hover_style = hover_style.duplicate()
-	
+
 	# Clear existing level buttons (but keep Continue, Settings, Quit)
 	for child in level_container.get_children():
 		if child.name.begins_with("Level_"):
 			child.queue_free()
-	
+
 	# Create a button for each level
-	for level_path in level_files:
+	for ii in range(level_files.size()):
+		var level_path = level_files[ii]
 		var button = Button.new()
-		var level_name = level_path.get_file().get_basename()
+		var level_name = LEVEL_NAME_FORMAT % (ii + 1)
 		# Format level name nicely (e.g., "level1" -> "Level 1", "playground_01" -> "Playground 01")
-		level_name = level_name.replace("_", " ").capitalize()
 		button.text = level_name
-		button.name = "Level_" + level_path.get_file().get_basename()
+		button.name = "level::%s" % level_path.get_file().get_basename()
 		button.custom_minimum_size = Vector2(150, 40)
 		button.add_theme_font_size_override("font_size", 20)
-		
+
 		# Apply same styles as other buttons
 		if normal_style:
 			button.add_theme_stylebox_override("normal", normal_style)
 		if hover_style:
 			button.add_theme_stylebox_override("hover", hover_style)
-		
+
 		# Connect button signal
 		button.pressed.connect(_on_level_selected.bind(level_path))
-		
+
 		# Add to container (before Continue button)
 		var continue_idx = level_container.get_child_count()
 		for i in range(level_container.get_child_count()):
