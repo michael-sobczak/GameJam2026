@@ -200,6 +200,8 @@ const GOAL_ZOOM_TARGET: float = 1.7
 const GOAL_ZOOM_DURATION: float = 0.8
 
 func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
+	# 0) Stop player and guards so they don't keep walking during the win sequence
+	_stop_player_and_guards()
 	# 1) Restore light to the whole map
 	if darkness:
 		darkness.color = Color.WHITE
@@ -225,6 +227,24 @@ func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
 	end_level()
 
 var _defeated := false
+
+## Stop player movement and disable guard state machines so they stop walking (e.g. on win).
+func _stop_player_and_guards() -> void:
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is PlayerEntity:
+			var player: PlayerEntity = node as PlayerEntity
+			player.input_enabled = false
+			player.stop()
+	var entities: Node = get_node_or_null("Entities")
+	if not entities:
+		return
+	for child in entities.get_children():
+		if child is GuardEntity:
+			var guard: GuardEntity = child as GuardEntity
+			guard.stop()
+			var sm: StateMachine = guard.get_node_or_null("GuardStates") as StateMachine
+			if sm:
+				sm.disabled = true
 
 func _connect_guards() -> void:
 	var entities: Node = get_node_or_null("Entities")
