@@ -36,6 +36,7 @@ var _intro_text: LevelIntroText
 
 const SIREN_STREAM: AudioStream = preload("res://DownloadedAssets/Siren-Sound.mp3")
 const IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/ImpactParticles.tscn")
+const PAUSE_MENU_SCENE: PackedScene = preload("res://scenes/menus/pause_menu.tscn")
 const GOAL_PARTICLE_WAIT_AFTER_BURST: float = 0.6
 var _defeat_siren_player: AudioStreamPlayer = null
 var _defeat_siren_play_count: int = 0
@@ -59,6 +60,24 @@ func _ready():
 
 	# Connect all guards' target_spotted so we can trigger defeat
 	_connect_guards()
+
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	var open_pause := Input.is_action_just_pressed(&"pause") or Input.is_action_just_pressed(&"ui_cancel")
+	if not open_pause:
+		return
+	if _defeated:
+		return
+	if level_complete_overlay and level_complete_overlay.visible:
+		return
+	# Only open pause if no menus are open
+	if get_tree().get_first_node_in_group(PauseMenu.PAUSE_MENU_GROUP):
+		return
+	if Globals.settings_menu != null:
+		return
+	var menu: PauseMenu = PAUSE_MENU_SCENE.instantiate() as PauseMenu
+	get_tree().root.add_child(menu)
 
 func init_scene():
 	DataManager.load_level_data()

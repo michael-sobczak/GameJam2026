@@ -2,7 +2,6 @@ class_name SettingsMenu extends CanvasLayer
 
 # opening this menu pauses the game, so you don't have to worry about blocking input
 # from anything underneath it
-
 signal language_changed(language: String)
 
 @onready var master_slider: HSlider = %MasterSlider as HSlider
@@ -15,6 +14,9 @@ signal language_changed(language: String)
 @onready var MUSIC_BUS_ID: int = AudioServer.get_bus_index("Music")
 
 var user_prefs: UserPrefs
+
+var _prev_tree_paused := false
+
 
 func _ready():
 	# load (or create) file with these saved preferences
@@ -32,11 +34,11 @@ func _ready():
 		var lang_index = Const.LANGUAGES.find(lang)
 		language_dropdown.selected = lang_index
 
-func _process(_delta):
-	if Input.is_action_just_pressed("ui_cancel"):
-		close_settings()
-
-func close_settings():
+func close_settings() -> void:
+	Globals.settings_menu = null
+	var pause_menu: Node = get_tree().get_first_node_in_group(PauseMenu.PAUSE_MENU_GROUP)
+	if pause_menu is PauseMenu:
+		(pause_menu as PauseMenu).return_focus()
 	queue_free()
 
 func _on_close_button_pressed():
@@ -66,7 +68,10 @@ func _on_language_dropdown_item_selected(_index):
 func _notification(what):
 	match what:
 		NOTIFICATION_ENTER_TREE:
+			_prev_tree_paused = get_tree().paused
 			get_tree().paused = true
 		NOTIFICATION_EXIT_TREE:
+			if Globals.settings_menu == self:
+				Globals.settings_menu = null
 			user_prefs.save()
-			get_tree().paused = false
+			get_tree().paused = _prev_tree_paused
