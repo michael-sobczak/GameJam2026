@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://nuwjevp6qhwc"]
+
+[ext_resource type="Script" path="res://vfx/scripts/laser_impact_particles.gd" id="1_sparks"]
+
+[node name="LaserImpactParticles" type="GPUParticles2D"]
+z_index = 10
+emitting = false
+amount = 12
+lifetime = 0.3
+one_shot = false
+explosiveness = 0.8
+script = ExtResource("1_sparks")
+spark_amount = 12
+spark_lifetime = 0.3
+spark_speed_min = 80.0
+spark_speed_max = 200.0
+spark_color = Color(1, 0.3, 0.3, 1)
+spark_color_end = Color(1, 0.8, 0.2, 0)
+spark_size_start = 6.0
+spark_size_end = 1.0
+spread_angle_degrees = 120.0
+spray_direction = Vector2(-1, 0)

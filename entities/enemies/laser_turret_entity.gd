@@ -39,10 +39,13 @@ enum FiringBehavior {
 @export_group("Muzzle Settings")
 @export var muzzle_offset: float = 16.0 ## Distance from center to muzzle tip in local X direction.
 
+const LASER_IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/LaserImpactParticles.tscn")
+
 @onready var vision_sensor: VisionConeSensor = $VisionConeSensor
 @onready var laser_line: Line2D = $LaserLine
 @onready var laser_raycast: RayCast2D = $LaserRaycast
 
+var _impact_particles: LaserImpactParticles = null
 var _current_facing: Vector2 = Vector2.RIGHT
 var _is_firing: bool = false
 var _pulse_timer: float = 0.0
@@ -95,6 +98,12 @@ func _ready():
 	if laser_raycast:
 		laser_raycast.target_position = Vector2(laser_range, 0)
 		laser_raycast.enabled = true
+	
+	# Create impact particles (add to parent so they don't rotate with turret)
+	_impact_particles = LASER_IMPACT_PARTICLES_SCENE.instantiate() as LaserImpactParticles
+	if _impact_particles:
+		# Add to parent (level/world) so particles don't rotate with turret
+		call_deferred("_add_particles_to_parent")
 	
 	# Set initial vision facing
 	_update_vision_facing()
@@ -160,6 +169,16 @@ func _start_firing():
 func _stop_firing():
 	if laser_line:
 		laser_line.visible = false
+	# Stop impact particles
+	if _impact_particles:
+		_impact_particles.stop_emission()
+
+
+## Add impact particles to parent node (called deferred).
+func _add_particles_to_parent() -> void:
+	if _impact_particles and get_parent():
+		get_parent().add_child(_impact_particles)
+		_impact_particles.set_spark_color(laser_color)
 
 
 ## Update laser beam visual and check for hits.
@@ -180,9 +199,19 @@ func _update_laser():
 	
 	# Get the end point of the laser (in local coordinates, relative to node origin)
 	var laser_end: Vector2
-	if laser_raycast.is_colliding():
+	var has_collision := laser_raycast.is_colliding()
+	
+	if has_collision:
 		# Convert collision point to local space (relative to node origin, not raycast)
 		laser_end = to_local(laser_raycast.get_collision_point())
+		var collision_point_global := laser_raycast.get_collision_point()
+		
+		# Update impact particles at collision point
+		if _impact_particles:
+			_impact_particles.set_impact_position(collision_point_global)
+			# Spray direction is opposite of laser direction (sparks fly back)
+			_impact_particles.set_spray_direction(-_current_facing)
+			_impact_particles.start_emission()
 		
 		# Check if we hit a player (vision_target group) - trigger defeat
 		var collider = laser_raycast.get_collider()
@@ -193,6 +222,9 @@ func _update_laser():
 	else:
 		# No collision - laser extends to full range from muzzle
 		laser_end = muzzle_local + Vector2(laser_range, 0)
+		# Stop particles when no collision
+		if _impact_particles:
+			_impact_particles.stop_emission()
 	
 	# Update Line2D points (starts at muzzle, ends at collision or max range)
 	laser_line.clear_points()
@@ -301,3 +333,10 @@ func set_facing(direction: Vector2):
 		_current_facing = direction.normalized()
 		rotation = _current_facing.angle()
 		_update_vision_facing()
+
+
+func _exit_tree() -> void:
+	# Clean up impact particles when turret is removed
+	if _impact_particles and is_instance_valid(_impact_particles):
+		_impact_particles.queue_free()
+		_impact_particles = null
