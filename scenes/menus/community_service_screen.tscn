@@ -81,6 +81,11 @@ color = Color(0.08, 0.08, 0.1, 1)
 [node name="Stage" type="Node2D" parent="."]
 position = Vector2(800, 450)
 
+[node name="GrassArea" type="Polygon2D" parent="Stage"]
+z_index = -1
+color = Color(0.22, 0.42, 0.2, 1)
+polygon = PackedVector2Array(-900, -180, 900, -180, 900, 280, -900, 280)
+
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="Stage"]
 z_index = 1
 position = Vector2(-580, 50)
