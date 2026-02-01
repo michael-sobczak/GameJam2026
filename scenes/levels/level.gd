@@ -7,6 +7,7 @@ class_name Level
 @onready var tilemap_layers: Node2D = %Layers
 @onready var darkness: CanvasModulate = %AmbientDarkness
 @onready var level_complete_overlay: CanvasLayer = get_node_or_null("LevelCompleteOverlay")
+@onready var defeat_overlay: CanvasLayer = get_node_or_null("DefeatOverlay")
 
 var destination_name: String ## Used when moving between levels to get the right destination position for the player in the loaded level.
 var player_id: int ## Used when moving between levels to save the player facing direction.
@@ -29,6 +30,15 @@ func _ready():
 	# Wait for tilemaps to be ready, then set up navigation polygons
 	await get_tree().process_frame
 	_setup_navigation_polygons(nav_region)
+
+	# Connect all guards' target_spotted so we can trigger defeat
+	_connect_guards()
+
+	# Connect Try Again button in code so it works when defeat overlay is shown
+	if defeat_overlay:
+		var try_again_btn: Button = defeat_overlay.get_node_or_null("CenterContainer/VBoxContainer/TryAgain")
+		if try_again_btn:
+			try_again_btn.pressed.connect(_on_defeat_try_again_pressed)
 
 func init_scene():
 	DataManager.load_level_data()
@@ -141,3 +151,40 @@ func _on_goal_reached() -> void:
 		level_complete_overlay.visible = true
 		await get_tree().create_timer(1.0).timeout
 	end_level()
+
+var _defeated := false
+
+func _connect_guards() -> void:
+	var entities: Node = get_node_or_null("Entities")
+	if not entities:
+		return
+	for child in entities.get_children():
+		if child is GuardEntity:
+			(child as GuardEntity).target_spotted.connect(_on_guard_spotted_player)
+
+func _on_guard_spotted_player(_target: Node2D) -> void:
+	if _defeated:
+		return
+	_defeated = true
+
+	# Disable player input and movement
+	var players = get_tree().get_nodes_in_group("player")
+	for node in players:
+		if node is PlayerEntity:
+			var player: PlayerEntity = node as PlayerEntity
+			player.input_enabled = false
+			player.stop()
+
+	# Show defeat overlay (level and guard keep running in background)
+	if defeat_overlay:
+		defeat_overlay.visible = true
+		var try_again_btn: Button = defeat_overlay.get_node_or_null("CenterContainer/VBoxContainer/TryAgain")
+		if try_again_btn:
+			try_again_btn.grab_focus()
+
+func _on_defeat_try_again_pressed() -> void:
+	var current_scene := get_tree().current_scene
+	var scene_path := current_scene.scene_file_path if current_scene else ""
+	if scene_path.is_empty():
+		scene_path = "res://scenes/menus/start_screen.tscn"
+	SceneManager.swap_scenes(scene_path, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
