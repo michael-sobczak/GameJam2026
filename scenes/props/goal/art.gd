@@ -1,4 +1,6 @@
 extends Area2D
+class_name Art
+
 signal goal_reached
 
 var _triggered := false

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmpblquxqm5of"]
 
-[ext_resource type="Script" uid="uid://dey8cws680yoj" path="res://scenes/props/painting.gd" id="1_mxqya"]
-[ext_resource type="Texture2D" uid="uid://cnl1y5wey3xqj" path="res://scenes/props/painting.png" id="1_ucj5d"]
+[ext_resource type="Script" path="res://scenes/props/goal/art.gd" id="1_mxqya"]
+[ext_resource type="Texture2D" uid="uid://cnl1y5wey3xqj" path="res://scenes/props/goal/painting.png" id="1_ucj5d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mxqya"]
 size = Vector2(616, 738)
