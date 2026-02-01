@@ -17,8 +17,6 @@ signal language_changed(language: String)
 var user_prefs: UserPrefs
 
 func _ready():
-	_populate_language_dropdown()
-
 	# load (or create) file with these saved preferences
 	user_prefs = UserPrefs.load_or_create()
 
@@ -40,10 +38,6 @@ func _process(_delta):
 
 func close_settings():
 	queue_free()
-
-func _populate_language_dropdown():
-	for lang in Const.LANGUAGES:
-		language_dropdown.add_item(lang)
 
 func _on_close_button_pressed():
 	AudioManager.play_sfx("inventory_select")
