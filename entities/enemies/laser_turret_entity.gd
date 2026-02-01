@@ -41,7 +41,12 @@ enum FiringBehavior {
 
 @export_group("Destruction Settings")
 @export var time_to_destroy: float = 0.5 ## Seconds of continuous reflection needed to destroy the turret.
+@export var paired_turret: NodePath = NodePath() ## Optional. When this turret is destroyed, the paired turret is destroyed after PAIR_DESTRUCTION_DELAY seconds. Leave empty for no pair. Set per instance in the level.
 
+const PAIR_DESTRUCTION_DELAY: float = 0.5 ## Delay before chained destruction of paired turret.
+const DESTRUCTION_LIGHT_RADIUS: float = 200.0 ## Radius of the temporary light when turret is destroyed.
+const DESTRUCTION_LIGHT_DURATION: float = 1.0 ## How long the light fades out (seconds).
+const DESTRUCTION_LIGHT_ENERGY: float = 0.5 ## Initial energy (partial lighting); fades to 0.
 const LASER_IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/LaserImpactParticles.tscn")
 const REFLECTION_TICK_SFX: AudioStream = preload("res://Kenny Audio Pack/Audio/tick_001.ogg")
 const EXPLOSION_SFX: AudioStream = preload("res://DownloadedAssets/explosion.mp3")
@@ -427,6 +432,9 @@ func _disable_turret() -> void:
 	# Create and trigger explosion particle effect
 	_create_explosion_particles()
 	
+	# Temporary light circle that fades off over 1 second
+	_create_destruction_light()
+	
 	# Turn turret dark gray
 	var sprite: Sprite2D = get_node_or_null("Sprite2D") as Sprite2D
 	if sprite:
@@ -441,6 +449,55 @@ func _disable_turret() -> void:
 	player_detected.emit(null)  # Reusing signal with null to indicate destruction
 	
 	print("LaserTurret: Destroyed by reflected laser!")
+	
+	# Chain destruction: after delay, destroy paired turret if configured
+	if paired_turret.is_empty():
+		return
+	var paired: Node = get_node_or_null(paired_turret)
+	if not paired is LaserTurretEntity:
+		return
+	var paired_entity: LaserTurretEntity = paired as LaserTurretEntity
+	var timer := get_tree().create_timer(PAIR_DESTRUCTION_DELAY)
+	timer.timeout.connect(func() -> void:
+		if is_instance_valid(paired_entity):
+			paired_entity.destroy_by_chain()
+	)
+
+
+## Call this to destroy the turret from chain (e.g. when its pair was destroyed). Same as _disable_turret.
+func destroy_by_chain() -> void:
+	_disable_turret()
+
+
+## Create a temporary PointLight2D at the turret that fades out over DESTRUCTION_LIGHT_DURATION.
+func _create_destruction_light() -> void:
+	var light := PointLight2D.new()
+	light.name = "DestructionLight"
+	light.blend_mode = Light2D.BLEND_MODE_ADD
+	light.shadow_enabled = false
+	light.color = Color(1.0, 0.95, 0.85, 1.0)
+	light.energy = DESTRUCTION_LIGHT_ENERGY
+	# Texture: radial gradient; we use a 64px-radius texture and scale to get DESTRUCTION_LIGHT_RADIUS
+	var tex_size := 64
+	light.texture = _create_radial_light_texture(tex_size)
+	light.texture_scale = DESTRUCTION_LIGHT_RADIUS / float(tex_size)
+	add_child(light)
+	var tween := create_tween()
+	tween.tween_property(light, "energy", 0.0, DESTRUCTION_LIGHT_DURATION).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(light.queue_free)
+
+
+## Create a soft radial gradient texture for the destruction light.
+func _create_radial_light_texture(size: int) -> Texture2D:
+	var img := Image.create(size * 2, size * 2, false, Image.FORMAT_RGBA8)
+	var center := Vector2(size, size)
+	for x in size * 2:
+		for y in size * 2:
+			var dist := Vector2(x, y).distance_to(center)
+			var alpha := clampf(1.0 - (dist / float(size)), 0.0, 1.0)
+			alpha = alpha * alpha  # Softer falloff
+			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
+	return ImageTexture.create_from_image(img)
 
 
 ## Create and trigger explosion particle effect at the turret's position.
