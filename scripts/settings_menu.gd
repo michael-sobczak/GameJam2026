@@ -36,7 +36,8 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_cancel"):
 		close_settings()
 
-func close_settings():
+func close_settings() -> void:
+	Globals.settings_menu = null
 	queue_free()
 
 func _on_close_button_pressed():
