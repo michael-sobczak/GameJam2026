@@ -1,50 +1,18 @@
-[gd_scene load_steps=16 format=3 uid="uid://dayefv6yyr2we"]
+[gd_scene format=3 uid="uid://dayefv6yyr2we"]
 
 [ext_resource type="Script" uid="uid://cyncm32qdovi5" path="res://scripts/start_screen.gd" id="1_flm04"]
-[ext_resource type="Shader" path="res://vfx/shaders/noise_overlay.gdshader" id="2_noise"]
-[ext_resource type="Shader" path="res://vfx/shaders/text_wave.gdshader" id="3_textwave"]
-[ext_resource type="Shader" path="res://vfx/shaders/text_glitch.gdshader" id="4_glitch"]
-[ext_resource type="Script" path="res://vfx/scripts/text_glitch_controller.gd" id="5_glitchctrl"]
-[ext_resource type="Script" path="res://vfx/scripts/falling_masks.gd" id="6_falling"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask1.jpeg" id="7_mask1"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask2.jpeg" id="8_mask2"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask3.jpeg" id="9_mask3"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask4.jpeg" id="10_mask4"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask5.jpeg" id="11_mask5"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask6.jpeg" id="12_mask6"]
-[ext_resource type="Texture2D" path="res://DownloadedAssets/mask7.jpeg" id="13_mask7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r03hu"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 16
-shadow_color = Color(0, 0, 0, 0.360784)
-shadow_size = 1
-shadow_offset = Vector2(1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ng4jn"]
-bg_color = Color(0.592157, 0.27451, 0.584314, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.592157, 0.27451, 0.584314, 1)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-corner_detail = 16
-shadow_color = Color(0, 0, 0, 0.360784)
-shadow_size = 1
-shadow_offset = Vector2(1, 1)
+[ext_resource type="Shader" uid="uid://ln6lbywvvfpg" path="res://vfx/shaders/noise_overlay.gdshader" id="2_noise"]
+[ext_resource type="Shader" uid="uid://dhadmbmmq8yam" path="res://vfx/shaders/text_wave.gdshader" id="3_textwave"]
+[ext_resource type="Shader" uid="uid://4pebuow4tlly" path="res://vfx/shaders/text_glitch.gdshader" id="4_glitch"]
+[ext_resource type="Script" uid="uid://bmcgo83lvtab3" path="res://vfx/scripts/text_glitch_controller.gd" id="5_glitchctrl"]
+[ext_resource type="Script" uid="uid://cht1ki2v86vlx" path="res://vfx/scripts/falling_masks.gd" id="6_falling"]
+[ext_resource type="Texture2D" uid="uid://c8bmxnyewq4dg" path="res://DownloadedAssets/mask1.jpeg" id="7_mask1"]
+[ext_resource type="Texture2D" uid="uid://d3be3dfhyv6x" path="res://DownloadedAssets/mask2.jpeg" id="8_mask2"]
+[ext_resource type="Texture2D" uid="uid://cv846cdytq6gq" path="res://DownloadedAssets/mask3.jpeg" id="9_mask3"]
+[ext_resource type="Texture2D" uid="uid://db784i0sxadqt" path="res://DownloadedAssets/mask4.jpeg" id="10_mask4"]
+[ext_resource type="Texture2D" uid="uid://bhbndngfb81b" path="res://DownloadedAssets/mask5.jpeg" id="11_mask5"]
+[ext_resource type="Texture2D" uid="uid://byvahh2c55xjt" path="res://DownloadedAssets/mask6.jpeg" id="12_mask6"]
+[ext_resource type="Texture2D" uid="uid://bb3cg7fo5vu5n" path="res://DownloadedAssets/mask7.jpeg" id="13_mask7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_noise"]
 shader = ExtResource("2_noise")
@@ -92,7 +60,39 @@ shader_parameter/base_color = Color(0.85, 0.75, 0.95, 1)
 shader_parameter/glitch_color_1 = Color(0.592157, 0.27451, 0.584314, 1)
 shader_parameter/glitch_color_2 = Color(0.3, 0.8, 0.9, 1)
 
-[node name="StartScreen" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r03hu"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 16
+shadow_color = Color(0, 0, 0, 0.360784)
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ng4jn"]
+bg_color = Color(0.592157, 0.27451, 0.584314, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.592157, 0.27451, 0.584314, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 16
+shadow_color = Color(0, 0, 0, 0.360784)
+shadow_size = 1
+shadow_offset = Vector2(1, 1)
+
+[node name="StartScreen" type="Control" unique_id=346368954]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,17 +102,16 @@ grow_vertical = 2
 script = ExtResource("1_flm04")
 level_files = Array[String](["uid://bgfvqywk203e4", "uid://p141l5aalrcj"])
 
-[node name="NoiseBackground" type="ColorRect" parent="."]
+[node name="NoiseBackground" type="ColorRect" parent="." unique_id=1382966985]
+material = SubResource("ShaderMaterial_noise")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-material = SubResource("ShaderMaterial_noise")
-color = Color(1, 1, 1, 1)
 
-[node name="FallingMasks" type="Control" parent="."]
+[node name="FallingMasks" type="Control" parent="." unique_id=1277181796]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -133,117 +132,95 @@ scale_max = 0.6
 opacity_min = 0.15
 opacity_max = 0.4
 
-[node name="TitleContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 80.0
-offset_right = 300.0
-offset_bottom = 220.0
-grow_horizontal = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="GameTitle" type="Label" parent="TitleContainer"]
-layout_mode = 2
-material = SubResource("ShaderMaterial_title")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 72
-text = "HEIST MASK"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="GlitchController" type="Control" parent="TitleContainer"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 40)
-script = ExtResource("5_glitchctrl")
-glitch_enabled = true
-glitch_intensity = 0.5
-glitch_frequency = 2.0
-auto_glitch = true
-auto_glitch_interval_min = 2.0
-auto_glitch_interval_max = 5.0
-auto_glitch_duration = 0.2
-
-[node name="Subtitle" type="Label" parent="TitleContainer/GlitchController"]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=313762823]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=706244961]
+layout_mode = 2
+
+[node name="TitleContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=738279468]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="GameTitle" type="Label" parent="MarginContainer/VBoxContainer/TitleContainer" unique_id=67074831]
+material = SubResource("ShaderMaterial_title")
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 72
+text = "HEIST MASK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GlitchController" type="Control" parent="MarginContainer/VBoxContainer/TitleContainer" unique_id=1181994509]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+script = ExtResource("5_glitchctrl")
+auto_glitch = true
+auto_glitch_duration = 0.2
+
+[node name="Subtitle" type="Label" parent="MarginContainer/VBoxContainer/TitleContainer/GlitchController" unique_id=1324649279]
 material = SubResource("ShaderMaterial_glitch")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.95, 1)
 theme_override_font_sizes/font_size = 24
 text = "ENTER THE MASQUERADE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="ButtonsContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer" unique_id=1083550656]
 layout_mode = 2
-alignment = 1
+size_flags_vertical = 3
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ButtonsContainer" unique_id=10630390]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/v_separation = 9
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+alignment = 1
 
-[node name="Continue" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer"]
+[node name="Continue" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=792994229]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(150, 40)
+custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
 text = "Continue"
 
-[node name="Settings" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer"]
-custom_minimum_size = Vector2(150, 40)
+[node name="Settings" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=1723596936]
+custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
 text = "Settings"
 
-[node name="Quit" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer"]
+[node name="Quit" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=1696775513]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 40)
+custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
 text = "Quit"
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -14.0
-offset_right = 36.0
-grow_vertical = 0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_bottom = 5
-
-[node name="VersionNum" type="Label" parent="MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "version"
-
-[connection signal="button_up" from="VBoxContainer/HBoxContainer/GridContainer/Continue" to="." method="_on_continue_button_up"]
-[connection signal="button_up" from="VBoxContainer/HBoxContainer/GridContainer/Settings" to="." method="_on_settings_button_up"]
-[connection signal="button_up" from="VBoxContainer/HBoxContainer/GridContainer/Quit" to="." method="_on_quit_button_up"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Continue" to="." method="_on_continue_button_up"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Settings" to="." method="_on_settings_button_up"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Quit" to="." method="_on_quit_button_up"]
