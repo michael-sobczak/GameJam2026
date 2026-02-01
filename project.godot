@@ -27,6 +27,7 @@ SceneManager="*res://scripts/autoloads/SceneManager.gd"
 DataManager="*res://scripts/autoloads/DataManager.gd"
 Debugger="*res://scripts/autoloads/debugger.gd"
 AudioManager="*res://scripts/autoloads/audio_manager.gd"
+BackgroundMusic="*res://scripts/autoloads/background_music.gd"
 
 [display]
 
