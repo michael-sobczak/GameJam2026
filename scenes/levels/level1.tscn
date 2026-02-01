@@ -1,14 +1,15 @@
 [gd_scene format=4 uid="uid://bgfvqywk203e4"]
 
 [ext_resource type="PackedScene" uid="uid://b0b0jp36dubff" path="res://scenes/levels/Level.tscn" id="1_o8c3j"]
-[ext_resource type="PackedScene" uid="uid://bmpblquxqm5of" path="res://scenes/props/painting.tscn" id="2_4tcl0"]
+[ext_resource type="PackedScene" uid="uid://bmpblquxqm5of" path="res://scenes/props/goal/painting.tscn" id="2_4tcl0"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_4tcl0"]
 vertices = PackedVector2Array(598, 310, 202, 310, 202, 170, 598, 170)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608, 320, 192, 320)])
 
-[node name="Level" unique_id=1461630359 instance=ExtResource("1_o8c3j")]
+[node name="Level2" unique_id=1461630359 instance=ExtResource("1_o8c3j")]
+next_level = "res://scenes/levels/level2.tscn"
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 navigation_polygon = SubResource("NavigationPolygon_4tcl0")
@@ -23,6 +24,6 @@ tile_map_data = PackedByteArray("AAAFAAcAAAALAAMAAAANAAcAAAAJAAEAAAAGAAcAAAAMAAM
 position = Vector2(224, 189)
 
 [node name="Painting" parent="." index="7" unique_id=1417247271 instance=ExtResource("2_4tcl0")]
-position = Vector2(579, 136)
+position = Vector2(574, 161)
 
 [connection signal="goal_reached" from="Painting" to="." method="_on_goal_reached"]

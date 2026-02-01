@@ -52,3 +52,29 @@ metadata/_edit_lock_ = true
 
 [node name="Events" type="Node2D" parent="." unique_id=671493125]
 metadata/_edit_lock_ = true
+
+[node name="LevelCompleteOverlay" type="CanvasLayer" parent="."]
+layer = 10
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="LevelCompleteOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CenterContainer" type="CenterContainer" parent="LevelCompleteOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="LevelCompleteOverlay/CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Good job! Starting next level..."
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -10,6 +10,11 @@ class_name Level
 var destination_name: String ## Used when moving between levels to get the right destination position for the player in the loaded level.
 var player_id: int ## Used when moving between levels to save the player facing direction.
 
+## Path to the scene to load when the goal is reached. Set per-level in the inspector (e.g. level1 → level2).
+@export_file("*.tscn") var next_level := ""
+
+@onready var level_complete_overlay: CanvasLayer = get_node_or_null("LevelCompleteOverlay")
+
 func _ready():
 	if not Engine.is_editor_hint():
 		darkness.color = Color.BLACK
@@ -39,11 +44,13 @@ func get_data():
 	return data
 
 ##internal - Used by SceneManager to get data from the outgoing level.
-func receive_data(data):
-	if data.destination_name:
-		destination_name = data.destination_name
-	if data.player_id:
-		player_id = data.player_id
+func receive_data(data: Dictionary) -> void:
+	var next_dest: Variant = data.get("destination_name")
+	if next_dest:
+		destination_name = next_dest
+	var next_player_id: Variant = data.get("player_id")
+	if next_player_id != null:
+		player_id = next_player_id
 
 ## Sets up navigation polygons for NavigationRegion2D based on tilemap layers.
 ## Creates navigation polygons for all walkable tiles (non-wall tiles).
@@ -125,8 +132,13 @@ func clear_tilemap_layers():
 
 func end_level() -> void:
 	print("reached end of level")
-	pass
+	if next_level.is_empty():
+		return
+	SceneManager.swap_scenes(next_level, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
 
 
 func _on_goal_reached() -> void:
+	if level_complete_overlay:
+		level_complete_overlay.visible = true
+		await get_tree().create_timer(1.0).timeout
 	end_level()

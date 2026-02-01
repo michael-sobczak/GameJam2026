@@ -1,17 +1,19 @@
 [gd_scene format=4 uid="uid://p141l5aalrcj"]
 
 [ext_resource type="PackedScene" uid="uid://b0b0jp36dubff" path="res://scenes/levels/Level.tscn" id="1_hfmxa"]
+[ext_resource type="PackedScene" uid="uid://1y4ng4yk10ov" path="res://scenes/props/goal/statue.tscn" id="2_71baw"]
 [ext_resource type="PackedScene" path="res://entities/enemies/guard.tscn" id="2_nos0u"]
 
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_nos0u"]
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_71baw"]
 vertices = PackedVector2Array(598, 310, 202, 310, 202, 170, 598, 170)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608, 320, 192, 320)])
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_hfmxa")]
+next_level = "res://scenes/menus/win_screen.tscn"
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
-navigation_polygon = SubResource("NavigationPolygon_nos0u")
+navigation_polygon = SubResource("NavigationPolygon_71baw")
 
 [node name="terrain" parent="Layers" parent_id_path=PackedInt32Array(562545212) index="0" unique_id=1847719028]
 tile_map_data = PackedByteArray("AAAGAAUAAAAPAAUAAAAGAAYAAAAPAAUAAAAHAAYAAAAPAAUAAAAIAAYAAAAPAAUAAAAJAAYAAAAPAAUAAAAKAAYAAAAPAAUAAAALAAYAAAAPAAUAAAAMAAYAAAAPAAUAAAANAAYAAAAPAAUAAAANAAUAAAAPAAUAAAAMAAUAAAAPAAUAAAALAAUAAAAPAAUAAAAKAAUAAAAPAAUAAAAJAAUAAAAPAAUAAAAIAAUAAAAPAAUAAAAHAAUAAAAPAAUAAAAOAAUAAAAPAAUAAAAPAAUAAAAPAAUAAAAQAAUAAAAPAAUAAAAQAAYAAAAPAAUAAAARAAYAAAAPAAUAAAASAAYAAAAPAAUAAAASAAUAAAAPAAUAAAARAAUAAAAPAAUAAAAOAAYAAAAPAAUAAAAPAAYAAAAPAAUAAAAPAAcAAAAPAAUAAAAPAAgAAAAPAAUAAAAPAAkAAAAPAAUAAAAOAAkAAAAPAAUAAAAOAAgAAAAPAAUAAAAOAAcAAAAPAAUAAAA=")
@@ -19,16 +21,21 @@ tile_map_data = PackedByteArray("AAAGAAUAAAAPAAUAAAAGAAYAAAAPAAUAAAAHAAYAAAAPAAU
 [node name="walls" parent="Layers" parent_id_path=PackedInt32Array(562545212) index="1" unique_id=2138029903]
 tile_map_data = PackedByteArray("AAAFAAcAAAALAAMAAAANAAcAAAAJAAEAAAAGAAcAAAAMAAMAAAAHAAcAAAAMAAMAAAAIAAcAAAAMAAMAAAAJAAcAAAAMAAMAAAAKAAcAAAAMAAMAAAALAAcAAAAMAAMAAAAMAAcAAAAMAAMAAAAFAAYAAAALAAIAAAAHAAMAAAABABMAAAAHAAQAAAABABQAAAAIAAMAAAABABMAAAAJAAMAAAABABMAAAAJAAQAAAABABQAAAAKAAMAAAABABMAAAAKAAQAAAABABQAAAALAAMAAAABABMAAAALAAQAAAABABQAAAAMAAMAAAABABMAAAAMAAQAAAABABQAAAANAAMAAAABABMAAAANAAQAAAABABQAAAAFAAMAAAALAAEAAAAFAAQAAAALAAIAAAAGAAMAAAABABMAAAAGAAQAAAABABQAAAAFAAUAAAALAAIAAAAIAAQAAAABABQAAAANAAgAAAALAAIAAAANAAkAAAALAAIAAAANAAoAAAALAAMAAAAOAAoAAAAMAAMAAAAPAAoAAAAMAAMAAAAQAAoAAAANAAMAAAAQAAkAAAANAAIAAAAQAAgAAAANAAIAAAAQAAcAAAAKAAEAAAAOAAMAAAABABMAAAAOAAQAAAABABQAAAAPAAMAAAABABMAAAAPAAQAAAABABQAAAAQAAMAAAABABMAAAAQAAQAAAABABQAAAARAAMAAAABABMAAAARAAQAAAABABQAAAASAAMAAAABABMAAAASAAQAAAABABQAAAATAAMAAAANAAEAAAATAAQAAAANAAIAAAATAAUAAAANAAIAAAATAAYAAAANAAIAAAATAAcAAAANAAMAAAASAAcAAAAMAAMAAAARAAcAAAAMAAMAAAA=")
 
-[node name="P1" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="0" unique_id=397110786]
+[node name="Statue" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="0" unique_id=730721952 instance=ExtResource("2_71baw")]
+position = Vector2(598.99994, 201.99998)
+
+[node name="P1" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="1" unique_id=397110786]
 position = Vector2(224, 189)
 
-[node name="Guard" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="1" unique_id=1924956250 instance=ExtResource("2_nos0u")]
+[node name="Guard" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="2" unique_id=1924956250 instance=ExtResource("2_nos0u")]
 position = Vector2(400, 185)
 patrol_points = Array[NodePath]([])
 home_position = Vector2(0, 0)
 
 [node name="Marker2D" type="Marker2D" parent="Entities/Guard" index="14" unique_id=2081564525]
-position = Vector2(163, 0)
+position = Vector2(136, -10)
 
 [node name="Marker2D2" type="Marker2D" parent="Entities/Guard" index="15" unique_id=1442155629]
 position = Vector2(80, 89)
+
+[connection signal="goal_reached" from="Entities/Statue" to="." method="_on_goal_reached"]
