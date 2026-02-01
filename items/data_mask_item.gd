@@ -6,7 +6,8 @@ extends DataItem
 enum MaskType {
 	NIGHT_VISION,
 	DISGUISE,
-	REFLECTION
+	REFLECTION,
+	PHASE
 }
 
 ## Returns the string key for this mask type (e.g. "night_vision", "disguise", "reflection") for level config.
@@ -18,6 +19,8 @@ static func type_to_string(t: MaskType) -> String:
 			return "disguise"
 		MaskType.REFLECTION:
 			return "reflection"
+		MaskType.PHASE:
+			return "phase"
 		_:
 			return ""
 
