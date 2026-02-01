@@ -55,12 +55,6 @@ func _ready():
 	# Connect all guards' target_spotted so we can trigger defeat
 	_connect_guards()
 
-	# Connect Try Again button in code so it works when defeat overlay is shown
-	if defeat_overlay:
-		var try_again_btn: Button = defeat_overlay.get_node_or_null("CenterContainer/VBoxContainer/TryAgain")
-		if try_again_btn:
-			try_again_btn.pressed.connect(_on_defeat_try_again_pressed)
-
 func init_scene():
 	DataManager.load_level_data()
 
@@ -206,15 +200,22 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 	if darkness:
 		darkness.color = Color.WHITE
 
-	# Siren loops up to 4 times; stopped when Try Again or level exits
-	_start_defeat_siren()
-
-	# Show defeat overlay (level and guard keep running in background)
+	# Show defeat overlay
 	if defeat_overlay:
 		defeat_overlay.visible = true
 		var try_again_btn: Button = defeat_overlay.get_node_or_null("CenterContainer/VBoxContainer/TryAgain")
 		if try_again_btn:
 			try_again_btn.grab_focus()
+
+	# End night vision / disguise immediately so the effect doesn't linger
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is PlayerEntity:
+			var mem: MaskEffectManager = (node as PlayerEntity).get_node_or_null("MaskEffectManager") as MaskEffectManager
+			if mem:
+				mem.clear_effects_for_defeat()
+
+	# Siren loops up to 4 times; stopped when Try Again or level exits
+	_start_defeat_siren()
 
 func _on_defeat_try_again_pressed() -> void:
 	_stop_defeat_siren()
