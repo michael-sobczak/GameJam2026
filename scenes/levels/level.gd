@@ -57,9 +57,12 @@ func _ready():
 		add_child(nav_region)
 		move_child(nav_region, 0)  # Move to top of scene tree
 
-	# Wait for tilemaps to be ready, then set up navigation polygons
+	# Set up navigation polygon: only auto-generate the rectangle if none is set (so you can use a custom shape in the editor).
 	await get_tree().process_frame
-	_setup_navigation_polygons(nav_region)
+	if not nav_region.navigation_polygon or nav_region.navigation_polygon.get_outline_count() == 0:
+		_setup_navigation_polygons(nav_region)
+	else:
+		nav_region.bake_navigation_polygon()
 
 	# Connect all guards' target_spotted so we can trigger defeat
 	_connect_guards()

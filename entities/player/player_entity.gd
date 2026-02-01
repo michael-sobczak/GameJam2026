@@ -197,6 +197,20 @@ func _initialize_starting_inventory():
 		inventory.add_item(reflection, qty_per_mask)
 		print("PlayerEntity: Created Mask of Reflection, icon: %s" % reflection.icon)
 
+	# Create Phase Mask item (add only if allowed) — walk through walls; expels when effect ends if inside a wall
+	if allowed.is_empty() or "phase" in allowed:
+		var phase = DataMaskItem.new()
+		phase.resource_name = "Phase Mask"
+		phase.description = "Walk through walls for a short time. Expels you when it ends if you're inside a wall."
+		phase.mask_type = DataMaskItem.MaskType.PHASE
+		phase.effect_duration = 5.0
+		phase.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)
+		phase.mask_texture = DISGUISE_MASK_TEXTURE
+		phase.activate_sound = DISGUISE_ACTIVATE_SFX
+		phase.deactivate_sound = DISGUISE_DEACTIVATE_SFX
+		inventory.add_item(phase, qty_per_mask)
+		print("PlayerEntity: Created Phase Mask, icon: %s" % phase.icon)
+
 	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
 
 	# Refresh HUD
@@ -292,6 +306,16 @@ func _on_mask_item_used(mask_item: DataMaskItem):
 			can_apply = mask_effect_manager.can_apply_reflection()
 			if can_apply:
 				mask_effect_manager.apply_reflection(
+					mask_item.effect_duration,
+					mask_item.mask_texture,
+					mask_item.activate_sound,
+					mask_item.deactivate_sound,
+					mask_item.resource_name
+				)
+		DataMaskItem.MaskType.PHASE:
+			can_apply = mask_effect_manager.can_apply_phase()
+			if can_apply:
+				mask_effect_manager.apply_phase(
 					mask_item.effect_duration,
 					mask_item.mask_texture,
 					mask_item.activate_sound,
