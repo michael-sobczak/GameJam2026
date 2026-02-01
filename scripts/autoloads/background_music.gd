@@ -26,23 +26,26 @@ const DEFAULT_TRACKS := [
 
 
 func _ready() -> void:
-	# Create audio players
+	# Create audio players; PROCESS_MODE_ALWAYS so music plays when tree is
+	# paused (e.g. settings menu).
 	_player_a = AudioStreamPlayer.new()
 	_player_a.bus = &"Music"
+	_player_a.process_mode = Node.PROCESS_MODE_ALWAYS
 	_player_a.finished.connect(_on_track_finished)
 	add_child(_player_a)
-	
+
 	_player_b = AudioStreamPlayer.new()
 	_player_b.bus = &"Music"
+	_player_b.process_mode = Node.PROCESS_MODE_ALWAYS
 	_player_b.volume_db = -80.0 # Start silent
 	add_child(_player_b)
-	
+
 	_active_player = _player_a
-	
+
 	# Load default tracks if none provided
 	if tracks.is_empty():
 		_load_default_tracks()
-	
+
 	# Auto-start music
 	play()
 
@@ -61,7 +64,7 @@ func play() -> void:
 	if tracks.is_empty():
 		push_warning("BackgroundMusic: No tracks to play")
 		return
-	
+
 	is_playing = true
 	_play_next_track()
 
@@ -117,7 +120,7 @@ func get_current_track_name() -> String:
 func _play_next_track() -> void:
 	if tracks.is_empty():
 		return
-	
+
 	# Determine next track
 	if shuffle:
 		var new_index := randi() % tracks.size()
@@ -127,9 +130,9 @@ func _play_next_track() -> void:
 		current_track_index = new_index
 	else:
 		current_track_index = (current_track_index + 1) % tracks.size()
-	
+
 	var next_stream := tracks[current_track_index]
-	
+
 	# Crossfade to next track
 	if crossfade_duration > 0 and _active_player.playing:
 		_crossfade_to(next_stream)
@@ -137,7 +140,7 @@ func _play_next_track() -> void:
 		_active_player.stream = next_stream
 		_active_player.volume_db = 0.0
 		_active_player.play()
-	
+
 	track_changed.emit(current_track_index, get_current_track_name())
 
 
@@ -145,23 +148,23 @@ func _crossfade_to(next_stream: AudioStream) -> void:
 	# Cancel existing crossfade
 	if _crossfade_tween and _crossfade_tween.is_valid():
 		_crossfade_tween.kill()
-	
+
 	# Determine which player to fade to
 	var fade_out_player := _active_player
 	var fade_in_player := _player_b if _active_player == _player_a else _player_a
-	
+
 	# Setup fade in player
 	fade_in_player.stream = next_stream
 	fade_in_player.volume_db = -80.0
 	fade_in_player.play()
-	
+
 	# Crossfade
 	_crossfade_tween = create_tween()
 	_crossfade_tween.set_parallel(true)
 	_crossfade_tween.tween_property(fade_out_player, "volume_db", -80.0, crossfade_duration)
 	_crossfade_tween.tween_property(fade_in_player, "volume_db", 0.0, crossfade_duration)
 	_crossfade_tween.chain().tween_callback(fade_out_player.stop)
-	
+
 	_active_player = fade_in_player
 
 

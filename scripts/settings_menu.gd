@@ -46,6 +46,7 @@ func _populate_language_dropdown():
 		language_dropdown.add_item(lang)
 
 func _on_close_button_pressed():
+	AudioManager.play_sfx("inventory_select")
 	close_settings()
 
 func _on_master_slider_value_changed(_value: float) -> void:

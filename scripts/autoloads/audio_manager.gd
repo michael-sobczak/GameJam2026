@@ -17,17 +17,19 @@ var _audio_players: Array[AudioStreamPlayer] = []
 const MAX_PLAYERS := 8
 
 func _ready() -> void:
-	# Create a pool of audio players
+	# Create a pool of audio players; PROCESS_MODE_ALWAYS so SFX plays when
+	# tree is paused (e.g. settings menu).
 	for i in range(MAX_PLAYERS):
 		var player = AudioStreamPlayer.new()
 		player.bus = &"SFX"
+		player.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(player)
 		_audio_players.append(player)
 
 ## Play a sound effect by name.
 func play_sfx(sfx_name: String, volume_db: float = 0.0) -> void:
 	var stream: AudioStream = null
-	
+
 	match sfx_name:
 		"inventory_select":
 			stream = sfx_inventory_select
@@ -48,7 +50,7 @@ func play_sfx(sfx_name: String, volume_db: float = 0.0) -> void:
 		_:
 			push_warning("AudioManager: Unknown SFX name: %s" % sfx_name)
 			return
-	
+
 	if stream:
 		_play_stream(stream, volume_db)
 
@@ -65,7 +67,7 @@ func _play_stream(stream: AudioStream, volume_db: float) -> void:
 			player.volume_db = volume_db
 			player.play()
 			return
-	
+
 	# If all players are busy, use the first one (interrupting it)
 	_audio_players[0].stream = stream
 	_audio_players[0].volume_db = volume_db
