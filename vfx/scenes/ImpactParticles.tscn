@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5vfximpactparticles"]
+
+[ext_resource type="Script" path="res://vfx/scripts/impact_particles.gd" id="1_particles"]
+
+[node name="ImpactParticles" type="GPUParticles2D"]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 1.0
+script = ExtResource("1_particles")
+burst_amount = 20
+burst_lifetime = 0.5
+burst_speed_min = 100.0
+burst_speed_max = 300.0
+color_start = Color(0.1, 0.9, 0.95, 1)
+color_end = Color(0.9, 0.3, 0.6, 0)
+size_start = 8.0
+size_end = 2.0
+spread_angle = 360.0
