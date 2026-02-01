@@ -191,14 +191,7 @@ func _enable_night_vision():
 	night_vision_overlay = CanvasLayer.new()
 	night_vision_overlay.name = "NightVisionOverlay"
 	
-	# Add CanvasModulate to brighten and tint everything green
-	# This affects everything below it in the scene tree
-	var canvas_modulate = CanvasModulate.new()
-	canvas_modulate.name = "NightVisionModulate"
-	canvas_modulate.color = Color(1.3, 1.4, 1.3, 1.0)  # Green tint + brightness boost
-	night_vision_overlay.add_child(canvas_modulate)
-	
-	# Add ColorRect overlay for additional green tint effect
+	# Add ColorRect overlay for green tint effect
 	var color_rect = ColorRect.new()
 	color_rect.name = "GreenTint"
 	color_rect.color = Color(0.1, 0.6, 0.1, 0.3)  # Green tint with transparency
