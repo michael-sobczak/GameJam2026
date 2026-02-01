@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cx8qj3k2m5lta"]
+
+[ext_resource type="Script" path="res://entities/enemies/laser_turret_entity.gd" id="1_turret"]
+[ext_resource type="Texture2D" path="res://DownloadedAssets/laser_turret.png" id="2_sprite"]
+[ext_resource type="Script" path="res://components/vision_cone_sensor.gd" id="3_vision"]
+[ext_resource type="Script" path="res://resources/cone_profile.gd" id="4_cone"]
+
+[sub_resource type="Resource" id="Resource_cone"]
+script = ExtResource("4_cone")
+range_px = 400.0
+fov_degrees = 45.0
+origin_offset = Vector2(0, 0)
+
+[node name="LaserTurret" type="Node2D"]
+script = ExtResource("1_turret")
+vision_range = 400.0
+fov_degrees = 45.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 3.14159
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("2_sprite")
+
+[node name="VisionConeSensor" type="Node2D" parent="."]
+script = ExtResource("3_vision")
+target_group = &"vision_target"
+cone_profile = SubResource("Resource_cone")
+
+[node name="LaserLine" type="Line2D" parent="."]
+width = 4.0
+default_color = Color(1, 0.2, 0.2, 0.9)
+
+[node name="LaserRaycast" type="RayCast2D" parent="."]
+target_position = Vector2(500, 0)
+collision_mask = 3

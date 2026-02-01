@@ -1,15 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://c8vfxdemomain"]
+[gd_scene format=3 uid="uid://c8vfxdemomain"]
 
-[ext_resource type="Script" path="res://demo/demo_controller.gd" id="1_controller"]
-[ext_resource type="Shader" path="res://vfx/shaders/noise_overlay.gdshader" id="2_noise"]
-[ext_resource type="Shader" path="res://vfx/shaders/text_wave.gdshader" id="3_textwave"]
-[ext_resource type="Shader" path="res://vfx/shaders/text_glitch.gdshader" id="4_textglitch"]
-[ext_resource type="Shader" path="res://vfx/shaders/sdf_shapes.gdshader" id="5_sdf"]
-[ext_resource type="Shader" path="res://vfx/shaders/screen_distort.gdshader" id="6_distort"]
-[ext_resource type="Script" path="res://vfx/scripts/impact_particles.gd" id="7_particles"]
-[ext_resource type="Script" path="res://vfx/scripts/screen_distort_controller.gd" id="8_distortctrl"]
-[ext_resource type="Script" path="res://vfx/scripts/text_glitch_controller.gd" id="9_glitchctrl"]
-[ext_resource type="Script" path="res://vfx/scripts/ui_motion.gd" id="10_uimotion"]
+[ext_resource type="Script" uid="uid://b3gnwu0eor68o" path="res://demo/demo_controller.gd" id="1_controller"]
+[ext_resource type="Shader" uid="uid://ln6lbywvvfpg" path="res://vfx/shaders/noise_overlay.gdshader" id="2_noise"]
+[ext_resource type="Shader" uid="uid://dhadmbmmq8yam" path="res://vfx/shaders/text_wave.gdshader" id="3_textwave"]
+[ext_resource type="Shader" uid="uid://4pebuow4tlly" path="res://vfx/shaders/text_glitch.gdshader" id="4_textglitch"]
+[ext_resource type="Shader" uid="uid://sqw2v6pg1wsk" path="res://vfx/shaders/sdf_shapes.gdshader" id="5_sdf"]
+[ext_resource type="Shader" uid="uid://d22numjkmq51r" path="res://vfx/shaders/screen_distort.gdshader" id="6_distort"]
+[ext_resource type="Script" uid="uid://buuse6at4f7cr" path="res://vfx/scripts/impact_particles.gd" id="7_particles"]
+[ext_resource type="Script" uid="uid://ckxfnx11ivxyr" path="res://vfx/scripts/screen_distort_controller.gd" id="8_distortctrl"]
+[ext_resource type="Script" uid="uid://bmcgo83lvtab3" path="res://vfx/scripts/text_glitch_controller.gd" id="9_glitchctrl"]
+[ext_resource type="Script" uid="uid://bqwytx86yf65x" path="res://vfx/scripts/ui_motion.gd" id="10_uimotion"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_noise"]
 shader = ExtResource("2_noise")
@@ -115,6 +115,69 @@ shader_parameter/crosshair_length = 0.15
 shader_parameter/show_radar_lines = false
 shader_parameter/radar_segments = 4
 
+[sub_resource type="Curve" id="Curve_cppeu"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_kp76f"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_8dj8s"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_kcpoq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_ndtpc"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_qjmj3"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0, Vector2(0.6, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Image" id="Image_3rffe"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 2, 255, 255, 255, 2, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 2, 255, 255, 255, 2, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 2, 255, 255, 255, 4, 255, 255, 255, 5, 255, 255, 255, 7, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 7, 255, 255, 255, 5, 255, 255, 255, 4, 255, 255, 255, 2, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 4, 255, 255, 255, 6, 255, 255, 255, 8, 255, 255, 255, 11, 255, 255, 255, 13, 255, 255, 255, 14, 255, 255, 255, 15, 255, 255, 255, 15, 255, 255, 255, 15, 255, 255, 255, 14, 255, 255, 255, 13, 255, 255, 255, 11, 255, 255, 255, 8, 255, 255, 255, 6, 255, 255, 255, 4, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 3, 255, 255, 255, 5, 255, 255, 255, 8, 255, 255, 255, 11, 255, 255, 255, 15, 255, 255, 255, 18, 255, 255, 255, 21, 255, 255, 255, 23, 255, 255, 255, 24, 255, 255, 255, 24, 255, 255, 255, 24, 255, 255, 255, 23, 255, 255, 255, 21, 255, 255, 255, 18, 255, 255, 255, 15, 255, 255, 255, 11, 255, 255, 255, 8, 255, 255, 255, 5, 255, 255, 255, 3, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 3, 255, 255, 255, 6, 255, 255, 255, 10, 255, 255, 255, 14, 255, 255, 255, 18, 255, 255, 255, 23, 255, 255, 255, 27, 255, 255, 255, 30, 255, 255, 255, 33, 255, 255, 255, 35, 255, 255, 255, 35, 255, 255, 255, 35, 255, 255, 255, 33, 255, 255, 255, 30, 255, 255, 255, 27, 255, 255, 255, 23, 255, 255, 255, 18, 255, 255, 255, 14, 255, 255, 255, 10, 255, 255, 255, 6, 255, 255, 255, 3, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 6, 255, 255, 255, 10, 255, 255, 255, 15, 255, 255, 255, 21, 255, 255, 255, 26, 255, 255, 255, 32, 255, 255, 255, 37, 255, 255, 255, 42, 255, 255, 255, 45, 255, 255, 255, 48, 255, 255, 255, 48, 255, 255, 255, 48, 255, 255, 255, 45, 255, 255, 255, 42, 255, 255, 255, 37, 255, 255, 255, 32, 255, 255, 255, 26, 255, 255, 255, 21, 255, 255, 255, 15, 255, 255, 255, 10, 255, 255, 255, 6, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 5, 255, 255, 255, 10, 255, 255, 255, 15, 255, 255, 255, 21, 255, 255, 255, 28, 255, 255, 255, 35, 255, 255, 255, 42, 255, 255, 255, 49, 255, 255, 255, 55, 255, 255, 255, 59, 255, 255, 255, 62, 255, 255, 255, 63, 255, 255, 255, 62, 255, 255, 255, 59, 255, 255, 255, 55, 255, 255, 255, 49, 255, 255, 255, 42, 255, 255, 255, 35, 255, 255, 255, 28, 255, 255, 255, 21, 255, 255, 255, 15, 255, 255, 255, 10, 255, 255, 255, 5, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 4, 255, 255, 255, 8, 255, 255, 255, 14, 255, 255, 255, 21, 255, 255, 255, 28, 255, 255, 255, 37, 255, 255, 255, 45, 255, 255, 255, 54, 255, 255, 255, 62, 255, 255, 255, 70, 255, 255, 255, 75, 255, 255, 255, 79, 255, 255, 255, 80, 255, 255, 255, 79, 255, 255, 255, 75, 255, 255, 255, 70, 255, 255, 255, 62, 255, 255, 255, 54, 255, 255, 255, 45, 255, 255, 255, 37, 255, 255, 255, 28, 255, 255, 255, 21, 255, 255, 255, 14, 255, 255, 255, 8, 255, 255, 255, 4, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 6, 255, 255, 255, 11, 255, 255, 255, 18, 255, 255, 255, 26, 255, 255, 255, 35, 255, 255, 255, 45, 255, 255, 255, 56, 255, 255, 255, 66, 255, 255, 255, 76, 255, 255, 255, 86, 255, 255, 255, 93, 255, 255, 255, 97, 255, 255, 255, 99, 255, 255, 255, 97, 255, 255, 255, 93, 255, 255, 255, 86, 255, 255, 255, 76, 255, 255, 255, 66, 255, 255, 255, 56, 255, 255, 255, 45, 255, 255, 255, 35, 255, 255, 255, 26, 255, 255, 255, 18, 255, 255, 255, 11, 255, 255, 255, 6, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 4, 255, 255, 255, 8, 255, 255, 255, 15, 255, 255, 255, 23, 255, 255, 255, 32, 255, 255, 255, 42, 255, 255, 255, 54, 255, 255, 255, 66, 255, 255, 255, 79, 255, 255, 255, 91, 255, 255, 255, 103, 255, 255, 255, 112, 255, 255, 255, 118, 255, 255, 255, 120, 255, 255, 255, 118, 255, 255, 255, 112, 255, 255, 255, 103, 255, 255, 255, 91, 255, 255, 255, 79, 255, 255, 255, 66, 255, 255, 255, 54, 255, 255, 255, 42, 255, 255, 255, 32, 255, 255, 255, 23, 255, 255, 255, 15, 255, 255, 255, 8, 255, 255, 255, 4, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 5, 255, 255, 255, 11, 255, 255, 255, 18, 255, 255, 255, 27, 255, 255, 255, 37, 255, 255, 255, 49, 255, 255, 255, 62, 255, 255, 255, 76, 255, 255, 255, 91, 255, 255, 255, 106, 255, 255, 255, 120, 255, 255, 255, 132, 255, 255, 255, 140, 255, 255, 255, 143, 255, 255, 255, 140, 255, 255, 255, 132, 255, 255, 255, 120, 255, 255, 255, 106, 255, 255, 255, 91, 255, 255, 255, 76, 255, 255, 255, 62, 255, 255, 255, 49, 255, 255, 255, 37, 255, 255, 255, 27, 255, 255, 255, 18, 255, 255, 255, 11, 255, 255, 255, 5, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 7, 255, 255, 255, 13, 255, 255, 255, 21, 255, 255, 255, 30, 255, 255, 255, 42, 255, 255, 255, 55, 255, 255, 255, 70, 255, 255, 255, 86, 255, 255, 255, 103, 255, 255, 255, 120, 255, 255, 255, 137, 255, 255, 255, 153, 255, 255, 255, 164, 255, 255, 255, 168, 255, 255, 255, 164, 255, 255, 255, 153, 255, 255, 255, 137, 255, 255, 255, 120, 255, 255, 255, 103, 255, 255, 255, 86, 255, 255, 255, 70, 255, 255, 255, 55, 255, 255, 255, 42, 255, 255, 255, 30, 255, 255, 255, 21, 255, 255, 255, 13, 255, 255, 255, 7, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 8, 255, 255, 255, 14, 255, 255, 255, 23, 255, 255, 255, 33, 255, 255, 255, 45, 255, 255, 255, 59, 255, 255, 255, 75, 255, 255, 255, 93, 255, 255, 255, 112, 255, 255, 255, 132, 255, 255, 255, 153, 255, 255, 255, 172, 255, 255, 255, 188, 255, 255, 255, 195, 255, 255, 255, 188, 255, 255, 255, 172, 255, 255, 255, 153, 255, 255, 255, 132, 255, 255, 255, 112, 255, 255, 255, 93, 255, 255, 255, 75, 255, 255, 255, 59, 255, 255, 255, 45, 255, 255, 255, 33, 255, 255, 255, 23, 255, 255, 255, 14, 255, 255, 255, 8, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 8, 255, 255, 255, 15, 255, 255, 255, 24, 255, 255, 255, 35, 255, 255, 255, 48, 255, 255, 255, 62, 255, 255, 255, 79, 255, 255, 255, 97, 255, 255, 255, 118, 255, 255, 255, 140, 255, 255, 255, 164, 255, 255, 255, 188, 255, 255, 255, 211, 255, 255, 255, 224, 255, 255, 255, 211, 255, 255, 255, 188, 255, 255, 255, 164, 255, 255, 255, 140, 255, 255, 255, 118, 255, 255, 255, 97, 255, 255, 255, 79, 255, 255, 255, 62, 255, 255, 255, 48, 255, 255, 255, 35, 255, 255, 255, 24, 255, 255, 255, 15, 255, 255, 255, 8, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 8, 255, 255, 255, 15, 255, 255, 255, 24, 255, 255, 255, 35, 255, 255, 255, 48, 255, 255, 255, 63, 255, 255, 255, 80, 255, 255, 255, 99, 255, 255, 255, 120, 255, 255, 255, 143, 255, 255, 255, 168, 255, 255, 255, 195, 255, 255, 255, 224, 255, 255, 255, 255, 255, 255, 255, 224, 255, 255, 255, 195, 255, 255, 255, 168, 255, 255, 255, 143, 255, 255, 255, 120, 255, 255, 255, 99, 255, 255, 255, 80, 255, 255, 255, 63, 255, 255, 255, 48, 255, 255, 255, 35, 255, 255, 255, 24, 255, 255, 255, 15, 255, 255, 255, 8, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 8, 255, 255, 255, 15, 255, 255, 255, 24, 255, 255, 255, 35, 255, 255, 255, 48, 255, 255, 255, 62, 255, 255, 255, 79, 255, 255, 255, 97, 255, 255, 255, 118, 255, 255, 255, 140, 255, 255, 255, 164, 255, 255, 255, 188, 255, 255, 255, 211, 255, 255, 255, 224, 255, 255, 255, 211, 255, 255, 255, 188, 255, 255, 255, 164, 255, 255, 255, 140, 255, 255, 255, 118, 255, 255, 255, 97, 255, 255, 255, 79, 255, 255, 255, 62, 255, 255, 255, 48, 255, 255, 255, 35, 255, 255, 255, 24, 255, 255, 255, 15, 255, 255, 255, 8, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 8, 255, 255, 255, 14, 255, 255, 255, 23, 255, 255, 255, 33, 255, 255, 255, 45, 255, 255, 255, 59, 255, 255, 255, 75, 255, 255, 255, 93, 255, 255, 255, 112, 255, 255, 255, 132, 255, 255, 255, 153, 255, 255, 255, 172, 255, 255, 255, 188, 255, 255, 255, 195, 255, 255, 255, 188, 255, 255, 255, 172, 255, 255, 255, 153, 255, 255, 255, 132, 255, 255, 255, 112, 255, 255, 255, 93, 255, 255, 255, 75, 255, 255, 255, 59, 255, 255, 255, 45, 255, 255, 255, 33, 255, 255, 255, 23, 255, 255, 255, 14, 255, 255, 255, 8, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 7, 255, 255, 255, 13, 255, 255, 255, 21, 255, 255, 255, 30, 255, 255, 255, 42, 255, 255, 255, 55, 255, 255, 255, 70, 255, 255, 255, 86, 255, 255, 255, 103, 255, 255, 255, 120, 255, 255, 255, 137, 255, 255, 255, 153, 255, 255, 255, 164, 255, 255, 255, 168, 255, 255, 255, 164, 255, 255, 255, 153, 255, 255, 255, 137, 255, 255, 255, 120, 255, 255, 255, 103, 255, 255, 255, 86, 255, 255, 255, 70, 255, 255, 255, 55, 255, 255, 255, 42, 255, 255, 255, 30, 255, 255, 255, 21, 255, 255, 255, 13, 255, 255, 255, 7, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 5, 255, 255, 255, 11, 255, 255, 255, 18, 255, 255, 255, 27, 255, 255, 255, 37, 255, 255, 255, 49, 255, 255, 255, 62, 255, 255, 255, 76, 255, 255, 255, 91, 255, 255, 255, 106, 255, 255, 255, 120, 255, 255, 255, 132, 255, 255, 255, 140, 255, 255, 255, 143, 255, 255, 255, 140, 255, 255, 255, 132, 255, 255, 255, 120, 255, 255, 255, 106, 255, 255, 255, 91, 255, 255, 255, 76, 255, 255, 255, 62, 255, 255, 255, 49, 255, 255, 255, 37, 255, 255, 255, 27, 255, 255, 255, 18, 255, 255, 255, 11, 255, 255, 255, 5, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 4, 255, 255, 255, 8, 255, 255, 255, 15, 255, 255, 255, 23, 255, 255, 255, 32, 255, 255, 255, 42, 255, 255, 255, 54, 255, 255, 255, 66, 255, 255, 255, 79, 255, 255, 255, 91, 255, 255, 255, 103, 255, 255, 255, 112, 255, 255, 255, 118, 255, 255, 255, 120, 255, 255, 255, 118, 255, 255, 255, 112, 255, 255, 255, 103, 255, 255, 255, 91, 255, 255, 255, 79, 255, 255, 255, 66, 255, 255, 255, 54, 255, 255, 255, 42, 255, 255, 255, 32, 255, 255, 255, 23, 255, 255, 255, 15, 255, 255, 255, 8, 255, 255, 255, 4, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 6, 255, 255, 255, 11, 255, 255, 255, 18, 255, 255, 255, 26, 255, 255, 255, 35, 255, 255, 255, 45, 255, 255, 255, 56, 255, 255, 255, 66, 255, 255, 255, 76, 255, 255, 255, 86, 255, 255, 255, 93, 255, 255, 255, 97, 255, 255, 255, 99, 255, 255, 255, 97, 255, 255, 255, 93, 255, 255, 255, 86, 255, 255, 255, 76, 255, 255, 255, 66, 255, 255, 255, 56, 255, 255, 255, 45, 255, 255, 255, 35, 255, 255, 255, 26, 255, 255, 255, 18, 255, 255, 255, 11, 255, 255, 255, 6, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 4, 255, 255, 255, 8, 255, 255, 255, 14, 255, 255, 255, 21, 255, 255, 255, 28, 255, 255, 255, 37, 255, 255, 255, 45, 255, 255, 255, 54, 255, 255, 255, 62, 255, 255, 255, 70, 255, 255, 255, 75, 255, 255, 255, 79, 255, 255, 255, 80, 255, 255, 255, 79, 255, 255, 255, 75, 255, 255, 255, 70, 255, 255, 255, 62, 255, 255, 255, 54, 255, 255, 255, 45, 255, 255, 255, 37, 255, 255, 255, 28, 255, 255, 255, 21, 255, 255, 255, 14, 255, 255, 255, 8, 255, 255, 255, 4, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 5, 255, 255, 255, 10, 255, 255, 255, 15, 255, 255, 255, 21, 255, 255, 255, 28, 255, 255, 255, 35, 255, 255, 255, 42, 255, 255, 255, 49, 255, 255, 255, 55, 255, 255, 255, 59, 255, 255, 255, 62, 255, 255, 255, 63, 255, 255, 255, 62, 255, 255, 255, 59, 255, 255, 255, 55, 255, 255, 255, 49, 255, 255, 255, 42, 255, 255, 255, 35, 255, 255, 255, 28, 255, 255, 255, 21, 255, 255, 255, 15, 255, 255, 255, 10, 255, 255, 255, 5, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 3, 255, 255, 255, 6, 255, 255, 255, 10, 255, 255, 255, 15, 255, 255, 255, 21, 255, 255, 255, 26, 255, 255, 255, 32, 255, 255, 255, 37, 255, 255, 255, 42, 255, 255, 255, 45, 255, 255, 255, 48, 255, 255, 255, 48, 255, 255, 255, 48, 255, 255, 255, 45, 255, 255, 255, 42, 255, 255, 255, 37, 255, 255, 255, 32, 255, 255, 255, 26, 255, 255, 255, 21, 255, 255, 255, 15, 255, 255, 255, 10, 255, 255, 255, 6, 255, 255, 255, 3, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 3, 255, 255, 255, 6, 255, 255, 255, 10, 255, 255, 255, 14, 255, 255, 255, 18, 255, 255, 255, 23, 255, 255, 255, 27, 255, 255, 255, 30, 255, 255, 255, 33, 255, 255, 255, 35, 255, 255, 255, 35, 255, 255, 255, 35, 255, 255, 255, 33, 255, 255, 255, 30, 255, 255, 255, 27, 255, 255, 255, 23, 255, 255, 255, 18, 255, 255, 255, 14, 255, 255, 255, 10, 255, 255, 255, 6, 255, 255, 255, 3, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 3, 255, 255, 255, 5, 255, 255, 255, 8, 255, 255, 255, 11, 255, 255, 255, 15, 255, 255, 255, 18, 255, 255, 255, 21, 255, 255, 255, 23, 255, 255, 255, 24, 255, 255, 255, 24, 255, 255, 255, 24, 255, 255, 255, 23, 255, 255, 255, 21, 255, 255, 255, 18, 255, 255, 255, 15, 255, 255, 255, 11, 255, 255, 255, 8, 255, 255, 255, 5, 255, 255, 255, 3, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 2, 255, 255, 255, 4, 255, 255, 255, 6, 255, 255, 255, 8, 255, 255, 255, 11, 255, 255, 255, 13, 255, 255, 255, 14, 255, 255, 255, 15, 255, 255, 255, 15, 255, 255, 255, 15, 255, 255, 255, 14, 255, 255, 255, 13, 255, 255, 255, 11, 255, 255, 255, 8, 255, 255, 255, 6, 255, 255, 255, 4, 255, 255, 255, 2, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 2, 255, 255, 255, 4, 255, 255, 255, 5, 255, 255, 255, 7, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 8, 255, 255, 255, 7, 255, 255, 255, 5, 255, 255, 255, 4, 255, 255, 255, 2, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 1, 255, 255, 255, 2, 255, 255, 255, 2, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 3, 255, 255, 255, 2, 255, 255, 255, 2, 255, 255, 255, 1, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 32,
+"mipmaps": false,
+"width": 32
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_87oxf"]
+image = SubResource("Image_3rffe")
+
+[sub_resource type="Gradient" id="Gradient_6spj6"]
+offsets = PackedFloat32Array(0, 1, 1)
+colors = PackedColorArray(0.1, 0.9, 0.95, 1, 1, 1, 1, 1, 0.9, 0.3, 0.6, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_w7bfv"]
+gradient = SubResource("Gradient_6spj6")
+
+[sub_resource type="Curve" id="Curve_xwaj7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0h46o"]
+curve = SubResource("Curve_xwaj7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1meda"]
+direction = Vector3(0, -1, 0)
+spread = 180.0
+initial_velocity_min = 120.0
+initial_velocity_max = 350.0
+gravity = Vector3(0, 0, 0)
+damping_min = 50.0
+damping_max = 100.0
+scale_min = 1.25
+scale_max = 1.25
+scale_curve = SubResource("CurveTexture_0h46o")
+color_ramp = SubResource("GradientTexture1D_w7bfv")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_distort"]
 shader = ExtResource("6_distort")
 shader_parameter/enable_noise_distort = true
@@ -138,7 +201,7 @@ shader_parameter/chromatic_strength = 0.003
 _data = [Vector2(0, 0), 0.0, 2.0, 0, 1, Vector2(0.4, 0.9), 0.5, 0.5, 0, 0, Vector2(1, 1), 0.2, 0.0, 0, 0]
 point_count = 3
 
-[node name="DemoMain" type="Control"]
+[node name="DemoMain" type="Control" unique_id=172907511]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -147,7 +210,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_controller")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=2025716890]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -156,18 +219,17 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.05, 0.1, 1)
 
-[node name="NoiseOverlay" type="ColorRect" parent="."]
+[node name="NoiseOverlay" type="ColorRect" parent="." unique_id=1326915853]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_noise")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-material = SubResource("ShaderMaterial_noise")
-color = Color(1, 1, 1, 1)
 
-[node name="ContentContainer" type="VBoxContainer" parent="."]
+[node name="ContentContainer" type="VBoxContainer" parent="." unique_id=991475788]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -176,36 +238,35 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="TopSpacer" type="Control" parent="ContentContainer"]
+[node name="TopSpacer" type="Control" parent="ContentContainer" unique_id=339366112]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="ContentContainer"]
+[node name="TitleLabel" type="Label" parent="ContentContainer" unique_id=468931572]
 unique_name_in_owner = true
-layout_mode = 2
 material = SubResource("ShaderMaterial_title")
+layout_mode = 2
 theme_override_colors/font_color = Color(0.1, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 64
 text = "VFX PACK DEMO"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="ContentContainer"]
+[node name="SubtitleLabel" type="Label" parent="ContentContainer" unique_id=171314597]
 unique_name_in_owner = true
-layout_mode = 2
 material = SubResource("ShaderMaterial_subtitle")
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 text = "Shaders • Particles • Procedural Effects"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GlitchController" type="Control" parent="ContentContainer"]
+[node name="GlitchController" type="Control" parent="ContentContainer" unique_id=214140985]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 4
 script = ExtResource("9_glitchctrl")
-glitch_enabled = true
 glitch_intensity = 0.6
 glitch_frequency = 3.0
 auto_glitch = true
@@ -213,46 +274,46 @@ auto_glitch_interval_min = 1.5
 auto_glitch_interval_max = 4.0
 auto_glitch_duration = 0.25
 
-[node name="GlitchLabel" type="Label" parent="ContentContainer/GlitchController"]
+[node name="GlitchLabel" type="Label" parent="ContentContainer/GlitchController" unique_id=722861769]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_glitch")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-material = SubResource("ShaderMaterial_glitch")
 theme_override_colors/font_color = Color(0.9, 0.3, 0.6, 1)
 theme_override_font_sizes/font_size = 36
 text = "< GLITCH TEXT EFFECT >"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SDFContainer" type="HBoxContainer" parent="ContentContainer"]
+[node name="SDFContainer" type="HBoxContainer" parent="ContentContainer" unique_id=51905662]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="Reticle" type="ColorRect" parent="ContentContainer/SDFContainer"]
+[node name="Reticle" type="ColorRect" parent="ContentContainer/SDFContainer" unique_id=2112594327]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_reticle")
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-material = SubResource("ShaderMaterial_reticle")
 color = Color(0, 0, 0, 0)
 
-[node name="PanelFrame" type="ColorRect" parent="ContentContainer/SDFContainer"]
+[node name="PanelFrame" type="ColorRect" parent="ContentContainer/SDFContainer" unique_id=436140743]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_panel")
 custom_minimum_size = Vector2(300, 80)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-material = SubResource("ShaderMaterial_panel")
 color = Color(0, 0, 0, 0)
 
-[node name="PanelLabel" type="Label" parent="ContentContainer/SDFContainer/PanelFrame"]
+[node name="PanelLabel" type="Label" parent="ContentContainer/SDFContainer/PanelFrame" unique_id=1725311594]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -265,119 +326,76 @@ text = "SDF Panel Frame"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ButtonContainer" type="HBoxContainer" parent="ContentContainer"]
+[node name="ButtonContainer" type="HBoxContainer" parent="ContentContainer" unique_id=2127772190]
 layout_mode = 2
 size_flags_vertical = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="ToggleNoise" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleNoise" type="Button" parent="ContentContainer/ButtonContainer" unique_id=473542427]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Noise: ON"
 script = ExtResource("10_uimotion")
-enable_breathing = true
-breathing_scale_amount = 0.02
-breathing_speed = 2.0
-enable_hover_wobble = true
-wobble_rotation_amount = 3.0
-wobble_offset_amount = 2.0
-wobble_speed = 8.0
-enable_click_punch = true
-punch_scale = 0.9
-punch_duration = 0.15
+punch_curve = SubResource("Curve_cppeu")
 
-[node name="ToggleDistort" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleDistort" type="Button" parent="ContentContainer/ButtonContainer" unique_id=330475178]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Distort: ON"
 script = ExtResource("10_uimotion")
-enable_breathing = true
-breathing_scale_amount = 0.02
 breathing_speed = 2.2
-enable_hover_wobble = true
-wobble_rotation_amount = 3.0
-wobble_offset_amount = 2.0
-wobble_speed = 8.0
-enable_click_punch = true
-punch_scale = 0.9
-punch_duration = 0.15
+punch_curve = SubResource("Curve_kp76f")
 
-[node name="ToggleParticles" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleParticles" type="Button" parent="ContentContainer/ButtonContainer" unique_id=1293441352]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 40)
 layout_mode = 2
 text = "Particles!"
 script = ExtResource("10_uimotion")
-enable_breathing = true
 breathing_scale_amount = 0.025
 breathing_speed = 2.4
-enable_hover_wobble = true
 wobble_rotation_amount = 4.0
 wobble_offset_amount = 3.0
 wobble_speed = 10.0
-enable_click_punch = true
 punch_scale = 0.85
 punch_duration = 0.12
+punch_curve = SubResource("Curve_8dj8s")
 
-[node name="ToggleTextEffects" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleTextEffects" type="Button" parent="ContentContainer/ButtonContainer" unique_id=1193769585]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "TextFX: ON"
 script = ExtResource("10_uimotion")
-enable_breathing = true
-breathing_scale_amount = 0.02
 breathing_speed = 2.6
-enable_hover_wobble = true
-wobble_rotation_amount = 3.0
-wobble_offset_amount = 2.0
-wobble_speed = 8.0
-enable_click_punch = true
-punch_scale = 0.9
-punch_duration = 0.15
+punch_curve = SubResource("Curve_kcpoq")
 
-[node name="ToggleGlitch" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleGlitch" type="Button" parent="ContentContainer/ButtonContainer" unique_id=220795763]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
 text = "Glitch: ON"
 script = ExtResource("10_uimotion")
-enable_breathing = true
-breathing_scale_amount = 0.02
 breathing_speed = 2.8
-enable_hover_wobble = true
-wobble_rotation_amount = 3.0
-wobble_offset_amount = 2.0
-wobble_speed = 8.0
-enable_click_punch = true
-punch_scale = 0.9
-punch_duration = 0.15
+punch_curve = SubResource("Curve_ndtpc")
 
-[node name="ToggleSDF" type="Button" parent="ContentContainer/ButtonContainer"]
+[node name="ToggleSDF" type="Button" parent="ContentContainer/ButtonContainer" unique_id=138113462]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(110, 40)
 layout_mode = 2
 text = "SDF: ON"
 script = ExtResource("10_uimotion")
-enable_breathing = true
-breathing_scale_amount = 0.02
 breathing_speed = 3.0
-enable_hover_wobble = true
-wobble_rotation_amount = 3.0
-wobble_offset_amount = 2.0
-wobble_speed = 8.0
-enable_click_punch = true
-punch_scale = 0.9
-punch_duration = 0.15
+punch_curve = SubResource("Curve_qjmj3")
 
-[node name="BottomSpacer" type="Control" parent="ContentContainer"]
+[node name="BottomSpacer" type="Control" parent="ContentContainer" unique_id=939404890]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HelpLabel" type="Label" parent="ContentContainer"]
+[node name="HelpLabel" type="Label" parent="ContentContainer" unique_id=489020495]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.7, 1)
 theme_override_font_sizes/font_size = 14
@@ -385,30 +403,30 @@ text = "Keys: 1-5 toggle effects | Space: particles | Click: shockwave | Esc: qu
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BottomPadding" type="Control" parent="ContentContainer"]
+[node name="BottomPadding" type="Control" parent="ContentContainer" unique_id=498830333]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
-[node name="ImpactParticles" type="GPUParticles2D" parent="."]
+[node name="ImpactParticles" type="GPUParticles2D" parent="." unique_id=748812915]
 unique_name_in_owner = true
 position = Vector2(640, 360)
 emitting = false
 amount = 25
+texture = SubResource("ImageTexture_87oxf")
+lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_1meda")
 script = ExtResource("7_particles")
 burst_amount = 25
 burst_lifetime = 0.6
 burst_speed_min = 120.0
 burst_speed_max = 350.0
-color_start = Color(0.1, 0.9, 0.95, 1)
-color_end = Color(0.9, 0.3, 0.6, 0)
 size_start = 10.0
-size_end = 2.0
-spread_angle = 360.0
 
-[node name="ScreenDistort" type="ColorRect" parent="."]
+[node name="ScreenDistort" type="ColorRect" parent="." unique_id=1813789708]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_distort")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -416,11 +434,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-material = SubResource("ShaderMaterial_distort")
 color = Color(1, 1, 1, 0)
 script = ExtResource("8_distortctrl")
-shockwave_duration = 0.5
-shockwave_max_radius = 1.5
 shockwave_curve = SubResource("Curve_shockwave")
-heat_haze_enabled = false
-noise_distort_enabled = true

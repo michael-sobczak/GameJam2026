@@ -98,17 +98,19 @@ func can_see(target: Node2D) -> bool:
 	else:
 		return false
 	
-	var origin_pos = global_position + cone_profile.origin_offset
+	# Calculate origin position, accounting for node rotation on the offset
+	var rotated_offset = cone_profile.origin_offset.rotated(global_rotation)
+	var origin_pos = global_position + rotated_offset
 	
 	# Distance check
 	var distance = origin_pos.distance_to(target_pos)
 	if distance > cone_profile.range_px:
 		return false
 	
-	# Angle check
+	# Angle check - account for global_rotation so rotated parent nodes work correctly
 	var direction_to_target = origin_pos.direction_to(target_pos)
 	var angle_to_target = direction_to_target.angle()
-	var facing_angle = _current_facing.angle()
+	var facing_angle = global_rotation + _current_facing.angle()
 	
 	var angle_diff = abs(angle_to_target - facing_angle)
 	# Normalize angle difference to [-PI, PI]
