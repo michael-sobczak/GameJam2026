@@ -31,6 +31,11 @@ var player_id: int ## Used when moving between levels to save the player facing 
 
 var _intro_text: LevelIntroText
 
+const SIREN_STREAM: AudioStream = preload("res://DownloadedAssets/Siren-Sound.mp3")
+var _defeat_siren_player: AudioStreamPlayer = null
+var _defeat_siren_play_count: int = 0
+var _defeat_siren_stopping: bool = false
+
 func _ready():
 	if not Engine.is_editor_hint():
 		darkness.color = darkness_modulation
@@ -201,6 +206,9 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 	if darkness:
 		darkness.color = Color.WHITE
 
+	# Siren loops up to 4 times; stopped when Try Again or level exits
+	_start_defeat_siren()
+
 	# Show defeat overlay (level and guard keep running in background)
 	if defeat_overlay:
 		defeat_overlay.visible = true
@@ -209,6 +217,7 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 			try_again_btn.grab_focus()
 
 func _on_defeat_try_again_pressed() -> void:
+	_stop_defeat_siren()
 	var current_scene := get_tree().current_scene
 	var scene_path := current_scene.scene_file_path if current_scene else ""
 	if scene_path.is_empty():
@@ -234,3 +243,36 @@ func _on_intro_finished() -> void:
 	if _intro_text:
 		_intro_text.queue_free()
 		_intro_text = null
+
+
+func _start_defeat_siren() -> void:
+	if _defeat_siren_player == null:
+		_defeat_siren_player = AudioStreamPlayer.new()
+		_defeat_siren_player.name = "DefeatSiren"
+		_defeat_siren_player.bus = &"SFX"
+		add_child(_defeat_siren_player)
+		_defeat_siren_player.finished.connect(_on_defeat_siren_finished)
+	_defeat_siren_stopping = false
+	_defeat_siren_play_count = 1
+	_defeat_siren_player.stream = SIREN_STREAM
+	_defeat_siren_player.play()
+
+
+func _on_defeat_siren_finished() -> void:
+	if _defeat_siren_stopping or not _defeat_siren_player:
+		return
+	if _defeat_siren_play_count < 4:
+		_defeat_siren_play_count += 1
+		_defeat_siren_player.play()
+	else:
+		_stop_defeat_siren()
+
+
+func _stop_defeat_siren() -> void:
+	_defeat_siren_stopping = true
+	if _defeat_siren_player:
+		_defeat_siren_player.stop()
+
+
+func _exit_tree() -> void:
+	_stop_defeat_siren()
