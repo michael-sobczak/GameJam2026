@@ -200,7 +200,8 @@ const GOAL_ZOOM_TARGET: float = 1.7
 const GOAL_ZOOM_DURATION: float = 0.8
 
 func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
-	# 0) Stop player and guards so they don't keep walking during the win sequence
+	# 0) Play pickup sound, stop player and guards
+	AudioManager.play_sfx("treasure_pickup")
 	_stop_player_and_guards()
 	# 1) Restore light to the whole map
 	if darkness:

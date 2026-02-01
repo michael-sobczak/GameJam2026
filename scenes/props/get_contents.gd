@@ -22,11 +22,11 @@ func get_contents(params):
 	for content in contents:
 		if content.quantity > 0:
 			inventory.add_item(content.item, content.quantity)
-	
+
 	# Spawn treasure particle effect
 	if show_treasure_particles:
 		_spawn_treasure_particles()
-	
+
 	contents_got.emit.call_deferred()
 
 
