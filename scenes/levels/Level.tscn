@@ -75,6 +75,6 @@ grow_vertical = 2
 [node name="Label" type="Label" parent="LevelCompleteOverlay/CenterContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Good job! Starting next level..."
+text = "A successful heist! Moving on to next target..."
 horizontal_alignment = 1
 vertical_alignment = 1
