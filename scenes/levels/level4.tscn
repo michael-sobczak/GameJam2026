@@ -11,7 +11,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(192, -32, 1184, -32, 1184, 352, 192, 352)])
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_fjlvv")]
-next_level = "res://scenes/menus/win_screen.tscn"
+next_level = "res://scenes/levels/level5.tscn"
 allowed_mask_types = Array[String](["reflection", "night_vision"])
 usages_per_mask = 1
 initial_camera_zoom = 2.5
@@ -34,8 +34,8 @@ position = Vector2(726, 100)
 patrol_points = Array[NodePath]([])
 home_position = Vector2(0, 0)
 sentry_scan_rotation_speed = 0.0
-sentry_sequence_directions = Array[NodePath]([])
-sentry_sequence_durations = Array[NodePath]([])
+sentry_sequence_directions = Array[Vector2]([])
+sentry_sequence_durations = Array[float]([])
 
 [node name="Marker2D" type="Marker2D" parent="Entities/Guard2" index="14" unique_id=1960588380]
 position = Vector2(103, -10)
@@ -48,8 +48,8 @@ position = Vector2(755, 298)
 patrol_points = Array[NodePath]([])
 home_position = Vector2(0, 0)
 sentry_scan_rotation_speed = 0.0
-sentry_sequence_directions = Array[NodePath]([])
-sentry_sequence_durations = Array[NodePath]([])
+sentry_sequence_directions = Array[Vector2]([])
+sentry_sequence_durations = Array[float]([])
 
 [node name="Marker2D" type="Marker2D" parent="Entities/Guard" index="14" unique_id=195784497]
 position = Vector2(136, -10)
