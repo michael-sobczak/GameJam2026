@@ -203,7 +203,7 @@ func set_navigation_target(pos: Vector2):
 		# Update agent position before setting target
 		NavigationServer2D.agent_set_position(navigation_agent.get_rid(), global_position)
 		navigation_agent.target_position = pos
-		print("Guard '%s': Set navigation target to: %s" % [name, pos])
+		# print("Guard '%s': Set navigation target to: %s" % [name, pos])
 
 ## Check if navigation has reached target.
 func is_navigation_finished() -> bool:

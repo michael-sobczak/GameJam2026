@@ -94,7 +94,7 @@ func physics_update(delta):
 	if distance_to_target < guard.navigation_agent.target_desired_distance:
 		_waiting_at_waypoint = true
 		guard.stop()
-		print("StateGuardPatrol: Reached patrol point %d (distance: %s)" % [_current_patrol_index, distance_to_target])
+		# print("StateGuardPatrol: Reached patrol point %d (distance: %s)" % [_current_patrol_index, distance_to_target])
 		return
 	
 	# Check if navigation has a valid path

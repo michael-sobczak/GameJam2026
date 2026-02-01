@@ -78,3 +78,43 @@ theme_override_font_sizes/font_size = 28
 text = "A successful heist! Moving on to next target..."
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DefeatOverlay" type="CanvasLayer" parent="."]
+layer = 150
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="DefeatOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CenterContainer" type="CenterContainer" parent="DefeatOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DefeatOverlay/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Label" type="Label" parent="DefeatOverlay/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Stop! You have violated the law"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TryAgain" type="Button" parent="DefeatOverlay/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Try Again"
+
+[connection signal="pressed" from="DefeatOverlay/CenterContainer/VBoxContainer/TryAgain" to="." method="_on_defeat_try_again_pressed"]
