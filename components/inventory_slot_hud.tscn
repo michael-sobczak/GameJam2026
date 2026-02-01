@@ -25,10 +25,197 @@ theme_override_constants/margin_bottom = 20
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
 
-[node name="SlotsContainer" type="HBoxContainer" parent="Control/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 8
+
+[node name="ToolbarRow" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 12
+
+[node name="QKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/QKeyIndicator"]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Q"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlotsContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 size_flags_horizontal = 4
-size_flags_vertical = 8
+size_flags_vertical = 4
 custom_minimum_size = Vector2(0, 64)
+
+[node name="EKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/EKeyIndicator"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacebarIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(120, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/SpacebarIndicator"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "SPACE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MovementHint" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -100.0
+offset_right = 120.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_constants/separation = 4
+
+[node name="TopRow" type="HBoxContainer" parent="Control/MovementHint"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 4
+
+[node name="WKey" type="Panel" parent="Control/MovementHint/TopRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MovementHint/TopRow/WKey"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "W"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomRow" type="HBoxContainer" parent="Control/MovementHint"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 4
+
+[node name="AKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/AKey"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/SKey"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/DKey"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MoveLabel" type="Label" parent="Control/MovementHint"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Move"
+horizontal_alignment = 1
+
+[node name="ItemTooltip" type="PanelContainer" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -180.0
+offset_right = 100.0
+offset_bottom = -140.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/ItemTooltip"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ItemTooltip/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ItemName" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)
+text = "Item Name"
+horizontal_alignment = 1
+
+[node name="ItemDescription" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Item description goes here."
+horizontal_alignment = 1
+autowrap_mode = 2

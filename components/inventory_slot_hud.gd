@@ -7,11 +7,15 @@ signal item_used(item: DataItem)
 
 const SLOT_COUNT := 5
 
-@onready var slots_container: HBoxContainer = $Control/MarginContainer/SlotsContainer
+@onready var slots_container: HBoxContainer = $Control/MarginContainer/VBoxContainer/ToolbarRow/SlotsContainer
 @onready var slot_scenes: Array[Control] = []
+@onready var item_tooltip: PanelContainer = $Control/ItemTooltip
+@onready var tooltip_name_label: Label = $Control/ItemTooltip/MarginContainer/VBoxContainer/ItemName
+@onready var tooltip_desc_label: Label = $Control/ItemTooltip/MarginContainer/VBoxContainer/ItemDescription
 
 var selected_slot_index: int = 0
 var inventory: Inventory = null
+var slot_items: Array[DataItem] = [] ## Cached item references per slot for tooltip lookup.
 
 func _ready() -> void:
 	# Ensure CanvasLayer is visible
@@ -28,6 +32,11 @@ func _ready() -> void:
 	
 	print("InventorySlotHUD: SlotsContainer found at path: %s" % slots_container.get_path())
 	print("InventorySlotHUD: CanvasLayer visible: %s, layer: %d" % [visible, layer])
+	
+	# Initialize slot_items array
+	slot_items.resize(SLOT_COUNT)
+	for i in range(SLOT_COUNT):
+		slot_items[i] = null
 	
 	# Create 5 slot UI elements
 	for i in range(SLOT_COUNT):
@@ -102,8 +111,11 @@ func _refresh_slots() -> void:
 		print("InventorySlotHUD: No slots created yet")
 		return
 	
-	# Clear all slots first
-	for slot in slot_scenes:
+	# Clear all slots and slot_items first
+	for i in range(SLOT_COUNT):
+		if i < slot_items.size():
+			slot_items[i] = null
+		var slot = slot_scenes[i]
 		var icon = slot.get_node_or_null("ItemIcon")
 		var label = slot.get_node_or_null("QuantityLabel")
 		if icon:
@@ -118,6 +130,9 @@ func _refresh_slots() -> void:
 	for i in range(min(items.size(), SLOT_COUNT)):
 		var content_item: ContentItem = items[i]
 		if content_item and content_item.item:
+			# Cache item reference for tooltip
+			slot_items[i] = content_item.item
+			
 			var slot = slot_scenes[i]
 			var icon = slot.get_node_or_null("ItemIcon")
 			var label = slot.get_node_or_null("QuantityLabel")
@@ -129,6 +144,9 @@ func _refresh_slots() -> void:
 				label.text = str(content_item.quantity)
 				label.visible = true  # Always show quantity
 			print("InventorySlotHUD: Slot %d filled with %s x%d" % [i, content_item.item.resource_name, content_item.quantity])
+	
+	# Update tooltip for current selection
+	_update_selected_tooltip()
 
 ## Create a single slot UI element.
 func _create_slot(index: int) -> Control:
@@ -138,6 +156,7 @@ func _create_slot(index: int) -> Control:
 	slot.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	slot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	slot.visible = true
+	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	
 	# Background panel
 	var panel = Panel.new()
@@ -196,13 +215,16 @@ func _create_slot(index: int) -> Control:
 	
 	return slot
 
-## Update which slot is highlighted.
+## Update which slot is highlighted and update tooltip for selected item.
 func _update_slot_selection() -> void:
 	for i in range(slot_scenes.size()):
 		var slot = slot_scenes[i]
 		var glow = slot.get_node_or_null("SelectionGlow")
 		if glow:
 			glow.visible = (i == selected_slot_index)
+	
+	# Update tooltip for selected slot
+	_update_selected_tooltip()
 
 ## Use the currently selected item.
 func _use_selected_item() -> void:
@@ -227,3 +249,27 @@ func _use_selected_item() -> void:
 	
 	# Refresh display
 	_refresh_slots()
+
+## Update tooltip to show info for currently selected slot.
+func _update_selected_tooltip() -> void:
+	if selected_slot_index < 0 or selected_slot_index >= slot_items.size():
+		if item_tooltip:
+			item_tooltip.visible = false
+		return
+	
+	var item = slot_items[selected_slot_index]
+	if not item:
+		# No item in selected slot, hide tooltip
+		if item_tooltip:
+			item_tooltip.visible = false
+		return
+	
+	# Update tooltip content
+	if tooltip_name_label:
+		tooltip_name_label.text = item.resource_name
+	if tooltip_desc_label:
+		tooltip_desc_label.text = item.description if item.description else ""
+	
+	# Show tooltip
+	if item_tooltip:
+		item_tooltip.visible = true
