@@ -63,7 +63,7 @@ rotation = 4.712389
 laser_color = Color(0.8627451, 0, 0.99215686, 0.9019608)
 paired_turret = NodePath("../LaserTurret3")
 
-[node name="LaserTurret3" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="1" unique_id=1343803268 instance=ExtResource("2_fjlvv")]
+[node name="LaserTurret3" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="3" unique_id=1343803268 instance=ExtResource("2_fjlvv")]
 position = Vector2(411, 257)
 rotation = 1.5707964
 laser_color = Color(0.8627451, 0, 0.99215686, 0.9019608)
