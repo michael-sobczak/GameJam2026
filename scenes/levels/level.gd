@@ -15,6 +15,14 @@ var player_id: int ## Used when moving between levels to save the player facing 
 ## Path to the scene to load when the goal is reached. Set per-level in the inspector (e.g. level1 → level2).
 @export_file("*.tscn") var next_level := ""
 
+## Intro text settings
+@export_group("Intro Text")
+@export var show_intro_text: bool = false ## Show intro text when level starts
+@export var intro_message: String = "FIND THE TREASURE\nDON'T GET CAUGHT"
+@export var intro_fade_duration: float = 5.0
+
+var _intro_text: LevelIntroText
+
 func _ready():
 	if not Engine.is_editor_hint():
 		darkness.color = Color(0.1, 0.1, 0.1, 1.0)
@@ -42,6 +50,12 @@ func _ready():
 
 func init_scene():
 	DataManager.load_level_data()
+
+
+## Called by SceneManager after level is fully loaded and transition complete
+func start_scene() -> void:
+	if show_intro_text:
+		_show_intro_text()
 
 ##internal - Used by SceneManager to pass data between levels.
 func get_data():
@@ -188,3 +202,23 @@ func _on_defeat_try_again_pressed() -> void:
 	if scene_path.is_empty():
 		scene_path = "res://scenes/menus/start_screen.tscn"
 	SceneManager.swap_scenes(scene_path, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
+
+
+func _show_intro_text() -> void:
+	# Create intro text overlay
+	_intro_text = LevelIntroText.new()
+	_intro_text.intro_text = intro_message
+	_intro_text.fade_duration = intro_fade_duration
+	_intro_text.font_size = 48
+	add_child(_intro_text)
+	
+	# Show intro (player can move immediately)
+	_intro_text.show_intro()
+	_intro_text.intro_finished.connect(_on_intro_finished)
+
+
+func _on_intro_finished() -> void:
+	# Clean up intro text
+	if _intro_text:
+		_intro_text.queue_free()
+		_intro_text = null
