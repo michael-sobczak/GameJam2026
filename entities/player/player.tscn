@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://b8k3m5n7qaq1r" path="res://components/inventory_slot_hud.tscn" id="18_slot_hud"]
 [ext_resource type="PackedScene" uid="uid://bfbxy4l18b0to" path="res://components/player_self_light.tscn" id="19_self_light"]
 [ext_resource type="Script" uid="uid://dtm68qo7dywh6" path="res://resources/cone_profile.gd" id="20_ghoj8"]
+[ext_resource type="PackedScene" uid="uid://wec1yl2djncx" path="res://components/overhead_mask_icon.tscn" id="21_overhead"]
 
 [sub_resource type="Resource" id="Resource_3wlsy"]
 script = ExtResource("3_yqrof")
@@ -697,7 +698,14 @@ z_index = 10
 position = Vector2(0, -30)
 scale = Vector2(0.1, 0.1)
 
-[node name="MaskEffectManager" type="Node" parent="." index="17" unique_id=173444392]
+[node name="ActiveMaskIcon" parent="." index="17" unique_id=1698094349 instance=ExtResource("21_overhead")]
+visible = false
+offset_left = -16.0
+offset_top = -66.0
+offset_right = 16.0
+offset_bottom = -34.0
+
+[node name="MaskEffectManager" type="Node" parent="." index="18" unique_id=173444392]
 script = ExtResource("17_mask_effect")
 
-[node name="InventorySlotHUD" parent="." index="18" unique_id=582248342 instance=ExtResource("18_slot_hud")]
+[node name="InventorySlotHUD" parent="." index="19" unique_id=582248342 instance=ExtResource("18_slot_hud")]

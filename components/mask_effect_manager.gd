@@ -18,8 +18,6 @@ var active_mask_name: String = ""
 var _night_vision_deactivate_sound: AudioStream = null
 var _disguise_deactivate_sound: AudioStream = null
 
-@onready var mask_sprite: Sprite2D = get_parent().get_node_or_null("MaskSprite")
-
 ## True if night vision can be applied (not already active).
 func can_apply_night_vision() -> bool:
 	return not night_vision_active
@@ -158,21 +156,13 @@ func _remove_disguise(silent: bool = false) -> void:
 
 	_clear_active_mask_and_emit()
 
-## Show the mask sprite on the player's head.
+## Set active mask texture for HUD/floating icon; on-head sprite is no longer shown.
 func _show_mask_sprite(texture: Texture2D):
-	if not mask_sprite:
-		mask_sprite = get_parent().get_node_or_null("MaskSprite")
-
-	if mask_sprite and texture:
+	if texture:
 		active_mask_texture = texture
-		mask_sprite.texture = texture
-		mask_sprite.visible = true
 
-## Hide the mask sprite.
+## Clear active mask (no on-head sprite to hide).
 func _hide_mask_sprite():
-	if mask_sprite:
-		mask_sprite.visible = false
-		mask_sprite.texture = null
 	active_mask_texture = null
 
 func _clear_active_mask_and_emit() -> void:

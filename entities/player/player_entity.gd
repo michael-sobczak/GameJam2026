@@ -13,6 +13,7 @@ var equipped = 0 ## The id of the weapon equipped by the player.
 @onready var flashlight: FlashlightCone = $FlashlightCone
 @onready var mask_effect_manager: MaskEffectManager = $MaskEffectManager
 @onready var inventory_slot_hud: InventorySlotHUD = $InventorySlotHUD
+@onready var active_mask_icon: TextureRect = $ActiveMaskIcon
 
 func _ready():
 	super._ready()
@@ -51,6 +52,11 @@ func _ready():
 	# Refresh HUD after inventory is set up
 	if inventory_slot_hud and inventory:
 		inventory_slot_hud._refresh_slots()
+
+	# Floating mask icon above player (same size as hotbar icon)
+	if mask_effect_manager and active_mask_icon:
+		mask_effect_manager.active_mask_changed.connect(_on_active_mask_icon_changed)
+		_on_active_mask_icon_changed(mask_effect_manager.active_mask_texture, mask_effect_manager.active_mask_name)
 
 ##Get the player data to save.
 func get_data():
@@ -275,3 +281,14 @@ func _on_mask_item_used(mask_item: DataMaskItem):
 		inventory.remove_item(mask_item.resource_name, 1)
 	if inventory_slot_hud:
 		inventory_slot_hud._refresh_slots()
+
+## Update floating mask icon above player when active mask changes (64x64).
+func _on_active_mask_icon_changed(texture: Texture2D, _mask_name: String) -> void:
+	if not is_instance_valid(active_mask_icon):
+		return
+	if texture:
+		active_mask_icon.texture = texture
+		active_mask_icon.visible = true
+	else:
+		active_mask_icon.visible = false
+		active_mask_icon.texture = null

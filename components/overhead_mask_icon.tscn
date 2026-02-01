@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://wec1yl2djncx"]
+
+[ext_resource type="Texture2D" uid="uid://c8u6rfjit4svi" path="res://build/index.icon.png" id="1_60svo"]
+
+[node name="OverheadMaskIcon" type="TextureRect" unique_id=1771668556]
+offset_right = 32.0
+offset_bottom = 32.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("1_60svo")
+expand_mode = 2
+stretch_mode = 5
