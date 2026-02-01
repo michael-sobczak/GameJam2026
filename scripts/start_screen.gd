@@ -6,15 +6,12 @@ const LEVEL_NAME_FORMAT := "Level %s"
 
 var user_prefs: UserPrefs
 
-@onready var level_container: GridContainer = %GridContainer
+@onready var level_container: Control = %Buttons
 @onready var continue_button: Button = %Continue
 @onready var quit_button: Button = %Quit
-@onready var version_num: Label = %VersionNum
 
 
 func _ready() -> void:
-	var version = ProjectSettings.get_setting("application/config/version")
-	version_num.text = "v%s" % version
 	user_prefs = UserPrefs.load_or_create()
 	_create_level_buttons()
 	_check_continue()
@@ -51,7 +48,7 @@ func _create_level_buttons():
 		# Format level name nicely (e.g., "level1" -> "Level 1", "playground_01" -> "Playground 01")
 		button.text = level_name
 		button.name = "level::%s" % level_path.get_file().get_basename()
-		button.custom_minimum_size = Vector2(150, 40)
+		button.custom_minimum_size = Vector2(300, 75)
 		button.add_theme_font_size_override("font_size", 20)
 
 		# Apply same styles as other buttons
