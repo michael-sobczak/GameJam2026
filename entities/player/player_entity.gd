@@ -116,6 +116,7 @@ func _initialize_starting_inventory():
 	# Create Night Vision Mask item
 	var night_vision_mask = DataMaskItem.new()
 	night_vision_mask.resource_name = "Night Vision Mask"
+	night_vision_mask.description = "See clearly in the dark for a short time."
 	night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
 	night_vision_mask.effect_duration = 5.0
 	night_vision_mask.icon = _create_simple_icon(32, Color(0.0, 1.0, 0.4, 1.0))  # Green square
@@ -124,6 +125,7 @@ func _initialize_starting_inventory():
 	# Create Disguise Mask item
 	var disguise = DataMaskItem.new()
 	disguise.resource_name = "Disguise Mask"
+	disguise.description = "Blend in with enemies and avoid detection."
 	disguise.mask_type = DataMaskItem.MaskType.DISGUISE
 	disguise.effect_duration = 5.0
 	disguise.icon = _create_simple_icon(32, Color(0.6, 0.2, 0.8, 1.0))  # Purple square

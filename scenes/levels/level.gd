@@ -6,6 +6,7 @@ class_name Level
 
 @onready var tilemap_layers: Node2D = %Layers
 @onready var darkness: CanvasModulate = %AmbientDarkness
+@onready var level_complete_overlay: CanvasLayer = get_node_or_null("LevelCompleteOverlay")
 
 var destination_name: String ## Used when moving between levels to get the right destination position for the player in the loaded level.
 var player_id: int ## Used when moving between levels to save the player facing direction.
@@ -13,11 +14,9 @@ var player_id: int ## Used when moving between levels to save the player facing 
 ## Path to the scene to load when the goal is reached. Set per-level in the inspector (e.g. level1 → level2).
 @export_file("*.tscn") var next_level := ""
 
-@onready var level_complete_overlay: CanvasLayer = get_node_or_null("LevelCompleteOverlay")
-
 func _ready():
 	if not Engine.is_editor_hint():
-		darkness.color = Color.BLACK
+		darkness.color = Color(0.1, 0.1, 0.1, 1.0)
 
 	# Ensure NavigationRegion2D exists for guard pathfinding
 	var nav_region: NavigationRegion2D = get_node_or_null("NavigationRegion2D")

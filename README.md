@@ -1,86 +1,81 @@
-# Godot 2D Top-Down Template
+# Heist Masquerade
 
-<img src="https://alchemy-pot.web.app/res/2d-topdown-template-godot4.png" width="100%">
+A stealth heist game where cunning and magical masks are your greatest tools. Slip past guards, manipulate shadows, and pull off the perfect heist.
 
-A comprehensive game template designed for Godot 4, providing everything you need to kickstart your 2D top-down game development journey.
+### Built With
 
-### Supported Godot Version
+[![Godot Engine](https://img.shields.io/badge/Godot_4.6-blue?logo=godotengine&logoColor=white)](https://godotengine.org)
 
-[![Godot Engine](https://img.shields.io/badge/Godot_4.4+-blue?logo=godotengine&logoColor=white)](https://godotengine.org)
+## 🎭 About the Game
 
-Godot version 4.4 or later is required, as the code utilizes [typed dictionaries](https://godotengine.org/article/dev-snapshot-godot-4-4-dev-2/#typed-dictionaries).
+In **Heist Masquerade**, you play as a master thief who has acquired a collection of enchanted masks, each granting unique abilities. Navigate through heavily guarded locations, avoid detection, and complete your objectives using stealth, timing, and the magical powers of your masks.
 
-## 🎮 Web Demo
+## 🎮 Controls
 
-[Play the web demo](https://alchemy-pot.web.app/files/godot-2d-topdown-template/play) to get a grasp of the available features.
+| Action | Key |
+|--------|-----|
+| Move | W, A, S, D |
+| Toggle Flashlight | F |
+| Scroll Items Left | Q |
+| Scroll Items Right | E |
+| Use Selected Item | Spacebar |
 
-## ⚙️ Features
+## ⚙️ Game Mechanics
 
-- **Character Controller** (basic movement + run, jump, attack, flash)
-- **Health Controller** with optional health bars
-- **Interaction System**
-- **State Management** using State Machines
-- **Save/Load System**
-- **Inventory Management**
-- ...and more!
+### 🔦 Flashlight
 
-# 📄 Docs
+Your flashlight illuminates dark areas, helping you navigate through shadowy environments. However, be careful—light can also give away your position to watchful guards. Toggle it wisely.
 
-Read the [documentation](https://alchemy-pot.web.app/resources/godot-2d-topdown-template).
+### 👁️ Guard Vision
 
-To explore a specific topic in more detail, you can refer directly to the code—**all key properties and functions are fully documented**.
+Guards patrol the area with keen eyes. Their vision cones represent their field of view. Stay out of sight, use cover, and time your movements to slip past undetected. If spotted, guards will pursue you.
 
-When starting your own project, you can safely remove all scenes that begin with **"playground_"**, as they are only meant for demonstration purposes. Then, set your desired starting level by configuring the **`start_level`** property in the `start_screen.tscn` scene.
+### 🎭 Masks
 
-## [Character Controller](https://alchemy-pot.web.app/godot-2d-topdown-template/character-controller)
+Masks are your secret weapons. Each mask grants a temporary magical ability when activated:
 
-Take full control of your characters: make them move, run, attack, jump, and flash while managing their states seamlessly.
+| Mask | Effect |
+|------|--------|
+| **Night Vision Mask** | See clearly in the dark for a short time, revealing hidden paths and dangers without using your flashlight. |
+| **Disguise Mask** | Blend in with enemies and avoid detection, allowing you to walk past guards unnoticed. |
 
-## [Interaction System](https://alchemy-pot.web.app/godot-2d-topdown-template/interaction-system)
+Masks have limited uses, so use them strategically!
 
-Enable your characters to interact with the game world. Trigger actions such as opening a chest, activating switches, or unlocking doors using the flexible interaction system.
+### 🎒 Inventory
 
-## [Inventory System](https://alchemy-pot.web.app/godot-2d-topdown-template/inventory-system)
+Your inventory displays up to 5 items at the bottom of the screen. Use **Q** and **E** to cycle through your items, and press **Spacebar** to activate the selected mask.
 
-The inventory manages all the items owned by a player. The project provides a simple node (`Inventory.tscn`) assigned as a child of the player, which shows all the items owned by him. You can delete this inventory and create your own according to your preferences. Press _ESC_ on your keyboard to open/close the inventory.
+## 🏆 Objectives
 
-## [Save/Load System](https://alchemy-pot.web.app/godot-2d-topdown-template/save-load-system)
+- Infiltrate guarded locations
+- Avoid detection by guards
+- Use your masks and flashlight strategically
+- Complete each heist without getting caught
 
-Easily save and load game progress, including player data, entity positions, and the current state of state machines. Saved data persists across levels and can be stored in a file for later retrieval, allowing players to continue from where they left off.
+## 🚀 Getting Started
 
-## [State Management](https://alchemy-pot.web.app/godot-2d-topdown-template/state-machines)
+1. Clone this repository
+2. Open the project in Godot 4.6+
+3. Run the main scene to start playing
 
-State machines form the backbone of this template, controlling characters, NPCs, enemies, objects, and more. Each state focuses on a single behavior, allowing you to decide when and how states are activated.
+## 📁 Project Structure
 
-## [Scenes Transition](https://alchemy-pot.web.app/godot-2d-topdown-template/scenes-transition)
+```
+├── assets/          # Art, audio, fonts, and shaders
+├── components/      # Reusable game components (inventory, flashlight, etc.)
+├── entities/        # Player, enemies, and NPCs
+├── items/           # Item definitions and resources
+├── scenes/          # Game scenes, levels, menus, and props
+├── scripts/         # Core systems, autoloads, and utilities
+├── shaders/         # Visual effect shaders
+└── tilesets/        # Tilemap resources
+```
 
-Seamlessly move between scenes, whether transitioning from a title screen to a level or from one level to another, and customize the transition effects to match your game's aesthetic.
+## 🎨 Credits
 
-## [User Prefs and Localization](https://alchemy-pot.web.app/godot-2d-topdown-template/user-prefs-and-localization)
+- Game developed for **Game Jam 2026**
+- Built using the [Godot 2D Top-Down Template](https://github.com/stesproject/godot-2d-topdown-template) as a foundation
 
-Save and load user preferences, such as music and sound effect volumes or selected language. Effortlessly implement multi-language support and game localization.
+---
 
-## [Tilemaps and Levels](https://alchemy-pot.web.app/godot-2d-topdown-template/tilemaps-and-levels)
-
-If you plan to use Tilemaps and the pre-built Level scene to build your levels, here you can discover some useful tips to create new levels and setting up autotiles in no time.
-
-## [Debugger](https://alchemy-pot.web.app/godot-2d-topdown-template/debugger)
-
-Simplify testing with a configurable debugger. Test features like saving sessions, toggling player collisions, restoring health, or blocking enemies. The debugger is extendable, so you can add custom functionalities as needed.
-
-## 🙏 Credits
-
-- **baconandgames** for [Godot4 Game Template](https://github.com/baconandgames/godot4-game-template)
-- **dandeliondino** for [Tile Bit Tools](https://github.com/dandeliondino/tile_bit_tools)
-
-## In Conclusion...
-
-The Godot 2D Top-Down Template is one of the most comprehensive systems I have designed and developed. It is the result of my experience creating and playing various top-down action-adventure and RPG-style games. My hope is that this template helps you build something amazing and that one day, I’ll get to play your game!
-
-The template is fully open-source, so feel free to explore the code and customize it to fit your needs. If you encounter bugs, missing features, or unclear documentation, don't hesitate to open an issue. Feature requests and contributions are also welcome, so feel free to submit them on the [GitHub repository](https://github.com/stesproject/godot-2d-topdown-template/issues).
-
-Check out my [RPG Maker games](https://store.steampowered.com/search/?developer=Ste%27s%20Project) that inspired the creation of this template!
-
-Enjoy creating! 🚀
-
-<a href="https://ko-fi.com/stesproject" target="_blank"><img src="https://cdn.ko-fi.com/cdn/kofi1.png?v=3" alt="Ko-Fi" width="145px"></a>
+*Stay in the shadows. Trust your masks. Pull off the perfect heist.*
