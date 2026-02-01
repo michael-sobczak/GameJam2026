@@ -3,7 +3,7 @@
 class_name InventorySlotHUD
 extends CanvasLayer
 
-signal item_used(item: DataItem)
+signal item_used(item: DataMaskItem)
 
 const SLOT_COUNT := 5
 
@@ -248,17 +248,10 @@ func _use_selected_item() -> void:
 	if not content_item or content_item.quantity <= 0:
 		return
 	
-	# Play item use sound
-	AudioManager.play_sfx("item_use")
-	
-	# Emit signal for item usage (handled by player entity)
-	item_used.emit(content_item.item)
-	
-	# Consume one quantity
-	inventory.remove_item(content_item.item.resource_name, 1)
-	
-	# Refresh display
-	_refresh_slots()
+	if not content_item.item is DataMaskItem:
+		push_error("Inventory use only supports mask items; got: %s" % content_item.item)
+		return
+	item_used.emit(content_item.item as DataMaskItem)
 
 ## Handle mouse entering a slot - show tooltip.
 func _on_slot_mouse_entered(index: int) -> void:

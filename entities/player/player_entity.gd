@@ -238,27 +238,38 @@ func _create_atlas_from_texture(texture: Texture2D) -> AtlasTexture:
 	atlas.region = Rect2(0, 0, texture.get_width(), texture.get_height())
 	return atlas
 
-## Handle mask item usage.
-func _on_mask_item_used(item: DataItem):
-	if not item is DataMaskItem:
-		return
-	
-	var mask_item = item as DataMaskItem
+## Handle mask item usage. Only consume when effect is actually applied (not already active).
+func _on_mask_item_used(mask_item: DataMaskItem):
 	if not mask_effect_manager:
 		return
 	
+	var can_apply := false
 	match mask_item.mask_type:
 		DataMaskItem.MaskType.NIGHT_VISION:
-			mask_effect_manager.apply_night_vision(
-				mask_item.effect_duration,
-				mask_item.mask_texture,
-				mask_item.activate_sound,
-				mask_item.deactivate_sound
-			)
+			can_apply = mask_effect_manager.can_apply_night_vision()
+			if can_apply:
+				mask_effect_manager.apply_night_vision(
+					mask_item.effect_duration,
+					mask_item.mask_texture,
+					mask_item.activate_sound,
+					mask_item.deactivate_sound
+				)
 		DataMaskItem.MaskType.DISGUISE:
-			mask_effect_manager.apply_disguise(
-				mask_item.effect_duration,
-				mask_item.mask_texture,
-				mask_item.activate_sound,
-				mask_item.deactivate_sound
-			)
+			can_apply = mask_effect_manager.can_apply_disguise()
+			if can_apply:
+				mask_effect_manager.apply_disguise(
+					mask_item.effect_duration,
+					mask_item.mask_texture,
+					mask_item.activate_sound,
+					mask_item.deactivate_sound
+				)
+	
+	if not can_apply:
+		return
+	
+	# Effect was applied: consume one use and refresh HUD
+	AudioManager.play_sfx("item_use")
+	if inventory:
+		inventory.remove_item(mask_item.resource_name, 1)
+	if inventory_slot_hud:
+		inventory_slot_hud._refresh_slots()
