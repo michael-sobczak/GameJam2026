@@ -80,10 +80,19 @@ func _remove_night_vision(silent: bool = false) -> void:
 		night_vision_overlay = null
 	
 	if is_instance_valid(ambient_darkness_node):
-		ambient_darkness_node.color = original_darkness_color
+		# Don't restore darkness if lose screen is up (level already set lights on)
+		var level: Node = ambient_darkness_node.get_parent()
+		var defeat_overlay: CanvasLayer = level.get_node_or_null("DefeatOverlay") if level else null
+		if not defeat_overlay or not defeat_overlay.visible:
+			ambient_darkness_node.color = original_darkness_color
 	ambient_darkness_node = null
 	
 	_hide_mask_sprite()
+
+## Clear night vision and disguise immediately (e.g. when caught). Silent, no sounds/signals.
+func clear_effects_for_defeat() -> void:
+	_remove_night_vision(true)
+	_remove_disguise(true)
 
 ## Apply disguise effect for specified duration.
 func apply_disguise(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null):

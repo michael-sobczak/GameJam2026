@@ -8,6 +8,39 @@
 [ext_resource type="Script" uid="uid://ju16nhje62n" path="res://scripts/tilemap_light_occluder.gd" id="6_occluder"]
 [ext_resource type="PackedScene" uid="uid://bjahstm66rjpf" path="res://entities/player/player_instantiator.tscn" id="7_a3ws7"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tryagain_normal"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tryagain_hover"]
+bg_color = Color(0.35, 0.35, 0.35, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tryagain_pressed"]
+bg_color = Color(0.15, 0.15, 0.15, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
 [node name="Level" type="Node2D" unique_id=1461630359 groups=["level"]]
 y_sort_enabled = true
 position = Vector2(-4.82253e-07, 2.05796e-08)
@@ -110,14 +143,19 @@ alignment = 1
 [node name="Label" type="Label" parent="DefeatOverlay/CenterContainer/VBoxContainer" unique_id=1164853421]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Stop! You have violated the law"
+text = "Stop! You have violated the law. Now you must serve your sentence."
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TryAgain" type="Button" parent="DefeatOverlay/CenterContainer/VBoxContainer" unique_id=1291668933]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
-text = "Serve your sentence"
+theme_override_styles/normal = SubResource("StyleBoxFlat_tryagain_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tryagain_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tryagain_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_tryagain_hover")
+text = "Do community service"
 
 [connection signal="pressed" from="DefeatOverlay/CenterContainer/VBoxContainer/TryAgain" to="." method="_on_defeat_try_again_pressed"]
