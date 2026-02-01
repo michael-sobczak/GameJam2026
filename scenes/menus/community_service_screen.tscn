@@ -82,6 +82,7 @@ color = Color(0.08, 0.08, 0.1, 1)
 position = Vector2(800, 450)
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="Stage"]
+z_index = 1
 position = Vector2(-580, 50)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_placeholder")
