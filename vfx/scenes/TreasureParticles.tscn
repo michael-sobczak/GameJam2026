@@ -4,10 +4,12 @@
 
 [node name="TreasureParticles" type="Node2D"]
 script = ExtResource("1_treasure")
-burst_amount = 30
+burst_amount = 50
 burst_lifetime = 1.2
 burst_speed_min = 180.0
 burst_speed_max = 320.0
+burst_count = 3
+burst_interval = 0.15
 gold_color = Color(1, 0.84, 0, 1)
 silver_color = Color(0.75, 0.75, 0.8, 1)
 size_start = 10.0

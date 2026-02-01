@@ -10,10 +10,14 @@ signal burst_started
 signal burst_finished
 
 @export_group("Burst Settings")
-@export var burst_amount: int = 30
+@export var burst_amount: int = 50 ## Particles per emitter per burst
 @export var burst_lifetime: float = 1.2
 @export var burst_speed_min: float = 180.0
 @export var burst_speed_max: float = 320.0
+
+@export_group("Multi-Burst")
+@export var burst_count: int = 3 ## Number of burst rounds
+@export var burst_interval: float = 0.15 ## Time between bursts
 
 @export_group("Colors")
 @export var gold_color: Color = Color(1.0, 0.84, 0.0, 1.0) # Gold
@@ -28,18 +32,29 @@ signal burst_finished
 @export var gravity: float = 400.0 # Particles arc back down
 @export var auto_free: bool = true ## Free the node after burst completes
 
-var _gold_particles: GPUParticles2D
-var _silver_particles: GPUParticles2D
+var _gold_emitters: Array[GPUParticles2D] = []
+var _silver_emitters: Array[GPUParticles2D] = []
 var _burst_timer: float = 0.0
 var _is_bursting: bool = false
+var _bursts_remaining: int = 0
+var _next_burst_timer: float = 0.0
 
 
 func _ready() -> void:
-	_setup_gold_particles()
-	_setup_silver_particles()
+	# Create emitters for each burst round
+	for i in range(burst_count):
+		_create_gold_emitter()
+		_create_silver_emitter()
 
 
 func _process(delta: float) -> void:
+	# Handle firing subsequent bursts
+	if _bursts_remaining > 0:
+		_next_burst_timer -= delta
+		if _next_burst_timer <= 0.0:
+			_fire_next_burst()
+	
+	# Handle cleanup after all particles finish
 	if _is_bursting:
 		_burst_timer -= delta
 		if _burst_timer <= 0.0:
@@ -49,34 +64,38 @@ func _process(delta: float) -> void:
 				queue_free()
 
 
-func _setup_gold_particles() -> void:
-	_gold_particles = GPUParticles2D.new()
-	_gold_particles.emitting = false
-	_gold_particles.one_shot = true
-	_gold_particles.explosiveness = 0.9
-	_gold_particles.amount = burst_amount
-	_gold_particles.lifetime = burst_lifetime
+func _create_gold_emitter() -> GPUParticles2D:
+	var emitter := GPUParticles2D.new()
+	emitter.emitting = false
+	emitter.one_shot = true
+	emitter.explosiveness = 0.9
+	emitter.amount = burst_amount
+	emitter.lifetime = burst_lifetime
 	
 	var mat := _create_particle_material(gold_color, Color(1.0, 0.65, 0.0, 0.0))
-	_gold_particles.process_material = mat
-	_gold_particles.texture = _create_particle_texture()
+	emitter.process_material = mat
+	emitter.texture = _create_particle_texture()
 	
-	add_child(_gold_particles)
+	add_child(emitter)
+	_gold_emitters.append(emitter)
+	return emitter
 
 
-func _setup_silver_particles() -> void:
-	_silver_particles = GPUParticles2D.new()
-	_silver_particles.emitting = false
-	_silver_particles.one_shot = true
-	_silver_particles.explosiveness = 0.9
-	_silver_particles.amount = burst_amount
-	_silver_particles.lifetime = burst_lifetime
+func _create_silver_emitter() -> GPUParticles2D:
+	var emitter := GPUParticles2D.new()
+	emitter.emitting = false
+	emitter.one_shot = true
+	emitter.explosiveness = 0.9
+	emitter.amount = burst_amount
+	emitter.lifetime = burst_lifetime
 	
 	var mat := _create_particle_material(silver_color, Color(0.9, 0.9, 0.95, 0.0))
-	_silver_particles.process_material = mat
-	_silver_particles.texture = _create_particle_texture()
+	emitter.process_material = mat
+	emitter.texture = _create_particle_texture()
 	
-	add_child(_silver_particles)
+	add_child(emitter)
+	_silver_emitters.append(emitter)
+	return emitter
 
 
 func _create_particle_material(color_start: Color, color_end: Color) -> ParticleProcessMaterial:
@@ -146,19 +165,40 @@ func _create_particle_texture() -> ImageTexture:
 	return ImageTexture.create_from_image(img)
 
 
+var _current_burst_index: int = 0
+
 ## Emit a burst of treasure particles at the current position
 func emit_burst() -> void:
-	if _gold_particles:
-		_gold_particles.restart()
-		_gold_particles.emitting = true
+	_current_burst_index = 0
+	_bursts_remaining = burst_count
 	
-	if _silver_particles:
-		_silver_particles.restart()
-		_silver_particles.emitting = true
+	# Fire first burst immediately
+	_fire_next_burst()
 	
 	_is_bursting = true
-	_burst_timer = burst_lifetime + 0.2 # Small buffer
+	# Total time: all bursts + last burst lifetime + buffer
+	_burst_timer = (burst_count - 1) * burst_interval + burst_lifetime + 0.3
 	burst_started.emit()
+
+
+func _fire_next_burst() -> void:
+	if _current_burst_index >= burst_count:
+		return
+	
+	# Fire the emitters for this burst round
+	if _current_burst_index < _gold_emitters.size():
+		var gold_emitter := _gold_emitters[_current_burst_index]
+		gold_emitter.restart()
+		gold_emitter.emitting = true
+	
+	if _current_burst_index < _silver_emitters.size():
+		var silver_emitter := _silver_emitters[_current_burst_index]
+		silver_emitter.restart()
+		silver_emitter.emitting = true
+	
+	_current_burst_index += 1
+	_bursts_remaining -= 1
+	_next_burst_timer = burst_interval
 
 
 ## Emit burst at a specific position
