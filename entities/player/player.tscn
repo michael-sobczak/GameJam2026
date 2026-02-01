@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dfxvfxqwdnh48"]
 
 [ext_resource type="PackedScene" uid="uid://d2nwo602rnihe" path="res://entities/entity.tscn" id="1_fnaeb"]
-[ext_resource type="PackedScene" uid="uid://ry5d5tfsku2i" path="res://scenes/hud/player_hud.tscn" id="2_kl4cw"]
 [ext_resource type="Script" uid="uid://ngyk1y3ddxjb" path="res://entities/player/player_entity.gd" id="2_x37y0"]
 [ext_resource type="Resource" uid="uid://bwwneuh3ges0r" path="res://items/weapons/sword_1.tres" id="3_3wlsy"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="3_xnu42"]
@@ -521,7 +520,6 @@ debug_color = Color(0.522179, 0.564523, 0.297975, 0.42)
 
 [node name="HealthController" type="Node2D" parent="." index="4" unique_id=1128154142 node_paths=PackedStringArray("on_hp_decrease", "on_hp_0")]
 script = ExtResource("5_gx6sm")
-health_bar = ExtResource("2_kl4cw")
 on_hp_decrease = NodePath("../StateMachine/hurt")
 on_hp_0 = NodePath("../StateMachine/death")
 metadata/_custom_type_script = "uid://igey4j36or78"
