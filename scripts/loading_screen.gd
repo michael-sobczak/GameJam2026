@@ -12,31 +12,29 @@ signal transition_in_complete
 
 var starting_animation_name:String
 
-## hides progress bar on startup, we'll reveal it later if loading has taken long
-## enough that it's worth showing. The alternative is that when something loads
-## quickly it flashes on screen briefly, and I don't like that.
+## Hides progress bar on startup; label is shown immediately. Progress bar
+## appears after timer if loading takes long enough.
 func _ready() -> void:
 	progress_bar.visible = false
-	pass
 
-## called by SceneManager to start the "in" transition. 
-func start_transition(animation_name:String) -> void: 
+## called by SceneManager to start the "in" transition.
+func start_transition(animation_name:String) -> void:
 	if !anim_player.has_animation(animation_name):
 		push_warning("'%s' animation does not exist" % animation_name)
 		animation_name = "fade_to_black"
 	starting_animation_name = animation_name
 	anim_player.play(animation_name)
-	
+
 	# if timer reaches the end before we finish loading, this will show the progress bar
 	timer.start()
-	
+
 ## called by SceneManger to play the outro to the transition once the content is loaded
 func finish_transition() -> void:
 	if timer:
 		timer.stop()
 	# construct second half of the transitation's animation name
 	var ending_animation_name:String = starting_animation_name.replace("to","from")
-	
+
 	if !anim_player.has_animation(ending_animation_name):
 		push_warning("'%s' animation does not exist" % ending_animation_name)
 		ending_animation_name = "fade_from_black"
@@ -50,9 +48,7 @@ func finish_transition() -> void:
 func report_midpoint() -> void:
 	transition_in_complete.emit()
 
-## if loading takes long enough that this timer fires, the loading bar will become visible and 
-## progress is displayed. If you don't ever want to display the loading bar, you can simple
-## choose not to start the timer in [method start_transition]
+## If loading takes long enough that this timer fires, the progress bar appears.
 func _on_timer_timeout() -> void:
 	progress_bar.visible = true
 
