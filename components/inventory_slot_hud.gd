@@ -16,6 +16,7 @@ const SLOT_COUNT := 5
 var selected_slot_index: int = 0
 var inventory: Inventory = null
 var slot_items: Array[DataItem] = [] ## Cached item references per slot for tooltip lookup.
+var hovered_slot_index: int = -1 ## Currently hovered slot index for tooltip display.
 
 func _ready() -> void:
 	# Ensure CanvasLayer is visible
@@ -91,6 +92,14 @@ func _input(event: InputEvent) -> void:
 	elif event.keycode == KEY_SPACE:
 		_use_selected_item()
 		get_viewport().set_input_as_handled()
+	# Handle direct slot activation with number keys (1-5)
+	elif event.keycode >= KEY_1 and event.keycode <= KEY_5:
+		var slot_index = event.keycode - KEY_1  # KEY_1 -> 0, KEY_2 -> 1, etc.
+		if slot_index < SLOT_COUNT:
+			selected_slot_index = slot_index
+			_update_slot_selection()
+			_use_selected_item()
+			get_viewport().set_input_as_handled()
 
 ## Set the inventory to display.
 func set_inventory(inv: Inventory) -> void:
@@ -145,8 +154,8 @@ func _refresh_slots() -> void:
 				label.visible = true  # Always show quantity
 			print("InventorySlotHUD: Slot %d filled with %s x%d" % [i, content_item.item.resource_name, content_item.quantity])
 	
-	# Update tooltip for current selection
-	_update_selected_tooltip()
+	# Update tooltip if a slot is currently hovered
+	_update_hovered_tooltip()
 
 ## Create a single slot UI element.
 func _create_slot(index: int) -> Control:
@@ -156,7 +165,11 @@ func _create_slot(index: int) -> Control:
 	slot.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	slot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	slot.visible = true
-	slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.mouse_filter = Control.MOUSE_FILTER_STOP  # Enable mouse interaction for hover
+	
+	# Connect mouse hover signals for tooltip display
+	slot.mouse_entered.connect(_on_slot_mouse_entered.bind(index))
+	slot.mouse_exited.connect(_on_slot_mouse_exited.bind(index))
 	
 	# Background panel
 	var panel = Panel.new()
@@ -215,16 +228,13 @@ func _create_slot(index: int) -> Control:
 	
 	return slot
 
-## Update which slot is highlighted and update tooltip for selected item.
+## Update which slot is highlighted.
 func _update_slot_selection() -> void:
 	for i in range(slot_scenes.size()):
 		var slot = slot_scenes[i]
 		var glow = slot.get_node_or_null("SelectionGlow")
 		if glow:
 			glow.visible = (i == selected_slot_index)
-	
-	# Update tooltip for selected slot
-	_update_selected_tooltip()
 
 ## Use the currently selected item.
 func _use_selected_item() -> void:
@@ -250,16 +260,27 @@ func _use_selected_item() -> void:
 	# Refresh display
 	_refresh_slots()
 
-## Update tooltip to show info for currently selected slot.
-func _update_selected_tooltip() -> void:
-	if selected_slot_index < 0 or selected_slot_index >= slot_items.size():
+## Handle mouse entering a slot - show tooltip.
+func _on_slot_mouse_entered(index: int) -> void:
+	hovered_slot_index = index
+	_update_hovered_tooltip()
+
+## Handle mouse exiting a slot - hide tooltip.
+func _on_slot_mouse_exited(index: int) -> void:
+	if hovered_slot_index == index:
+		hovered_slot_index = -1
+		_update_hovered_tooltip()
+
+## Update tooltip to show info for currently hovered slot.
+func _update_hovered_tooltip() -> void:
+	if hovered_slot_index < 0 or hovered_slot_index >= slot_items.size():
 		if item_tooltip:
 			item_tooltip.visible = false
 		return
 	
-	var item = slot_items[selected_slot_index]
+	var item = slot_items[hovered_slot_index]
 	if not item:
-		# No item in selected slot, hide tooltip
+		# No item in hovered slot, hide tooltip
 		if item_tooltip:
 			item_tooltip.visible = false
 		return
