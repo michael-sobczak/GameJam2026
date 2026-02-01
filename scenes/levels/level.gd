@@ -197,6 +197,10 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 			player.input_enabled = false
 			player.stop()
 
+	# Turn lights on!
+	if darkness:
+		darkness.color = Color.WHITE
+
 	# Show defeat overlay (level and guard keep running in background)
 	if defeat_overlay:
 		defeat_overlay.visible = true
