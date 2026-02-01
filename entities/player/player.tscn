@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dfxvfxqwdnh48"]
 
 [ext_resource type="PackedScene" uid="uid://d2nwo602rnihe" path="res://entities/entity.tscn" id="1_fnaeb"]
-[ext_resource type="PackedScene" uid="uid://ry5d5tfsku2i" path="res://scenes/hud/player_hud.tscn" id="2_kl4cw"]
 [ext_resource type="Script" uid="uid://ngyk1y3ddxjb" path="res://entities/player/player_entity.gd" id="2_x37y0"]
 [ext_resource type="Resource" uid="uid://bwwneuh3ges0r" path="res://items/weapons/sword_1.tres" id="3_3wlsy"]
 [ext_resource type="Script" uid="uid://dp66ice2hhj8n" path="res://scripts/state_machine/state_machine.gd" id="3_xnu42"]
@@ -22,6 +21,8 @@
 [ext_resource type="PackedScene" uid="uid://xvksl7732ws6" path="res://components/flashlight_cone.tscn" id="16_flashlight"]
 [ext_resource type="Script" uid="uid://bh6le0uximv7q" path="res://components/mask_effect_manager.gd" id="17_mask_effect"]
 [ext_resource type="PackedScene" uid="uid://b8k3m5n7qaq1r" path="res://components/inventory_slot_hud.tscn" id="18_slot_hud"]
+[ext_resource type="PackedScene" uid="uid://bfbxy4l18b0to" path="res://components/player_self_light.tscn" id="19_self_light"]
+[ext_resource type="Script" uid="uid://dtm68qo7dywh6" path="res://resources/cone_profile.gd" id="20_ghoj8"]
 
 [sub_resource type="Resource" id="Resource_3wlsy"]
 script = ExtResource("3_yqrof")
@@ -31,7 +32,7 @@ metadata/_custom_type_script = "uid://qawe0cujhuns"
 [sub_resource type="CircleShape2D" id="CircleShape2D_1npff"]
 radius = 23.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_221hk"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t1t22"]
 resource_local_to_scene = true
 shader = ExtResource("4_8hp4k")
 shader_parameter/flash_color = Color(0.891291, 4.18738e-06, 8.66354e-07, 1)
@@ -229,7 +230,7 @@ region = Rect2(160, 150, 40, 50)
 atlas = ExtResource("6_afbqv")
 region = Rect2(200, 150, 40, 50)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_ghoj8"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_50fht"]
 resource_local_to_scene = true
 animations = [{
 "frames": [{
@@ -489,6 +490,11 @@ action = "jump"
 function_name = "jump"
 metadata/_custom_type_script = "uid://dlqmc36quropm"
 
+[sub_resource type="Resource" id="Resource_wuv6x"]
+script = ExtResource("20_ghoj8")
+range_px = 170.0
+metadata/_custom_type_script = "uid://dtm68qo7dywh6"
+
 [node name="Player" unique_id=1749872963 node_paths=PackedStringArray("on_transfer_start", "on_transfer_end", "health_controller", "inventory", "running_particles", "on_attack", "on_fall") groups=["player", "save", "vision_target"] instance=ExtResource("1_fnaeb")]
 y_sort_enabled = false
 collision_mask = 5
@@ -520,14 +526,13 @@ debug_color = Color(0.522179, 0.564523, 0.297975, 0.42)
 
 [node name="HealthController" type="Node2D" parent="." index="4" unique_id=1128154142 node_paths=PackedStringArray("on_hp_decrease", "on_hp_0")]
 script = ExtResource("5_gx6sm")
-health_bar = ExtResource("2_kl4cw")
 on_hp_decrease = NodePath("../StateMachine/hurt")
 on_hp_0 = NodePath("../StateMachine/death")
 metadata/_custom_type_script = "uid://igey4j36or78"
 
 [node name="AnimatedSprite2D" parent="." index="5" unique_id=121589457]
-material = SubResource("ShaderMaterial_221hk")
-sprite_frames = SubResource("SpriteFrames_ghoj8")
+material = SubResource("ShaderMaterial_t1t22")
+sprite_frames = SubResource("SpriteFrames_50fht")
 
 [node name="AnimationTree" parent="." index="9" unique_id=1172070750]
 parameters/walk/BlendSpace2D/blend_position = Vector2(0.00376654, 0.992565)
@@ -680,14 +685,19 @@ health_controller = NodePath("../HealthController")
 disabled = false
 
 [node name="FlashlightCone" parent="." index="14" unique_id=1733046864 instance=ExtResource("16_flashlight")]
+local_offset = Vector2(0, 0)
+cone_profile = SubResource("Resource_wuv6x")
 
-[node name="MaskSprite" type="Sprite2D" parent="." index="15" unique_id=1800195646]
+[node name="PlayerSelfLight" parent="." index="15" unique_id=1085852860 instance=ExtResource("19_self_light")]
+energy = 0.15
+
+[node name="MaskSprite" type="Sprite2D" parent="." index="16" unique_id=1800195646]
 visible = false
+z_index = 10
 position = Vector2(0, -30)
 scale = Vector2(0.1, 0.1)
-z_index = 10
 
-[node name="MaskEffectManager" type="Node" parent="." index="16" unique_id=173444392]
+[node name="MaskEffectManager" type="Node" parent="." index="17" unique_id=173444392]
 script = ExtResource("17_mask_effect")
 
-[node name="InventorySlotHUD" parent="." index="17" unique_id=582248342 instance=ExtResource("18_slot_hud")]
+[node name="InventorySlotHUD" parent="." index="18" unique_id=582248342 instance=ExtResource("18_slot_hud")]

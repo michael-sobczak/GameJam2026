@@ -5,22 +5,24 @@ class_name SettingsMenu extends CanvasLayer
 
 signal language_changed(language: String)
 
-@onready var music_slider:HSlider = %MusicSlider as HSlider
-@onready var sfx_slider:HSlider = %SFXSlider as HSlider
-@onready var language_dropdown:OptionButton = %LanguageDropdown as OptionButton
-@onready var close_button:Button = %CloseButton as Button
-@onready var SFX_BUS_ID = AudioServer.get_bus_index("SFX")
-@onready var MUSIC_BUS_ID = AudioServer.get_bus_index("Music")
+@onready var master_slider: HSlider = %MasterSlider as HSlider
+@onready var music_slider: HSlider = %MusicSlider as HSlider
+@onready var sfx_slider: HSlider = %SFXSlider as HSlider
+@onready var language_dropdown: OptionButton = %LanguageDropdown as OptionButton
+@onready var close_button: Button = %CloseButton as Button
+@onready var MASTER_BUS_ID: int = AudioServer.get_bus_index("Master")
+@onready var SFX_BUS_ID: int = AudioServer.get_bus_index("SFX")
+@onready var MUSIC_BUS_ID: int = AudioServer.get_bus_index("Music")
 
 var user_prefs: UserPrefs
 
 func _ready():
-	_populate_language_dropdown()
-
 	# load (or create) file with these saved preferences
 	user_prefs = UserPrefs.load_or_create()
 
 	# set saved values (will be default values if first load)
+	if master_slider:
+		master_slider.value = user_prefs.master_volume
 	if music_slider:
 		music_slider.value = user_prefs.music_volume
 	if sfx_slider:
@@ -37,12 +39,14 @@ func _process(_delta):
 func close_settings():
 	queue_free()
 
-func _populate_language_dropdown():
-	for lang in Const.LANGUAGES:
-		language_dropdown.add_item(lang)
-
 func _on_close_button_pressed():
+	AudioManager.play_sfx("inventory_select")
 	close_settings()
+
+func _on_master_slider_value_changed(_value: float) -> void:
+	AudioServer.set_bus_volume_db(MASTER_BUS_ID, linear_to_db(_value))
+	AudioServer.set_bus_mute(MASTER_BUS_ID, _value < .05)
+	user_prefs.master_volume = _value
 
 func _on_music_slider_value_changed(_value):
 	AudioServer.set_bus_volume_db(MUSIC_BUS_ID, linear_to_db(_value))

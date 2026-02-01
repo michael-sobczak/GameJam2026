@@ -74,6 +74,22 @@ theme_override_constants/margin_bottom = 25
 layout_mode = 2
 columns = 2
 
+[node name="MasterVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1343521278]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=675766212]
+unique_name_in_owner = true
+layout_direction = 2
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 2.0
+max_value = 1.0
+step = 0.05
+value = 0.5
+
 [node name="MusicVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1343521277]
 custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
@@ -88,7 +104,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 2.0
 max_value = 1.0
 step = 0.05
-value = 1.0
+value = 0.5
 
 [node name="SFXVol" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=1584619953]
 custom_minimum_size = Vector2(175, 0)
@@ -104,17 +120,7 @@ size_flags_vertical = 1
 size_flags_stretch_ratio = 2.0
 max_value = 1.0
 step = 0.05
-value = 1.0
-
-[node name="Language" type="Label" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=111941685]
-custom_minimum_size = Vector2(175, 0)
-layout_mode = 2
-text = "Language
-"
-
-[node name="LanguageDropdown" type="OptionButton" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer" unique_id=799306310]
-unique_name_in_owner = true
-layout_mode = 2
+value = 0.75
 
 [node name="Panel" type="Panel" parent="Panel/BackgroundPanel/MarginContainer/VBoxContainer" unique_id=811538336]
 custom_minimum_size = Vector2(2.08165e-12, 25)
@@ -133,7 +139,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "Close"
 
+[connection signal="value_changed" from="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer/MasterSlider" to="." method="_on_master_slider_value_changed"]
 [connection signal="value_changed" from="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer/MusicSlider" to="." method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
-[connection signal="item_selected" from="Panel/BackgroundPanel/MarginContainer/VBoxContainer/MarginContainer/GridContainer/LanguageDropdown" to="." method="_on_language_dropdown_item_selected"]
 [connection signal="pressed" from="Panel/BackgroundPanel/MarginContainer/VBoxContainer/HBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

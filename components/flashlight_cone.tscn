@@ -9,3 +9,6 @@ script = ExtResource("1_flashlight")
 texture_filter = 1
 color = Color(1, 0.95, 0.8, 1)
 energy = 1.5
+shadow_enabled = true
+shadow_filter = 1
+shadow_filter_smooth = 2.0
