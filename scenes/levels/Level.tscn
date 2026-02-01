@@ -5,6 +5,7 @@
 [ext_resource type="TileSet" uid="uid://cxbku7clobpa" path="res://tilesets/tileset_terrain.tres" id="3_jvuwd"]
 [ext_resource type="Script" uid="uid://c7b1xfu55p5mn" path="res://scripts/tilemap_navigation.gd" id="4_6158f"]
 [ext_resource type="TileSet" uid="uid://cpiu136cl3wdd" path="res://tilesets/tileset_walls.tres" id="5_5n3p8"]
+[ext_resource type="Script" uid="uid://d4xqm8kp3l2tf" path="res://scripts/tilemap_light_occluder.gd" id="6_occluder"]
 [ext_resource type="PackedScene" uid="uid://bjahstm66rjpf" path="res://entities/player/player_instantiator.tscn" id="7_a3ws7"]
 
 [node name="Level" type="Node2D" unique_id=1461630359 groups=["level"]]
@@ -35,6 +36,7 @@ metadata/_edit_lock_ = true
 
 [node name="walls" type="TileMapLayer" parent="Layers" unique_id=2138029903]
 tile_set = ExtResource("5_5n3p8")
+script = ExtResource("6_occluder")
 metadata/_edit_lock_ = true
 
 [node name="Props" type="Node2D" parent="." unique_id=1741009082]
