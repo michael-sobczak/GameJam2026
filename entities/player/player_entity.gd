@@ -135,12 +135,15 @@ func _unhandled_input(event: InputEvent):
 ## Preloaded mask textures.
 const NIGHT_VISION_MASK_TEXTURE = preload("res://DownloadedAssets/a-stunning-masquerade-mask-featuring-elaborate-detailing-and-a-rich-palette-of-purple-green-and-pink-hues-evoking-mystery-and-festivity-png.png")
 const DISGUISE_MASK_TEXTURE = preload("res://DownloadedAssets/elaborate-venetian-mask-with-wings-gold-details-and-gems-on-transparent-background-png.png")
+const REFLECTION_MASK_TEXTURE = preload("res://DownloadedAssets/mask3.jpeg")
 
 ## Preloaded mask sound effects (distinct for each mask type).
 const NIGHT_VISION_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/glitch_003.ogg")
 const NIGHT_VISION_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/glitch_001.ogg")
 const DISGUISE_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/maximize_008.ogg")
 const DISGUISE_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/minimize_008.ogg")
+const REFLECTION_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/maximize_006.ogg")
+const REFLECTION_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/pluck_001.ogg")
 
 ## Initialize player's starting inventory with the appropriate mask items for the level.
 func _initialize_starting_inventory():
@@ -179,6 +182,20 @@ func _initialize_starting_inventory():
 		disguise.deactivate_sound = DISGUISE_DEACTIVATE_SFX
 		inventory.add_item(disguise, qty_per_mask)
 		print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
+
+	# Create Reflection Mask item (add only if allowed)
+	if allowed.is_empty() or "reflection" in allowed:
+		var reflection = DataMaskItem.new()
+		reflection.resource_name = "Mask of Reflection"
+		reflection.description = "Reflect laser beams back at their source."
+		reflection.mask_type = DataMaskItem.MaskType.REFLECTION
+		reflection.effect_duration = 5.0
+		reflection.icon = _create_atlas_from_texture(REFLECTION_MASK_TEXTURE)
+		reflection.mask_texture = REFLECTION_MASK_TEXTURE
+		reflection.activate_sound = REFLECTION_ACTIVATE_SFX
+		reflection.deactivate_sound = REFLECTION_DEACTIVATE_SFX
+		inventory.add_item(reflection, qty_per_mask)
+		print("PlayerEntity: Created Mask of Reflection, icon: %s" % reflection.icon)
 
 	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
 
@@ -265,6 +282,16 @@ func _on_mask_item_used(mask_item: DataMaskItem):
 			can_apply = mask_effect_manager.can_apply_disguise()
 			if can_apply:
 				mask_effect_manager.apply_disguise(
+					mask_item.effect_duration,
+					mask_item.mask_texture,
+					mask_item.activate_sound,
+					mask_item.deactivate_sound,
+					mask_item.resource_name
+				)
+		DataMaskItem.MaskType.REFLECTION:
+			can_apply = mask_effect_manager.can_apply_reflection()
+			if can_apply:
+				mask_effect_manager.apply_reflection(
 					mask_item.effect_duration,
 					mask_item.mask_texture,
 					mask_item.activate_sound,
