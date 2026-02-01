@@ -223,6 +223,20 @@ func return_to_safe_position():
 	if safe_position != Vector2.ZERO:
 		global_position = safe_position
 
+## Push out of walls when phase mask expires and we're overlapping block layer. Tries move_and_collide in 4 directions repeatedly.
+func expel_from_walls() -> void:
+	const STEP: float = 24.0
+	const MAX_ITERATIONS: int = 12
+	var directions: Array[Vector2] = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+	for _iter in range(MAX_ITERATIONS):
+		var moved: bool = false
+		for dir in directions:
+			var col: KinematicCollision2D = move_and_collide(dir * STEP)
+			if col:
+				moved = true
+		if not moved:
+			break
+
 func enable_state(state: State):
 	if state and health_controller.hp > 0:
 		state.enable()

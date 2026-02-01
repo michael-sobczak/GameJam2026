@@ -8,11 +8,17 @@ signal disguise_started(duration: float)
 signal disguise_ended
 signal reflection_started(duration: float)
 signal reflection_ended
+signal phase_started(duration: float)
+signal phase_ended
 signal active_mask_changed(texture: Texture2D, mask_name: String)
+
+## Physics layer 1 = "block" (walls). Phase mask ignores this layer so player can walk through walls.
+const PHYSICS_LAYER_BLOCK: int = 1
 
 var night_vision_active: bool = false
 var disguise_active: bool = false
 var reflection_active: bool = false
+var phase_active: bool = false
 var night_vision_overlay: CanvasLayer = null
 var ambient_darkness_node: CanvasModulate = null
 var original_darkness_color: Color = Color.BLACK
@@ -21,6 +27,7 @@ var active_mask_name: String = ""
 var _night_vision_deactivate_sound: AudioStream = null
 var _disguise_deactivate_sound: AudioStream = null
 var _reflection_deactivate_sound: AudioStream = null
+var _phase_deactivate_sound: AudioStream = null
 var _reflection_overlay: CanvasLayer = null
 var _reflection_glow: PointLight2D = null ## Glow effect when actively reflecting a laser.
 var _glow_tween: Tween = null ## Tween for pulsing glow effect.
@@ -36,6 +43,10 @@ func can_apply_disguise() -> bool:
 ## True if reflection can be applied (not already active).
 func can_apply_reflection() -> bool:
 	return not reflection_active
+
+## True if phase (walk through walls) can be applied (not already active).
+func can_apply_phase() -> bool:
+	return not phase_active
 
 ## Apply night vision effect for specified duration.
 func apply_night_vision(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null, mask_name: String = ""):
@@ -115,6 +126,7 @@ func clear_effects_for_defeat() -> void:
 	_remove_night_vision(true)
 	_remove_disguise(true)
 	_remove_reflection(true)
+	_remove_phase(true)
 
 ## Apply disguise effect for specified duration.
 func apply_disguise(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null, mask_name: String = ""):
@@ -204,6 +216,62 @@ func apply_reflection(duration: float, mask_tex: Texture2D = null, activate_sfx:
 	# Wait for duration then remove
 	await get_tree().create_timer(duration).timeout
 	_remove_reflection()
+
+## Apply phase effect: walk through walls for specified duration. When it expires, if player is inside a wall they are expelled.
+func apply_phase(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null, mask_name: String = ""):
+	if phase_active:
+		return  # Already active
+
+	phase_active = true
+	phase_started.emit(duration)
+	_phase_deactivate_sound = deactivate_sfx
+
+	if activate_sfx:
+		AudioManager.play_stream(activate_sfx)
+	else:
+		AudioManager.play_sfx("disguise_on")  # Reuse or add phase_on later
+
+	active_mask_name = mask_name
+	_show_mask_sprite(mask_tex)
+	active_mask_changed.emit(active_mask_texture, active_mask_name)
+
+	# Stop colliding with block layer (walls) so player can walk through
+	var players = Globals.get_players()
+	for player in players:
+		if player is CharacterBody2D:
+			player.set_meta(&"phase_original_collision_mask", player.collision_mask)
+			player.collision_mask &= ~PHYSICS_LAYER_BLOCK
+
+	await get_tree().create_timer(duration).timeout
+	_remove_phase()
+
+## Remove phase effect. Restores wall collision and expels player from walls if inside one.
+func _remove_phase(silent: bool = false) -> void:
+	if not phase_active:
+		return
+
+	phase_active = false
+	if not silent:
+		phase_ended.emit()
+		if _phase_deactivate_sound:
+			AudioManager.play_stream(_phase_deactivate_sound)
+		else:
+			AudioManager.play_sfx("disguise_off")
+	_phase_deactivate_sound = null
+
+	# Restore collision with walls, then expel from any wall we're inside
+	var players = Globals.get_players()
+	for player in players:
+		if is_instance_valid(player) and player is CharacterBody2D:
+			if player.has_meta(&"phase_original_collision_mask"):
+				player.collision_mask = player.get_meta(&"phase_original_collision_mask")
+				player.remove_meta(&"phase_original_collision_mask")
+			else:
+				player.collision_mask |= PHYSICS_LAYER_BLOCK
+			if player.has_method("expel_from_walls"):
+				player.expel_from_walls()
+
+	_clear_active_mask_and_emit()
 
 ## Remove reflection effect. Pass silent=true to skip sounds/signals (e.g. on level transition).
 func _remove_reflection(silent: bool = false) -> void:
@@ -314,6 +382,7 @@ func _exit_tree() -> void:
 	_remove_night_vision(true)
 	_remove_disguise(true)
 	_remove_reflection(true)
+	_remove_phase(true)
 	hide_reflection_glow()
 	if _reflection_glow:
 		_reflection_glow.queue_free()
