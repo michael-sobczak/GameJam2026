@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://b8k3m5n7qaq1r"]
 
-[ext_resource type="Script" path="res://components/inventory_slot_hud.gd" id="1_slot_hud"]
+[ext_resource type="Script" uid="uid://b71uyly27owj" path="res://components/inventory_slot_hud.gd" id="1_slot_hud"]
 
-[node name="InventorySlotHUD" type="CanvasLayer"]
+[node name="InventorySlotHUD" type="CanvasLayer" unique_id=1626078375]
 script = ExtResource("1_slot_hud")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=728639834]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,34 +14,35 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Control"]
+[node name="MarginContainer" type="MarginContainer" parent="Control" unique_id=382633839]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_bottom = 20
+mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer" unique_id=204781534]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_constants/separation = 8
 
-[node name="ToolbarRow" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer"]
+[node name="ToolbarRow" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=663982688]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 12
 
-[node name="QKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+[node name="QKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow" unique_id=1375951728]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/QKeyIndicator"]
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/QKeyIndicator" unique_id=1383670895]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,20 +53,20 @@ text = "Q"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SlotsContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+[node name="SlotsContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer/ToolbarRow" unique_id=1910119599]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_minimum_size = Vector2(0, 64)
+theme_override_constants/separation = 10
+alignment = 1
 
-[node name="EKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow"]
+[node name="EKeyIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer/ToolbarRow" unique_id=871818978]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/EKeyIndicator"]
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/ToolbarRow/EKeyIndicator" unique_id=1327474005]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,12 +77,12 @@ text = "E"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SpacebarIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer"]
+[node name="SpacebarIndicator" type="Panel" parent="Control/MarginContainer/VBoxContainer" unique_id=1901898481]
 custom_minimum_size = Vector2(200, 28)
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/SpacebarIndicator"]
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/SpacebarIndicator" unique_id=1927495256]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -92,7 +93,7 @@ text = "SPACE TO ACTIVATE MASK"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MovementHint" type="VBoxContainer" parent="Control"]
+[node name="MovementHint" type="VBoxContainer" parent="Control" unique_id=1758148944]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -102,18 +103,21 @@ offset_top = -100.0
 offset_right = 120.0
 offset_bottom = -20.0
 grow_vertical = 0
+mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="TopRow" type="HBoxContainer" parent="Control/MovementHint"]
+[node name="TopRow" type="HBoxContainer" parent="Control/MovementHint" unique_id=1970095832]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="WKey" type="Panel" parent="Control/MovementHint/TopRow"]
+[node name="WKey" type="Panel" parent="Control/MovementHint/TopRow" unique_id=471772569]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Label" type="Label" parent="Control/MovementHint/TopRow/WKey"]
+[node name="Label" type="Label" parent="Control/MovementHint/TopRow/WKey" unique_id=671507386]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -124,16 +128,18 @@ text = "W"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BottomRow" type="HBoxContainer" parent="Control/MovementHint"]
+[node name="BottomRow" type="HBoxContainer" parent="Control/MovementHint" unique_id=17270347]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="AKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+[node name="AKey" type="Panel" parent="Control/MovementHint/BottomRow" unique_id=226265096]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/AKey"]
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/AKey" unique_id=1301862150]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,11 +150,12 @@ text = "A"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+[node name="SKey" type="Panel" parent="Control/MovementHint/BottomRow" unique_id=1634873255]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/SKey"]
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/SKey" unique_id=1596744043]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -159,11 +166,12 @@ text = "S"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DKey" type="Panel" parent="Control/MovementHint/BottomRow"]
+[node name="DKey" type="Panel" parent="Control/MovementHint/BottomRow" unique_id=1980695968]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
+mouse_filter = 2
 
-[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/DKey"]
+[node name="Label" type="Label" parent="Control/MovementHint/BottomRow/DKey" unique_id=1224055813]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -174,13 +182,13 @@ text = "D"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MoveLabel" type="Label" parent="Control/MovementHint"]
+[node name="MoveLabel" type="Label" parent="Control/MovementHint" unique_id=842021088]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Move"
 horizontal_alignment = 1
 
-[node name="ItemTooltip" type="PanelContainer" parent="Control"]
+[node name="ItemTooltip" type="PanelContainer" parent="Control" unique_id=1670570923]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -195,24 +203,24 @@ offset_bottom = -140.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/ItemTooltip"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/ItemTooltip" unique_id=133318567]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/ItemTooltip/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/ItemTooltip/MarginContainer" unique_id=1575783177]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="ItemName" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer"]
+[node name="ItemName" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer" unique_id=575556804]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)
 text = "Item Name"
 horizontal_alignment = 1
 
-[node name="ItemDescription" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer"]
+[node name="ItemDescription" type="Label" parent="Control/ItemTooltip/MarginContainer/VBoxContainer" unique_id=1889878003]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 12
