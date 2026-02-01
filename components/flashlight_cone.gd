@@ -8,7 +8,7 @@ signal aim_changed(angle: float)
 
 @export_group("Settings")
 @export var enabled: bool = true ## Whether the flashlight is currently active.
-@export var energy: float = 1.5 ## Light energy/intensity.
+@export var energy: float = 2.25 ## Light energy/intensity.
 @export var color: Color = Color(1.0, 0.95, 0.8, 1.0) ## Light color (warm white default).
 @export var local_offset: Vector2 = Vector2(0, -10) ## Offset from parent where light originates.
 
