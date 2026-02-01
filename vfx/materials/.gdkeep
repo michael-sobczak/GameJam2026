@@ -1,0 +1,3 @@
+# This folder is for pre-configured ShaderMaterial resources
+# Materials are currently embedded in scenes for simplicity
+# Save .tres material files here for reusable presets

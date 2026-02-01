@@ -1,0 +1,426 @@
+[gd_scene load_steps=12 format=3 uid="uid://c8vfxdemomain"]
+
+[ext_resource type="Script" path="res://demo/demo_controller.gd" id="1_controller"]
+[ext_resource type="Shader" path="res://vfx/shaders/noise_overlay.gdshader" id="2_noise"]
+[ext_resource type="Shader" path="res://vfx/shaders/text_wave.gdshader" id="3_textwave"]
+[ext_resource type="Shader" path="res://vfx/shaders/text_glitch.gdshader" id="4_textglitch"]
+[ext_resource type="Shader" path="res://vfx/shaders/sdf_shapes.gdshader" id="5_sdf"]
+[ext_resource type="Shader" path="res://vfx/shaders/screen_distort.gdshader" id="6_distort"]
+[ext_resource type="Script" path="res://vfx/scripts/impact_particles.gd" id="7_particles"]
+[ext_resource type="Script" path="res://vfx/scripts/screen_distort_controller.gd" id="8_distortctrl"]
+[ext_resource type="Script" path="res://vfx/scripts/text_glitch_controller.gd" id="9_glitchctrl"]
+[ext_resource type="Script" path="res://vfx/scripts/ui_motion.gd" id="10_uimotion"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_noise"]
+shader = ExtResource("2_noise")
+shader_parameter/color_a = Color(0.1, 0.8, 0.9, 1)
+shader_parameter/color_b = Color(0.6, 0.2, 0.8, 1)
+shader_parameter/color_c = Color(0.9, 0.3, 0.6, 1)
+shader_parameter/use_three_colors = true
+shader_parameter/noise_scale = 8.0
+shader_parameter/speed = 0.3
+shader_parameter/contrast = 1.2
+shader_parameter/opacity = 0.4
+shader_parameter/output_dissolve_mask = false
+shader_parameter/dissolve_edge_width = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_title"]
+shader = ExtResource("3_textwave")
+shader_parameter/wave_intensity = 3.0
+shader_parameter/wave_speed = 2.0
+shader_parameter/wave_frequency = 4.0
+shader_parameter/vertical_wave = true
+shader_parameter/horizontal_wave = false
+shader_parameter/enable_rainbow = false
+shader_parameter/rainbow_speed = 1.0
+shader_parameter/rainbow_saturation = 0.8
+shader_parameter/base_color = Color(0.1, 0.9, 0.95, 1)
+shader_parameter/enable_dissolve = false
+shader_parameter/dissolve_progress = 0.0
+shader_parameter/dissolve_edge_width = 0.1
+shader_parameter/dissolve_edge_color = Color(0.9, 0.3, 0.6, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_subtitle"]
+shader = ExtResource("3_textwave")
+shader_parameter/wave_intensity = 2.0
+shader_parameter/wave_speed = 3.0
+shader_parameter/wave_frequency = 6.0
+shader_parameter/vertical_wave = true
+shader_parameter/horizontal_wave = true
+shader_parameter/enable_rainbow = true
+shader_parameter/rainbow_speed = 0.5
+shader_parameter/rainbow_saturation = 0.7
+shader_parameter/base_color = Color(1, 1, 1, 1)
+shader_parameter/enable_dissolve = false
+shader_parameter/dissolve_progress = 0.0
+shader_parameter/dissolve_edge_width = 0.1
+shader_parameter/dissolve_edge_color = Color(0.9, 0.3, 0.6, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_glitch"]
+shader = ExtResource("4_textglitch")
+shader_parameter/enable_glitch = true
+shader_parameter/glitch_intensity = 0.6
+shader_parameter/glitch_frequency = 3.0
+shader_parameter/glitch_block_size = 0.05
+shader_parameter/enable_jitter = true
+shader_parameter/jitter_amount = 5.0
+shader_parameter/enable_scanlines = true
+shader_parameter/scanline_count = 30.0
+shader_parameter/scanline_offset_max = 0.02
+shader_parameter/enable_rgb_split = true
+shader_parameter/rgb_split_amount = 3.0
+shader_parameter/base_color = Color(1, 1, 1, 1)
+shader_parameter/glitch_color_1 = Color(0.9, 0.3, 0.6, 1)
+shader_parameter/glitch_color_2 = Color(0.1, 0.9, 0.95, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_reticle"]
+shader = ExtResource("5_sdf")
+shader_parameter/shape_type = 1
+shader_parameter/size = 0.3
+shader_parameter/ring_thickness = 0.03
+shader_parameter/corner_radius = 0.1
+shader_parameter/rect_size = Vector2(0.6, 0.3)
+shader_parameter/fill_color = Color(0.1, 0.8, 0.9, 0.2)
+shader_parameter/outline_color = Color(0.1, 0.8, 0.9, 1)
+shader_parameter/outline_width = 0.015
+shader_parameter/edge_softness = 0.008
+shader_parameter/enable_pulse = true
+shader_parameter/pulse_speed = 2.0
+shader_parameter/pulse_intensity = 0.03
+shader_parameter/rotation_speed = 0.5
+shader_parameter/show_crosshair = true
+shader_parameter/crosshair_thickness = 0.008
+shader_parameter/crosshair_length = 0.12
+shader_parameter/show_radar_lines = false
+shader_parameter/radar_segments = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_panel"]
+shader = ExtResource("5_sdf")
+shader_parameter/shape_type = 2
+shader_parameter/size = 0.4
+shader_parameter/ring_thickness = 0.05
+shader_parameter/corner_radius = 0.08
+shader_parameter/rect_size = Vector2(0.8, 0.2)
+shader_parameter/fill_color = Color(0.6, 0.2, 0.8, 0.1)
+shader_parameter/outline_color = Color(0.6, 0.2, 0.8, 0.8)
+shader_parameter/outline_width = 0.01
+shader_parameter/edge_softness = 0.005
+shader_parameter/enable_pulse = true
+shader_parameter/pulse_speed = 1.5
+shader_parameter/pulse_intensity = 0.01
+shader_parameter/rotation_speed = 0.0
+shader_parameter/show_crosshair = false
+shader_parameter/crosshair_thickness = 0.01
+shader_parameter/crosshair_length = 0.15
+shader_parameter/show_radar_lines = false
+shader_parameter/radar_segments = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_distort"]
+shader = ExtResource("6_distort")
+shader_parameter/enable_noise_distort = true
+shader_parameter/noise_strength = 0.003
+shader_parameter/noise_scale = 15.0
+shader_parameter/noise_speed = 0.3
+shader_parameter/enable_shockwave = false
+shader_parameter/shockwave_center = Vector2(0.5, 0.5)
+shader_parameter/shockwave_radius = 0.0
+shader_parameter/shockwave_width = 0.1
+shader_parameter/shockwave_strength = 0.04
+shader_parameter/shockwave_falloff = 1.5
+shader_parameter/enable_heat_haze = false
+shader_parameter/heat_strength = 0.01
+shader_parameter/heat_speed = 3.0
+shader_parameter/heat_frequency = 20.0
+shader_parameter/enable_chromatic = true
+shader_parameter/chromatic_strength = 0.003
+
+[sub_resource type="Curve" id="Curve_shockwave"]
+_data = [Vector2(0, 0), 0.0, 2.0, 0, 1, Vector2(0.4, 0.9), 0.5, 0.5, 0, 0, Vector2(1, 1), 0.2, 0.0, 0, 0]
+point_count = 3
+
+[node name="DemoMain" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_controller")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.1, 1)
+
+[node name="NoiseOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+material = SubResource("ShaderMaterial_noise")
+color = Color(1, 1, 1, 1)
+
+[node name="ContentContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="TopSpacer" type="Control" parent="ContentContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+material = SubResource("ShaderMaterial_title")
+theme_override_colors/font_color = Color(0.1, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 64
+text = "VFX PACK DEMO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+material = SubResource("ShaderMaterial_subtitle")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "Shaders • Particles • Procedural Effects"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GlitchController" type="Control" parent="ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("9_glitchctrl")
+glitch_enabled = true
+glitch_intensity = 0.6
+glitch_frequency = 3.0
+auto_glitch = true
+auto_glitch_interval_min = 1.5
+auto_glitch_interval_max = 4.0
+auto_glitch_duration = 0.25
+
+[node name="GlitchLabel" type="Label" parent="ContentContainer/GlitchController"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+material = SubResource("ShaderMaterial_glitch")
+theme_override_colors/font_color = Color(0.9, 0.3, 0.6, 1)
+theme_override_font_sizes/font_size = 36
+text = "< GLITCH TEXT EFFECT >"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SDFContainer" type="HBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="Reticle" type="ColorRect" parent="ContentContainer/SDFContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+material = SubResource("ShaderMaterial_reticle")
+color = Color(0, 0, 0, 0)
+
+[node name="PanelFrame" type="ColorRect" parent="ContentContainer/SDFContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+material = SubResource("ShaderMaterial_panel")
+color = Color(0, 0, 0, 0)
+
+[node name="PanelLabel" type="Label" parent="ContentContainer/SDFContainer/PanelFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 16
+text = "SDF Panel Frame"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="ToggleNoise" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Noise: ON"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.02
+breathing_speed = 2.0
+enable_hover_wobble = true
+wobble_rotation_amount = 3.0
+wobble_offset_amount = 2.0
+wobble_speed = 8.0
+enable_click_punch = true
+punch_scale = 0.9
+punch_duration = 0.15
+
+[node name="ToggleDistort" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Distort: ON"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.02
+breathing_speed = 2.2
+enable_hover_wobble = true
+wobble_rotation_amount = 3.0
+wobble_offset_amount = 2.0
+wobble_speed = 8.0
+enable_click_punch = true
+punch_scale = 0.9
+punch_duration = 0.15
+
+[node name="ToggleParticles" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 40)
+layout_mode = 2
+text = "Particles!"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.025
+breathing_speed = 2.4
+enable_hover_wobble = true
+wobble_rotation_amount = 4.0
+wobble_offset_amount = 3.0
+wobble_speed = 10.0
+enable_click_punch = true
+punch_scale = 0.85
+punch_duration = 0.12
+
+[node name="ToggleTextEffects" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "TextFX: ON"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.02
+breathing_speed = 2.6
+enable_hover_wobble = true
+wobble_rotation_amount = 3.0
+wobble_offset_amount = 2.0
+wobble_speed = 8.0
+enable_click_punch = true
+punch_scale = 0.9
+punch_duration = 0.15
+
+[node name="ToggleGlitch" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Glitch: ON"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.02
+breathing_speed = 2.8
+enable_hover_wobble = true
+wobble_rotation_amount = 3.0
+wobble_offset_amount = 2.0
+wobble_speed = 8.0
+enable_click_punch = true
+punch_scale = 0.9
+punch_duration = 0.15
+
+[node name="ToggleSDF" type="Button" parent="ContentContainer/ButtonContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 40)
+layout_mode = 2
+text = "SDF: ON"
+script = ExtResource("10_uimotion")
+enable_breathing = true
+breathing_scale_amount = 0.02
+breathing_speed = 3.0
+enable_hover_wobble = true
+wobble_rotation_amount = 3.0
+wobble_offset_amount = 2.0
+wobble_speed = 8.0
+enable_click_punch = true
+punch_scale = 0.9
+punch_duration = 0.15
+
+[node name="BottomSpacer" type="Control" parent="ContentContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HelpLabel" type="Label" parent="ContentContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Keys: 1-5 toggle effects | Space: particles | Click: shockwave | Esc: quit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomPadding" type="Control" parent="ContentContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ImpactParticles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(640, 360)
+emitting = false
+amount = 25
+one_shot = true
+explosiveness = 1.0
+script = ExtResource("7_particles")
+burst_amount = 25
+burst_lifetime = 0.6
+burst_speed_min = 120.0
+burst_speed_max = 350.0
+color_start = Color(0.1, 0.9, 0.95, 1)
+color_end = Color(0.9, 0.3, 0.6, 0)
+size_start = 10.0
+size_end = 2.0
+spread_angle = 360.0
+
+[node name="ScreenDistort" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+material = SubResource("ShaderMaterial_distort")
+color = Color(1, 1, 1, 0)
+script = ExtResource("8_distortctrl")
+shockwave_duration = 0.5
+shockwave_max_radius = 1.5
+shockwave_curve = SubResource("Curve_shockwave")
+heat_haze_enabled = false
+noise_distort_enabled = true
