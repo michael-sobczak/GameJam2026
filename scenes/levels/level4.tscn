@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b0b0jp36dubff" path="res://scenes/levels/Level.tscn" id="1_fjlvv"]
 [ext_resource type="PackedScene" uid="uid://cx8qj3k2m5lta" path="res://entities/enemies/laser_turret.tscn" id="2_fjlvv"]
-[ext_resource type="PackedScene" uid="uid://1y4ng4yk10ov" path="res://scenes/props/goal/statue.tscn" id="2_o34q2"]
+[ext_resource type="PackedScene" path="res://scenes/props/goal/moon.tscn" id="2_o34q2"]
 [ext_resource type="PackedScene" path="res://entities/enemies/guard.tscn" id="4_o34q2"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_o34q2"]
@@ -79,10 +79,10 @@ position = Vector2(253, 257)
 rotation = 1.5707964
 paired_turret = NodePath("../LaserTurret2")
 
-[node name="Statue" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="6" unique_id=730721952 instance=ExtResource("2_o34q2")]
+[node name="Moon" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="6" instance=ExtResource("2_o34q2")]
 position = Vector2(144, 117.000015)
 
 [node name="P1" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="7" unique_id=397110786]
 position = Vector2(72, 435)
 
-[connection signal="goal_reached" from="Entities/Statue" to="." method="_on_goal_reached"]
+[connection signal="goal_reached" from="Entities/Moon" to="." method="_on_goal_reached"]
