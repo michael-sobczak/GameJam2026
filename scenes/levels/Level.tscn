@@ -5,13 +5,14 @@
 [ext_resource type="TileSet" uid="uid://cxbku7clobpa" path="res://tilesets/tileset_terrain.tres" id="3_jvuwd"]
 [ext_resource type="Script" uid="uid://c7b1xfu55p5mn" path="res://scripts/tilemap_navigation.gd" id="4_6158f"]
 [ext_resource type="TileSet" uid="uid://cpiu136cl3wdd" path="res://tilesets/tileset_walls.tres" id="5_5n3p8"]
-[ext_resource type="Script" uid="uid://d4xqm8kp3l2tf" path="res://scripts/tilemap_light_occluder.gd" id="6_occluder"]
+[ext_resource type="Script" uid="uid://ju16nhje62n" path="res://scripts/tilemap_light_occluder.gd" id="6_occluder"]
 [ext_resource type="PackedScene" uid="uid://bjahstm66rjpf" path="res://entities/player/player_instantiator.tscn" id="7_a3ws7"]
 
 [node name="Level" type="Node2D" unique_id=1461630359 groups=["level"]]
 y_sort_enabled = true
 position = Vector2(-4.82253e-07, 2.05796e-08)
 script = ExtResource("1_cq0rv")
+darkness_modulation = Color(0.0142752165, 0.014275218, 0.014275218, 1)
 metadata/_edit_lock_ = true
 
 [node name="AmbientDarkness" type="CanvasModulate" parent="." unique_id=1741009083]
@@ -55,11 +56,11 @@ metadata/_edit_lock_ = true
 [node name="Events" type="Node2D" parent="." unique_id=671493125]
 metadata/_edit_lock_ = true
 
-[node name="LevelCompleteOverlay" type="CanvasLayer" parent="."]
+[node name="LevelCompleteOverlay" type="CanvasLayer" parent="." unique_id=1011691482]
 layer = 10
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="LevelCompleteOverlay"]
+[node name="ColorRect" type="ColorRect" parent="LevelCompleteOverlay" unique_id=716501322]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -67,25 +68,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="CenterContainer" type="CenterContainer" parent="LevelCompleteOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="LevelCompleteOverlay" unique_id=1639562396]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="LevelCompleteOverlay/CenterContainer"]
+[node name="Label" type="Label" parent="LevelCompleteOverlay/CenterContainer" unique_id=284165895]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "A successful heist! Moving on to next target..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DefeatOverlay" type="CanvasLayer" parent="."]
+[node name="DefeatOverlay" type="CanvasLayer" parent="." unique_id=1459881729]
 layer = 150
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="DefeatOverlay"]
+[node name="ColorRect" type="ColorRect" parent="DefeatOverlay" unique_id=319847808]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -94,26 +95,26 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="CenterContainer" type="CenterContainer" parent="DefeatOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="DefeatOverlay" unique_id=285445298]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="DefeatOverlay/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="DefeatOverlay/CenterContainer" unique_id=489872921]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Label" type="Label" parent="DefeatOverlay/CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="DefeatOverlay/CenterContainer/VBoxContainer" unique_id=1164853421]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Stop! You have violated the law"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TryAgain" type="Button" parent="DefeatOverlay/CenterContainer/VBoxContainer"]
+[node name="TryAgain" type="Button" parent="DefeatOverlay/CenterContainer/VBoxContainer" unique_id=1291668933]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20

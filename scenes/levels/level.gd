@@ -15,6 +15,8 @@ var player_id: int ## Used when moving between levels to save the player facing 
 ## Path to the scene to load when the goal is reached. Set per-level in the inspector (e.g. level1 → level2).
 @export_file("*.tscn") var next_level := ""
 
+@export var darkness_modulation: Color = Color(0.05, 0.05, 0.05, 1.0)
+
 ## Intro text settings
 @export_group("Intro Text")
 @export var show_intro_text: bool = false ## Show intro text when level starts
@@ -25,7 +27,7 @@ var _intro_text: LevelIntroText
 
 func _ready():
 	if not Engine.is_editor_hint():
-		darkness.color = Color(0.1, 0.1, 0.1, 1.0)
+		darkness.color = darkness_modulation
 
 	# Ensure NavigationRegion2D exists for guard pathfinding
 	var nav_region: NavigationRegion2D = get_node_or_null("NavigationRegion2D")
@@ -211,7 +213,7 @@ func _show_intro_text() -> void:
 	_intro_text.fade_duration = intro_fade_duration
 	_intro_text.font_size = 48
 	add_child(_intro_text)
-	
+
 	# Show intro (player can move immediately)
 	_intro_text.show_intro()
 	_intro_text.intro_finished.connect(_on_intro_finished)
