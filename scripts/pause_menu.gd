@@ -12,12 +12,11 @@ func _ready() -> void:
 	add_to_group(PAUSE_MENU_GROUP)
 	if resume_button:
 		resume_button.pressed.connect(_on_resume_pressed)
+		resume_button.grab_focus()
 	if settings_button:
 		settings_button.pressed.connect(_on_settings_pressed)
 	if quit_button:
 		quit_button.pressed.connect(_on_quit_pressed)
-	if resume_button:
-		resume_button.grab_focus()
 
 
 func _process(_delta: float) -> void:
