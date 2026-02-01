@@ -19,6 +19,11 @@ signal target_lost(target: Node2D)
 var visible_targets: Array[Node2D] = []
 var _scan_timer: Timer
 var _current_facing: Vector2 = Vector2.DOWN
+var _debug_was_visible: bool = false ## Tracks previous debug visibility state.
+
+## Debug draw color: light semi-transparent red.
+const DEBUG_CONE_COLOR: Color = Color(1.0, 0.3, 0.3, 0.25)
+const DEBUG_CONE_OUTLINE_COLOR: Color = Color(1.0, 0.3, 0.3, 0.6)
 
 func _ready():
 	if not cone_profile:
@@ -28,6 +33,43 @@ func _ready():
 		cone_profile.fov_degrees = 60.0
 	
 	_setup_scan_timer()
+	set_process(true)
+
+func _process(_delta: float):
+	# Request redraw when debug visualization is enabled or just turned off.
+	var debug_visible = Debugger.vision_cones_visible
+	if debug_visible or _debug_was_visible:
+		queue_redraw()
+	_debug_was_visible = debug_visible
+
+func _draw():
+	if not Debugger.vision_cones_visible:
+		return
+	if not cone_profile:
+		return
+	
+	var origin = cone_profile.origin_offset
+	var facing_angle = _current_facing.angle()
+	var half_fov = deg_to_rad(cone_profile.fov_degrees / 2.0)
+	var range_dist = cone_profile.range_px
+	
+	# Build cone polygon with arc segments for smooth edges.
+	var points: PackedVector2Array = []
+	points.append(origin)
+	
+	var arc_segments: int = 16
+	for i in range(arc_segments + 1):
+		var t = float(i) / float(arc_segments)
+		var angle = facing_angle - half_fov + t * (half_fov * 2.0)
+		points.append(origin + Vector2.from_angle(angle) * range_dist)
+	
+	# Draw filled cone.
+	draw_colored_polygon(points, DEBUG_CONE_COLOR)
+	
+	# Draw outline.
+	var outline_points = points.duplicate()
+	outline_points.append(origin)  # Close the shape.
+	draw_polyline(outline_points, DEBUG_CONE_OUTLINE_COLOR, 2.0)
 
 func _setup_scan_timer():
 	_scan_timer = Timer.new()

@@ -10,6 +10,8 @@ var night_vision_overlay: CanvasLayer = null
 var original_darkness_color: Color = Color(0.05, 0.05, 0.05, 1)  # Store original darkness color
 var ambient_darkness_node: CanvasModulate = null  # Reference to the darkness node
 
+var vision_cones_visible: bool = false ## Dev toggle for enemy vision cone visibility.
+
 func _ready():
 	# Always enable debugger for testing (comment out if you want debug-only)
 	# if not OS.is_debug_build():
@@ -17,7 +19,7 @@ func _ready():
 	# 	print("DEBUGGER DISABLED.")
 	# 	return
 	
-	print("DEBUGGER ENABLED - Press G to spawn guard, N for night vision")
+	print("DEBUGGER ENABLED - Press G to spawn guard, N for night vision, C to toggle vision cones")
 	
 	# Preload guard scene
 	guard_scene = load(GUARD_SCENE_PATH) as PackedScene
@@ -50,6 +52,8 @@ func _unhandled_key_input(event: InputEvent):
 				_spawn_guard_at_cursor()
 			KEY_N:
 				_toggle_night_vision()
+			KEY_C:
+				_toggle_vision_cones()
 
 ## Disables/enables players CollisionShape2D, allowing them to pass through anything.
 func _set_player_ghost():
@@ -215,3 +219,8 @@ func _disable_night_vision():
 		ambient_darkness_node = null
 	
 	print("Night vision disabled")
+
+## Toggles visibility of enemy vision cones (semi-transparent red).
+func _toggle_vision_cones():
+	vision_cones_visible = not vision_cones_visible
+	print("Vision cones %s" % ("visible" if vision_cones_visible else "hidden"))
