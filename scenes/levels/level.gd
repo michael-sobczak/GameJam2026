@@ -196,7 +196,7 @@ func end_level() -> void:
 	SceneManager.swap_scenes(next_level, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
 
 
-const GOAL_ZOOM_TARGET: float = 2.5
+const GOAL_ZOOM_TARGET: float = 1.7
 const GOAL_ZOOM_DURATION: float = 0.8
 
 func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
@@ -211,7 +211,7 @@ func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
 	await particles.burst_finished
 	await get_tree().create_timer(GOAL_PARTICLE_WAIT_AFTER_BURST).timeout
 	particles.queue_free()
-	# 3) Zoom out 4 -> 2.5
+	# 3) Zoom out from nominal zoom to a wider view
 	var cam: Camera2D = get_node_or_null("GameCamera2D") as Camera2D
 	if cam:
 		var tween := create_tween()
