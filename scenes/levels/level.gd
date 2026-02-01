@@ -360,11 +360,7 @@ func _start_guard_spin(guard: GuardEntity, rotations_per_second: float) -> void:
 
 func _on_defeat_try_again_pressed() -> void:
 	_stop_defeat_siren()
-	var current_scene := get_tree().current_scene
-	var scene_path := current_scene.scene_file_path if current_scene else ""
-	if scene_path.is_empty():
-		scene_path = "res://scenes/menus/start_screen.tscn"
-	SceneManager.swap_scenes(scene_path, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
+	SceneManager.swap_scenes("res://scenes/menus/community_service_screen.tscn", get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
 
 
 func _show_intro_text() -> void:
