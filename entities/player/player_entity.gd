@@ -16,17 +16,17 @@ var equipped = 0 ## The id of the weapon equipped by the player.
 
 func _ready():
 	super._ready()
-	Globals.transfer_start.connect(func(): 
+	Globals.transfer_start.connect(func():
 		on_transfer_start.enable()
 	)
 	Globals.transfer_complete.connect(func(): on_transfer_end.enable())
 	Globals.destination_found.connect(func(destination_path): _move_to_destination(destination_path))
-	
+
 	# Sync flashlight with facing direction
 	if flashlight:
 		direction_changed.connect(_update_flashlight_aim)
 		_update_flashlight_aim(facing)
-	
+
 	# Setup inventory slot HUD
 	if inventory_slot_hud:
 		print("PlayerEntity: Found InventorySlotHUD")
@@ -38,16 +38,16 @@ func _ready():
 			print("PlayerEntity: Warning - No inventory found")
 	else:
 		print("PlayerEntity: Warning - InventorySlotHUD not found!")
-	
+
 	receive_data(DataManager.get_player_data(player_id))
-	
+
 	# Initialize starting inventory if empty (after loading save data)
 	if inventory and inventory.items.is_empty():
 		_initialize_starting_inventory()
-	
+
 	# Apply level mask restrictions (e.g. level 3 = no disguise mask); strip disallowed masks
 	call_deferred("_apply_level_mask_restrictions")
-	
+
 	# Refresh HUD after inventory is set up
 	if inventory_slot_hud and inventory:
 		inventory_slot_hud._refresh_slots()
@@ -100,9 +100,9 @@ func disable_entity(value: bool, delay = 0.0):
 func _update_flashlight_aim(direction: Vector2):
 	if not flashlight:
 		return
-	
+
 	flashlight.set_aim_direction(direction)
-	
+
 	# Offset flashlight position based on facing direction (torch held in right hand)
 	var offset := Vector2.ZERO
 	if direction == Vector2.DOWN:
@@ -116,7 +116,7 @@ func _update_flashlight_aim(direction: Vector2):
 	else:
 		# Diagonal directions
 		offset = Vector2(direction.x * 6, direction.y * 3 - 5)
-	
+
 	flashlight.position = offset
 
 ## Handle flashlight toggle input.
@@ -141,11 +141,11 @@ func _initialize_starting_inventory():
 	if not inventory:
 		print("PlayerEntity: Cannot initialize inventory - inventory is null")
 		return
-	
+
 	var allowed := _get_level_allowed_mask_types()
 	var qty_per_mask: int = _get_usages_per_mask()
 	print("PlayerEntity: Initializing starting inventory...")
-	
+
 	# Create Night Vision Mask item (add only if allowed)
 	if allowed.is_empty() or "night_vision" in allowed:
 		var night_vision_mask = DataMaskItem.new()
@@ -159,7 +159,7 @@ func _initialize_starting_inventory():
 		night_vision_mask.deactivate_sound = NIGHT_VISION_DEACTIVATE_SFX
 		inventory.add_item(night_vision_mask, qty_per_mask)
 		print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
-	
+
 	# Create Disguise Mask item (add only if allowed)
 	if allowed.is_empty() or "disguise" in allowed:
 		var disguise = DataMaskItem.new()
@@ -173,9 +173,9 @@ func _initialize_starting_inventory():
 		disguise.deactivate_sound = DISGUISE_DEACTIVATE_SFX
 		inventory.add_item(disguise, qty_per_mask)
 		print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
-	
+
 	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
-	
+
 	# Refresh HUD
 	if inventory_slot_hud:
 		print("PlayerEntity: Refreshing inventory slot HUD...")
@@ -242,7 +242,7 @@ func _create_atlas_from_texture(texture: Texture2D) -> AtlasTexture:
 func _on_mask_item_used(mask_item: DataMaskItem):
 	if not mask_effect_manager:
 		return
-	
+
 	var can_apply := false
 	match mask_item.mask_type:
 		DataMaskItem.MaskType.NIGHT_VISION:
@@ -252,7 +252,8 @@ func _on_mask_item_used(mask_item: DataMaskItem):
 					mask_item.effect_duration,
 					mask_item.mask_texture,
 					mask_item.activate_sound,
-					mask_item.deactivate_sound
+					mask_item.deactivate_sound,
+					mask_item.resource_name
 				)
 		DataMaskItem.MaskType.DISGUISE:
 			can_apply = mask_effect_manager.can_apply_disguise()
@@ -261,12 +262,13 @@ func _on_mask_item_used(mask_item: DataMaskItem):
 					mask_item.effect_duration,
 					mask_item.mask_texture,
 					mask_item.activate_sound,
-					mask_item.deactivate_sound
+					mask_item.deactivate_sound,
+					mask_item.resource_name
 				)
-	
+
 	if not can_apply:
 		return
-	
+
 	# Effect was applied: consume one use and refresh HUD
 	AudioManager.play_sfx("item_use")
 	if inventory:
