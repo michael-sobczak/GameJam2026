@@ -10,7 +10,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608, 320, 192, 320)])
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_hfmxa")]
-next_level = "res://scenes/menus/win_screen.tscn"
+next_level = "res://scenes/levels/level3.tscn"
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 navigation_polygon = SubResource("NavigationPolygon_71baw")

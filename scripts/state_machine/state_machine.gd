@@ -38,6 +38,9 @@ func _ready():
 	_init_states()
 	_get_states()
 	_enter_states()
+	# Initial state's enter() was never called (only enable_state() does that); call it so entity/etc. are set.
+	if current_state:
+		current_state.enter()
 
 func _init_states():
 	var children = get_children(true).filter(func(node): return node is State)
@@ -47,7 +50,13 @@ func _init_states():
 	Globals.state_machine_initialized.emit(self)
 
 func _get_states():
-	if !current_state or current_state and current_state.disabled:
+	# Export NodePath("sentry") etc. may not be resolved when _ready() runs on instanced scenes; resolve from first State child if null.
+	if current_state == null:
+		var state_children = get_children(true).filter(func(n): return n is State)
+		if not state_children.is_empty():
+			current_state = state_children[0]
+			current_state_name = current_state.name
+	if !current_state or current_state.disabled:
 		return
 	states = []
 	states.append(current_state)
@@ -65,6 +74,8 @@ func enable_state(state: State, sender = null):
 	state_changed.emit(previous_state, current_state)
 	_get_states()
 	_enter_states(sender)
+	# New state's enter() must run so it can set up (e.g. chase sets nav target, speed).
+	current_state.enter()
 
 func disable_state(_state: State):
 	_exit_states()

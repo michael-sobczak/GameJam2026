@@ -100,7 +100,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_flm04")
-level_files = Array[String](["uid://bgfvqywk203e4", "uid://p141l5aalrcj"])
+level_files = Array[String](["uid://bgfvqywk203e4", "uid://p141l5aalrcj", "uid://n2lahx5r8vxh"])
 
 [node name="NoiseBackground" type="ColorRect" parent="." unique_id=1382966985]
 material = SubResource("ShaderMaterial_noise")

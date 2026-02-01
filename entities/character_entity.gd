@@ -125,10 +125,12 @@ func _emit_action(action: String, value: bool):
 	action_performed.emit(action if value else "")
 
 ##internal - Used to update the current animation in the AnimationTree with the facing direction.
+## Sets blend_position on all direction-blended states so facing is correct (e.g. for sentry guards that don't move).
 func _update_animation():
-	var current_anim = animation_tree.get("parameters/playback").get_current_node()
-	if current_anim:
-		animation_tree.set("parameters/%s/BlendSpace2D/blend_position" % current_anim, Vector2(facing.x, facing.y))
+	var blend_pos = Vector2(facing.x, facing.y)
+	var state_names = ["idle", "walk", "run", "jump", "attack", "hurt"]
+	for state_name in state_names:
+		animation_tree.set("parameters/%s/BlendSpace2D/blend_position" % state_name, blend_pos)
 
 ##internal - Checks if the entity is inside an area that it is considered a falling zone.
 func _check_falling():

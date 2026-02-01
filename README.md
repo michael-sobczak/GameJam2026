@@ -26,9 +26,9 @@ In **Heist Masquerade**, you play as a master thief who has acquired a collectio
 
 Your flashlight illuminates dark areas, helping you navigate through shadowy environments. However, be careful—light can also give away your position to watchful guards. Toggle it wisely.
 
-### 👁️ Guard Vision
+### 🚨 Getting Caught
 
-Guards patrol the area with keen eyes. Their vision cones represent their field of view. Stay out of sight, use cover, and time your movements to slip past undetected. If spotted, guards will pursue you.
+Guards patrol the area with keen eyes. Their vision cones represent their field of view. Stay out of sight, use cover, and time your movements to slip past undetected. If a guard spots you, it's an instant game over.
 
 ### 🎭 Masks
 
@@ -50,7 +50,7 @@ Your inventory displays up to 5 items at the bottom of the screen. Use **Q** and
 - Infiltrate guarded locations
 - Avoid detection by guards
 - Use your masks and flashlight strategically
-- Complete each heist without getting caught
+- Complete each heist to advance; complete the final heist to win
 
 ## 🚀 Getting Started
 

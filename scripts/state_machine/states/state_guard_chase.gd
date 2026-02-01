@@ -69,6 +69,15 @@ func physics_update(delta):
 	if not guard.is_navigation_finished():
 		var next_pos = guard.get_next_path_position()
 		guard.move_towards(next_pos)
+	elif is_instance_valid(guard.current_target):
+		var target_pos = guard.current_target.global_position
+		var dist = guard.global_position.distance_to(target_pos)
+		var stop_distance: float = guard.navigation_agent.target_desired_distance if guard.navigation_agent else 4.0
+		if dist <= stop_distance:
+			# Close enough: stop so we don't run into the player (keeps "run around in front" feel)
+			guard.stop()
+		else:
+			# Path not ready yet or target moved: move towards target
+			guard.move_towards(target_pos)
 	else:
-		# Reached target position, but target might have moved
 		guard.stop()

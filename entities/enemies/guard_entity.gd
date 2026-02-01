@@ -21,6 +21,11 @@ signal target_lost(target: Node2D)
 @export var home_position: Vector2 ## Position to return to after investigation.
 @export var home_facing: Vector2 = Vector2.DOWN ## Direction to face when at home.
 
+@export_group("Sentry")
+@export var sentry_scan_rotation_speed: float = 0.0 ## Degrees per second to rotate while in sentry mode (0 = no rotation). Ignored if sentry_sequence is set.
+@export var sentry_sequence_directions: Array[Vector2] = [] ## Per guard: directions to face in order (e.g. [Vector2.UP, Vector2.RIGHT]). Empty = use scan_rotation_speed or none.
+@export var sentry_sequence_durations: Array[float] = [] ## Per guard: seconds to hold each direction (same length as sentry_sequence_directions). E.g. [20.0, 2.0].
+
 @onready var perception: VisionConeSensor = $Perception
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var alert_indicator: AlertIndicator = $AlertIndicator
@@ -157,8 +162,7 @@ func _build_patrol_path_from_markers():
 		print("Guard '%s': Built patrol path from %d Marker2D children (patrol_loop=%s)" % [name, markers.size(), patrol_loop])
 		
 		# Note: Patrol will start after navigation is set up (in _setup_navigation)
-	else:
-		print("Guard '%s': No Marker2D children found for patrol path" % name)
+	# else: no markers is valid (sentry-only guard)
 
 ## Starts patrol mode if guard has patrol points.
 ## Called deferred to ensure state machine is ready.

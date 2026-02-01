@@ -691,13 +691,13 @@ cone_profile = SubResource("Resource_wuv6x")
 [node name="PlayerSelfLight" parent="." index="15" unique_id=1085852860 instance=ExtResource("19_self_light")]
 energy = 0.15
 
-[node name="MaskSprite" type="Sprite2D" parent="." index="16" unique_id=1113418640]
+[node name="MaskSprite" type="Sprite2D" parent="." index="16" unique_id=1800195646]
 visible = false
 z_index = 10
 position = Vector2(0, -30)
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.1, 0.1)
 
-[node name="MaskEffectManager" type="Node" parent="." index="17" unique_id=1694509091]
+[node name="MaskEffectManager" type="Node" parent="." index="17" unique_id=173444392]
 script = ExtResource("17_mask_effect")
 
 [node name="InventorySlotHUD" parent="." index="18" unique_id=582248342 instance=ExtResource("18_slot_hud")]
