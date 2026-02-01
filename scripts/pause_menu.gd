@@ -43,8 +43,13 @@ func _on_resume_pressed() -> void:
 
 func _on_settings_pressed() -> void:
 	AudioManager.play_sfx("inventory_select")
-	_close()
 	Globals.open_settings_menu()
+	# Keep pause menu open; settings will call return_focus() when closed
+
+## Call from SettingsMenu when it closes so pause menu buttons work again.
+func return_focus() -> void:
+	if resume_button:
+		resume_button.call_deferred("grab_focus")
 
 
 func _on_quit_pressed() -> void:

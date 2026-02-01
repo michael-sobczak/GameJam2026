@@ -38,6 +38,9 @@ func _process(_delta):
 
 func close_settings() -> void:
 	Globals.settings_menu = null
+	var pause_menu: Node = get_tree().get_first_node_in_group(PauseMenu.PAUSE_MENU_GROUP)
+	if pause_menu is PauseMenu:
+		(pause_menu as PauseMenu).return_focus()
 	queue_free()
 
 func _on_close_button_pressed():
