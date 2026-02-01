@@ -31,7 +31,13 @@ enum FiringBehavior {
 
 @export_group("Visual Settings")
 @export var laser_color: Color = Color(1.0, 0.2, 0.2, 0.9) ## Color of the laser beam.
-@export var laser_width: float = 4.0 ## Width of the laser beam.
+@export var laser_width: float = 4.0 ## Base width of the laser beam.
+@export var wave_amplitude: float = 0.6 ## How much the width varies along the beam (0-1, fraction of base width).
+@export var wave_frequency: float = 4.0 ## Number of wave cycles along the beam length.
+@export var wave_speed: float = 3.0 ## How fast the wave travels along the beam.
+
+@export_group("Muzzle Settings")
+@export var muzzle_offset: float = 16.0 ## Distance from center to muzzle tip in local X direction.
 
 @onready var vision_sensor: VisionConeSensor = $VisionConeSensor
 @onready var laser_line: Line2D = $LaserLine
@@ -42,6 +48,9 @@ var _is_firing: bool = false
 var _pulse_timer: float = 0.0
 var _pulse_on: bool = true
 var _detected_target: Node2D = null
+var _wave_time: float = 0.0 ## Time accumulator for traveling wave effect.
+var _has_triggered_defeat: bool = false ## Prevents multiple defeat triggers.
+var _width_curve: Curve ## Curve for varying beam width along its length.
 
 
 func _notification(what: int) -> void:
@@ -95,6 +104,9 @@ func _process(delta: float):
 	# Skip game logic in editor
 	if Engine.is_editor_hint():
 		return
+	
+	# Update wave time for traveling wave effect
+	_wave_time += delta * wave_speed
 	
 	# Handle rotation (rotate the whole node)
 	if rotation_speed > 0.0:
@@ -155,40 +167,106 @@ func _update_laser():
 	if not laser_raycast or not laser_line:
 		return
 	
-	# Raycast points in local RIGHT direction; node rotation handles orientation
+	# Set base width
+	laser_line.width = laser_width
+	
+	# Muzzle offset in local coordinates (tip of turret is in +X direction in local space)
+	var muzzle_local := Vector2(muzzle_offset, 0)
+	
+	# Set raycast to start from muzzle position
+	laser_raycast.position = muzzle_local
 	laser_raycast.target_position = Vector2(laser_range, 0)
 	laser_raycast.force_raycast_update()
 	
-	# Get the end point of the laser (in local coordinates)
+	# Get the end point of the laser (in local coordinates, relative to node origin)
 	var laser_end: Vector2
 	if laser_raycast.is_colliding():
+		# Convert collision point to local space (relative to node origin, not raycast)
 		laser_end = to_local(laser_raycast.get_collision_point())
 		
-		# Check if we hit something that can take damage
+		# Check if we hit a player (vision_target group) - trigger defeat
 		var collider = laser_raycast.get_collider()
-		if collider and collider.has_method("take_damage"):
+		if collider and collider.is_in_group(&"vision_target"):
+			_trigger_player_defeat(collider)
+		elif collider and collider.has_method("take_damage"):
 			collider.take_damage(laser_damage)
-		elif collider and collider.is_in_group(&"vision_target"):
-			# Try to find HurtBox on the collider or parent
-			var hurtbox = _find_hurtbox(collider)
-			if hurtbox and hurtbox.has_method("_on_area_entered"):
-				# Emit damage through HurtBox system if available
-				pass  # HurtBox handles damage through area detection
 	else:
-		laser_end = Vector2(laser_range, 0)
+		# No collision - laser extends to full range from muzzle
+		laser_end = muzzle_local + Vector2(laser_range, 0)
 	
-	# Update Line2D points
+	# Update Line2D points (starts at muzzle, ends at collision or max range)
 	laser_line.clear_points()
-	laser_line.add_point(Vector2.ZERO)
+	laser_line.add_point(muzzle_local)
 	laser_line.add_point(laser_end)
+	
+	# Create traveling wave width curve
+	_update_width_curve()
 
 
-## Find a HurtBox on the given node or its parent.
-func _find_hurtbox(node: Node) -> Node:
-	if node.has_node("HurtBox"):
-		return node.get_node("HurtBox")
-	if node.get_parent() and node.get_parent().has_node("HurtBox"):
-		return node.get_parent().get_node("HurtBox")
+## Update the width curve to create a traveling wave effect along the beam.
+func _update_width_curve() -> void:
+	if not laser_line:
+		return
+	
+	# Create or reuse curve
+	if not _width_curve:
+		_width_curve = Curve.new()
+		_width_curve.bake_resolution = 32
+		laser_line.width_curve = _width_curve
+	
+	# Clear existing points
+	_width_curve.clear_points()
+	
+	# Generate wave pattern along the beam
+	# Sample points along the curve (0.0 to 1.0 represents beam length)
+	const NUM_POINTS := 16
+	for i in range(NUM_POINTS + 1):
+		var t := float(i) / float(NUM_POINTS)  # Position along beam (0 to 1)
+		
+		# Create traveling sine wave
+		# Phase shifts with time to create movement, frequency controls wave count
+		var phase := t * wave_frequency * TAU - _wave_time * TAU
+		var wave_value := sin(phase)
+		
+		# Map sine (-1 to 1) to width multiplier (1 - amplitude to 1 + amplitude)
+		# This creates thicker and thinner sections along the beam
+		var width_multiplier := 1.0 + (wave_value * wave_amplitude)
+		width_multiplier = max(0.3, width_multiplier)  # Ensure minimum visibility
+		
+		# Add point to curve (x = position along beam, y = width multiplier)
+		_width_curve.add_point(Vector2(t, width_multiplier))
+
+
+## Trigger player defeat when hit by laser (same as being caught by guard).
+func _trigger_player_defeat(player_node: Node2D) -> void:
+	# Only trigger once
+	if _has_triggered_defeat:
+		return
+	_has_triggered_defeat = true
+	
+	# Emit signal for external listeners
+	player_detected.emit(player_node)
+	
+	# Find the current level and call its defeat handler
+	var level: Level = _find_level()
+	if level and level.has_method("_on_guard_spotted_player"):
+		level._on_guard_spotted_player(player_node)
+	else:
+		# Fallback: try to find defeat mechanism through tree
+		push_warning("LaserTurret: Could not find Level node to trigger defeat")
+
+
+## Find the Level node in the scene tree.
+func _find_level() -> Level:
+	var node: Node = self
+	while node:
+		if node is Level:
+			return node as Level
+		node = node.get_parent()
+	# Try finding via tree root
+	var root = get_tree().current_scene
+	if root is Level:
+		return root as Level
 	return null
 
 

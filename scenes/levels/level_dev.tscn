@@ -32,6 +32,7 @@ position = Vector2(464, 300)
 position = Vector2(493, 197)
 rotation = 3.1415927
 pulse_duration = 5.0
+fov_degrees = 20.0
 laser_color = Color(0.8271693, 0.305665, 0.8161766, 0.9019608)
 
 [connection signal="goal_reached" from="Painting" to="." method="_on_goal_reached"]
