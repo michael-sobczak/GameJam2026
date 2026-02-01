@@ -12,15 +12,21 @@ var disguise_active: bool = false
 var night_vision_overlay: CanvasLayer = null
 var ambient_darkness_node: CanvasModulate = null
 var original_darkness_color: Color = Color.BLACK
+var active_mask_texture: Texture2D = null
+
+@onready var mask_sprite: Sprite2D = get_parent().get_node_or_null("MaskSprite")
 
 ## Apply night vision effect for specified duration.
-func apply_night_vision(duration: float):
+func apply_night_vision(duration: float, mask_tex: Texture2D = null):
 	if night_vision_active:
 		return  # Already active
 	
 	night_vision_active = true
 	night_vision_started.emit(duration)
 	AudioManager.play_sfx("night_vision_on")
+	
+	# Show mask on player's head
+	_show_mask_sprite(mask_tex)
 	
 	# Find and brighten the AmbientDarkness node
 	var current_level = Globals.get_current_level()
@@ -68,15 +74,21 @@ func _remove_night_vision():
 	if ambient_darkness_node:
 		ambient_darkness_node.color = original_darkness_color
 		ambient_darkness_node = null
+	
+	# Hide mask sprite
+	_hide_mask_sprite()
 
 ## Apply disguise effect for specified duration.
-func apply_disguise(duration: float):
+func apply_disguise(duration: float, mask_tex: Texture2D = null):
 	if disguise_active:
 		return  # Already active
 	
 	disguise_active = true
 	disguise_started.emit(duration)
 	AudioManager.play_sfx("disguise_on")
+	
+	# Show mask on player's head
+	_show_mask_sprite(mask_tex)
 	
 	# Remove player from vision_target group so guards can't see them
 	var players = Globals.get_players()
@@ -102,3 +114,23 @@ func _remove_disguise():
 	for player in players:
 		if player is PlayerEntity:
 			player.add_to_group(&"vision_target")
+	
+	# Hide mask sprite
+	_hide_mask_sprite()
+
+## Show the mask sprite on the player's head.
+func _show_mask_sprite(texture: Texture2D):
+	if not mask_sprite:
+		mask_sprite = get_parent().get_node_or_null("MaskSprite")
+	
+	if mask_sprite and texture:
+		active_mask_texture = texture
+		mask_sprite.texture = texture
+		mask_sprite.visible = true
+
+## Hide the mask sprite.
+func _hide_mask_sprite():
+	if mask_sprite:
+		mask_sprite.visible = false
+		mask_sprite.texture = null
+	active_mask_texture = null

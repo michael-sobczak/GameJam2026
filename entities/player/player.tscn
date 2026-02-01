@@ -681,7 +681,13 @@ disabled = false
 
 [node name="FlashlightCone" parent="." index="14" unique_id=1733046864 instance=ExtResource("16_flashlight")]
 
-[node name="MaskEffectManager" type="Node" parent="." index="15"]
+[node name="MaskSprite" type="Sprite2D" parent="." index="15"]
+visible = false
+position = Vector2(0, -30)
+scale = Vector2(0.15, 0.15)
+z_index = 10
+
+[node name="MaskEffectManager" type="Node" parent="." index="16"]
 script = ExtResource("17_mask_effect")
 
-[node name="InventorySlotHUD" parent="." index="16" unique_id=582248342 instance=ExtResource("18_slot_hud")]
+[node name="InventorySlotHUD" parent="." index="17" unique_id=582248342 instance=ExtResource("18_slot_hud")]

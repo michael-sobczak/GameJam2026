@@ -105,6 +105,10 @@ func _unhandled_input(event: InputEvent):
 			flashlight.set_enabled(not flashlight.enabled)
 			AudioManager.play_sfx("flashlight_toggle")
 
+## Preloaded mask textures.
+const NIGHT_VISION_MASK_TEXTURE = preload("res://DownloadedAssets/a-stunning-masquerade-mask-featuring-elaborate-detailing-and-a-rich-palette-of-purple-green-and-pink-hues-evoking-mystery-and-festivity-png.png")
+const DISGUISE_MASK_TEXTURE = preload("res://DownloadedAssets/elaborate-venetian-mask-with-wings-gold-details-and-gems-on-transparent-background-png.png")
+
 ## Initialize player's starting inventory with mask items.
 func _initialize_starting_inventory():
 	if not inventory:
@@ -119,7 +123,8 @@ func _initialize_starting_inventory():
 	night_vision_mask.description = "See clearly in the dark for a short time."
 	night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
 	night_vision_mask.effect_duration = 5.0
-	night_vision_mask.icon = _create_simple_icon(32, Color(0.0, 1.0, 0.4, 1.0))  # Green square
+	night_vision_mask.icon = _create_atlas_from_texture(NIGHT_VISION_MASK_TEXTURE)
+	night_vision_mask.mask_texture = NIGHT_VISION_MASK_TEXTURE
 	print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
 	
 	# Create Disguise Mask item
@@ -128,7 +133,8 @@ func _initialize_starting_inventory():
 	disguise.description = "Blend in with enemies and avoid detection."
 	disguise.mask_type = DataMaskItem.MaskType.DISGUISE
 	disguise.effect_duration = 5.0
-	disguise.icon = _create_simple_icon(32, Color(0.6, 0.2, 0.8, 1.0))  # Purple square
+	disguise.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)
+	disguise.mask_texture = DISGUISE_MASK_TEXTURE
 	print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
 	
 	# Add items to inventory
@@ -143,15 +149,11 @@ func _initialize_starting_inventory():
 	else:
 		print("PlayerEntity: Warning - inventory_slot_hud is null, cannot refresh")
 
-## Create a simple colored icon texture.
-func _create_simple_icon(size: int, color: Color) -> AtlasTexture:
-	var image = Image.create(size, size, false, Image.FORMAT_RGBA8)
-	image.fill(color)
-	
-	var texture = ImageTexture.create_from_image(image)
+## Create an AtlasTexture from a full texture for use as an icon.
+func _create_atlas_from_texture(texture: Texture2D) -> AtlasTexture:
 	var atlas = AtlasTexture.new()
 	atlas.atlas = texture
-	atlas.region = Rect2(0, 0, size, size)
+	atlas.region = Rect2(0, 0, texture.get_width(), texture.get_height())
 	return atlas
 
 ## Handle mask item usage.
@@ -165,6 +167,6 @@ func _on_mask_item_used(item: DataItem):
 	
 	match mask_item.mask_type:
 		DataMaskItem.MaskType.NIGHT_VISION:
-			mask_effect_manager.apply_night_vision(mask_item.effect_duration)
+			mask_effect_manager.apply_night_vision(mask_item.effect_duration, mask_item.mask_texture)
 		DataMaskItem.MaskType.DISGUISE:
-			mask_effect_manager.apply_disguise(mask_item.effect_duration)
+			mask_effect_manager.apply_disguise(mask_item.effect_duration, mask_item.mask_texture)

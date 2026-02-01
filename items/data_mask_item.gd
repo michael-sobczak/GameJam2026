@@ -10,3 +10,4 @@ enum MaskType {
 
 @export var mask_type: MaskType
 @export var effect_duration: float = 5.0 ## Duration of the effect in seconds.
+@export var mask_texture: Texture2D ## Full texture to display on player's head when active.
