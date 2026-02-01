@@ -12,6 +12,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_hfmxa")]
 initial_camera_zoom = 2.5
 next_level = "res://scenes/levels/level3.tscn"
+allowed_mask_types = Array[String](["night_vision", "disguise"])
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 navigation_polygon = SubResource("NavigationPolygon_71baw")

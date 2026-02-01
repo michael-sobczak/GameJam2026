@@ -11,6 +11,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_o8c3j")]
 next_level = "res://scenes/levels/level2.tscn"
 show_intro_text = true
+allowed_mask_types = Array[String](["night_vision"])
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 navigation_polygon = SubResource("NavigationPolygon_4tcl0")
