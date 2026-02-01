@@ -1,0 +1,103 @@
+[gd_scene load_steps=8 format=3 uid="uid://community_service_01"]
+
+[ext_resource type="Script" path="res://scripts/community_service_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://2us16ikdxggi" path="res://entities/player/chara-hero.png" id="2_hero"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk_frame"]
+atlas = ExtResource("2_hero")
+region = Rect2(120, 150, 40, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_placeholder"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk_frame")
+}],
+"loop": true,
+"name": &"walk-right",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_guard"]
+atlas = ExtResource("2_hero")
+region = Rect2(240, 0, 40, 50)
+
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "community_service"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Stage/PlayerSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(-580, 50), Vector2(380, 50)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Stage/PlayerSprite")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"walk-right"],
+"method": &"play"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"community_service": SubResource("Animation_walk")
+}
+
+[node name="CommunityServiceScreen" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(800, 450)
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -800.0
+offset_top = -450.0
+offset_right = 800.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="Stage" type="Node2D" parent="."]
+position = Vector2(800, 450)
+
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="Stage"]
+position = Vector2(-580, 50)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_placeholder")
+
+[node name="Guard1" type="Sprite2D" parent="Stage"]
+position = Vector2(-400, -50)
+scale = Vector2(4, 4)
+texture = SubResource("AtlasTexture_guard")
+
+[node name="Guard2" type="Sprite2D" parent="Stage"]
+position = Vector2(200, -50)
+scale = Vector2(4, 4)
+texture = SubResource("AtlasTexture_guard")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_main")
+autoplay = "community_service"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]
