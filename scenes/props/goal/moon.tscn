@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cq27sjmxhse63"]
+
+[ext_resource type="Script" uid="uid://6qaut4d4t7wf" path="res://scenes/props/goal/moon.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c7lowffv5lrwi" path="res://DownloadedAssets/moon.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(420, 406.6667)
+
+[node name="Moon" type="Area2D" unique_id=791337373]
+scale = Vector2(0.15, 0.15)
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2081106764]
+position = Vector2(10.000006, -9.999993)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=976002653]
+texture = ExtResource("2_texture")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

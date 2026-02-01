@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c0yufdbeqjvn2"]
+
+[ext_resource type="Script" uid="uid://bcbw821gjbsfw" path="res://scenes/props/goal/money_bag.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://phmabfxxlnhv" path="res://scenes/props/goal/moneybag.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(246.66666, 253.33333)
+
+[node name="MoneyBag" type="Area2D" unique_id=1109985633]
+scale = Vector2(0.15, 0.15)
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=844122216]
+position = Vector2(3.3333304, 3.1789143e-06)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=75575543]
+scale = Vector2(0.46875, 0.46875)
+texture = ExtResource("2_texture")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
