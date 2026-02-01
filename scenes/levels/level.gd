@@ -37,7 +37,10 @@ var _intro_text: LevelIntroText
 const SIREN_STREAM: AudioStream = preload("res://DownloadedAssets/Siren-Sound.mp3")
 const IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/ImpactParticles.tscn")
 const PAUSE_MENU_SCENE: PackedScene = preload("res://scenes/menus/pause_menu.tscn")
+const GUARD_SCENE: PackedScene = preload("res://entities/enemies/guard.tscn")
 const GOAL_PARTICLE_WAIT_AFTER_BURST: float = 0.6
+const DEFEAT_GUARD_COUNT: int = 4 ## Number of guards to spawn around player when caught.
+const DEFEAT_GUARD_RADIUS: float = 80.0 ## Distance from player where guards spawn.
 var _defeat_siren_player: AudioStreamPlayer = null
 var _defeat_siren_play_count: int = 0
 var _defeat_siren_stopping: bool = false
@@ -200,6 +203,9 @@ const GOAL_ZOOM_TARGET: float = 1.7
 const GOAL_ZOOM_DURATION: float = 0.8
 
 func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
+	# 0) Play pickup sound, stop player and guards
+	AudioManager.play_sfx("treasure_pickup")
+	_stop_player_and_guards()
 	# 1) Restore light to the whole map
 	if darkness:
 		darkness.color = Color.WHITE
@@ -226,6 +232,24 @@ func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
 
 var _defeated := false
 
+## Stop player movement and disable guard state machines so they stop walking (e.g. on win).
+func _stop_player_and_guards() -> void:
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is PlayerEntity:
+			var player: PlayerEntity = node as PlayerEntity
+			player.input_enabled = false
+			player.stop()
+	var entities: Node = get_node_or_null("Entities")
+	if not entities:
+		return
+	for child in entities.get_children():
+		if child is GuardEntity:
+			var guard: GuardEntity = child as GuardEntity
+			guard.stop()
+			var sm: StateMachine = guard.get_node_or_null("GuardStates") as StateMachine
+			if sm:
+				sm.disabled = true
+
 func _connect_guards() -> void:
 	var entities: Node = get_node_or_null("Entities")
 	if not entities:
@@ -240,12 +264,17 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 	_defeated = true
 
 	# Disable player input and movement
+	var player_pos := Vector2.ZERO
 	var players = get_tree().get_nodes_in_group("player")
 	for node in players:
 		if node is PlayerEntity:
 			var player: PlayerEntity = node as PlayerEntity
 			player.input_enabled = false
 			player.stop()
+			player_pos = player.global_position
+
+	# Spawn cosmetic guards surrounding the player
+	_spawn_defeat_guards(player_pos)
 
 	# Turn lights on!
 	if darkness:
@@ -267,6 +296,67 @@ func _on_guard_spotted_player(_target: Node2D) -> void:
 
 	# Siren loops up to 4 times; stopped when Try Again or level exits
 	_start_defeat_siren()
+
+
+## Spawn cosmetic guards in a circle around the player when caught.
+func _spawn_defeat_guards(player_pos: Vector2) -> void:
+	var entities: Node = get_node_or_null("Entities")
+	if not entities:
+		entities = self  # Fallback to level root
+
+	for i in range(DEFEAT_GUARD_COUNT):
+		# Calculate position in a circle around player
+		var angle := (TAU / DEFEAT_GUARD_COUNT) * i
+		var offset := Vector2(cos(angle), sin(angle)) * DEFEAT_GUARD_RADIUS
+		var spawn_pos := player_pos + offset
+
+		# Instantiate guard
+		var guard: GuardEntity = GUARD_SCENE.instantiate() as GuardEntity
+		guard.global_position = spawn_pos
+
+		# Disable AI - just a cosmetic guard
+		var sm: StateMachine = guard.get_node_or_null("GuardStates") as StateMachine
+		if sm:
+			sm.disabled = true
+
+		# Face toward the player initially
+		var dir_to_player := (player_pos - spawn_pos).normalized()
+		guard.facing = dir_to_player
+
+		# Add to scene
+		entities.add_child(guard)
+
+		# Stop movement immediately after adding to tree
+		guard.stop()
+
+		# Show alert indicator (exclamation mark) - keep it visible indefinitely
+		var alert: AlertIndicator = guard.get_node_or_null("AlertIndicator") as AlertIndicator
+		if alert:
+			alert.show_duration = 0.0  # Don't auto-hide
+			alert.show_indicator()
+
+		# Start spinning animation - each guard spins at a slightly different speed
+		var spin_speed := 2.0 + randf() * 1.0  # 2-3 rotations per second
+		var spin_direction := 1.0 if i % 2 == 0 else -1.0  # Alternate spin directions
+		_start_guard_spin(guard, spin_speed * spin_direction)
+
+
+## Start a continuous spinning animation for a cosmetic guard.
+func _start_guard_spin(guard: GuardEntity, rotations_per_second: float) -> void:
+	var spin_tween := create_tween()
+	spin_tween.set_loops()  # Infinite loop
+
+	# Rotate through 4 directions over time
+	var directions := [Vector2.DOWN, Vector2.RIGHT, Vector2.UP, Vector2.LEFT]
+	if rotations_per_second < 0:
+		directions.reverse()
+		rotations_per_second = abs(rotations_per_second)
+
+	var time_per_direction := 1.0 / (rotations_per_second * 4.0)
+
+	for dir in directions:
+		spin_tween.tween_callback(func(): guard.facing = dir)
+		spin_tween.tween_interval(time_per_direction)
 
 func _on_defeat_try_again_pressed() -> void:
 	_stop_defeat_siren()

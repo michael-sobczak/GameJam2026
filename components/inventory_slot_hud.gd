@@ -12,8 +12,16 @@ const SLOT_COUNT := 5
 @onready var item_tooltip: PanelContainer = $Control/ItemTooltip
 @onready var tooltip_name_label: Label = $Control/ItemTooltip/MarginContainer/VBoxContainer/ItemName
 @onready var tooltip_desc_label: Label = $Control/ItemTooltip/MarginContainer/VBoxContainer/ItemDescription
+@onready var active_mask_display: VBoxContainer = $Control/ActiveMaskDisplay
+@onready var mask_name_label: Label = $Control/ActiveMaskDisplay/MaskNameLabel
+@onready var mask_texture_rect: TextureRect = $Control/ActiveMaskDisplay/MaskIconPanel/MaskTextureRect
+@onready var mask_countdown_label: Label = $Control/ActiveMaskDisplay/MaskCountdownLabel
+@onready var mask_progress_bar: ProgressBar = $Control/MaskProgressBar
 
 var selected_slot_index: int = 0
+var _mask_time_remaining: float = 0.0 ## Remaining time for active mask effect.
+var _mask_total_duration: float = 0.0 ## Total duration of the mask effect.
+var _mask_countdown_active: bool = false ## Whether countdown is currently running.
 var inventory: Inventory = null
 var slot_items: Array[DataItem] = [] ## Cached item references per slot for tooltip lookup.
 var hovered_slot_index: int = -1 ## Currently hovered slot index for tooltip display.
@@ -22,32 +30,32 @@ func _ready() -> void:
 	# Ensure CanvasLayer is visible
 	visible = true
 	layer = 100  # High layer to ensure it's on top
-	
+
 	# Wait a frame for the scene tree to be fully ready
 	await get_tree().process_frame
-	
+
 	# Ensure slots_container is ready
 	if not slots_container:
 		push_error("InventorySlotHUD: SlotsContainer not found!")
 		return
-	
+
 	print("InventorySlotHUD: SlotsContainer found at path: %s" % slots_container.get_path())
 	print("InventorySlotHUD: CanvasLayer visible: %s, layer: %d" % [visible, layer])
-	
+
 	# Initialize slot_items array
 	slot_items.resize(SLOT_COUNT)
 	for i in range(SLOT_COUNT):
 		slot_items[i] = null
-	
+
 	# Create 5 slot UI elements
 	for i in range(SLOT_COUNT):
 		var slot = _create_slot(i)
 		slots_container.add_child(slot)
 		slot_scenes.append(slot)
-	
+
 	# Wait another frame for layout to update
 	await get_tree().process_frame
-	
+
 	_update_slot_selection()
 	print("InventorySlotHUD: Created %d slots" % slot_scenes.size())
 	print("InventorySlotHUD: SlotsContainer size: %s, position: %s, visible: %s" % [slots_container.size, slots_container.position, slots_container.visible])
@@ -59,20 +67,34 @@ func _ready() -> void:
 		var first_panel = slot_scenes[0].get_node_or_null("Background")
 		if first_panel:
 			print("InventorySlotHUD: First panel size: %s, visible: %s, modulate: %s" % [first_panel.size, first_panel.visible, first_panel.modulate])
-	
+
 	# Refresh slots now that they're created (in case inventory was set before slots existed)
 	if inventory:
 		print("InventorySlotHUD: Inventory already set, refreshing slots...")
 		_refresh_slots()
+	# Connect to parent player's MaskEffectManager for active mask display
+	var mask_mgr = get_parent().get_node_or_null("MaskEffectManager") as MaskEffectManager
+	if mask_mgr:
+		mask_mgr.active_mask_changed.connect(_on_active_mask_changed)
+		_on_active_mask_changed(mask_mgr.active_mask_texture, mask_mgr.active_mask_name)
+		# Connect to mask duration signals for countdown timer
+		mask_mgr.night_vision_started.connect(_on_mask_started)
+		mask_mgr.night_vision_ended.connect(_on_mask_ended)
+		mask_mgr.disguise_started.connect(_on_mask_started)
+		mask_mgr.disguise_ended.connect(_on_mask_ended)
+		mask_mgr.reflection_started.connect(_on_mask_started)
+		mask_mgr.reflection_ended.connect(_on_mask_ended)
+	elif active_mask_display:
+		active_mask_display.visible = false
 
 func _input(event: InputEvent) -> void:
 	if not inventory:
 		return
-	
+
 	# Only handle key events
 	if not event is InputEventKey or not event.pressed:
 		return
-	
+
 	# Handle slot selection with Q (left) and E (right)
 	if event.keycode == KEY_Q:
 		var old_index = selected_slot_index
@@ -101,12 +123,23 @@ func _input(event: InputEvent) -> void:
 			_use_selected_item()
 			get_viewport().set_input_as_handled()
 
+func _process(delta: float) -> void:
+	if not _mask_countdown_active:
+		return
+	
+	_mask_time_remaining -= delta
+	if _mask_time_remaining <= 0.0:
+		_mask_time_remaining = 0.0
+		_stop_countdown()
+	else:
+		_update_countdown_display()
+
 ## Set the inventory to display.
 func set_inventory(inv: Inventory) -> void:
 	inventory = inv
 	print("InventorySlotHUD: Inventory set, items count: %d" % (inv.items.size() if inv else 0))
 	_refresh_slots()
-	
+
 	# Connect to inventory updates if possible
 	# Note: Inventory doesn't have signals for changes, so we'll refresh on item use
 
@@ -115,11 +148,11 @@ func _refresh_slots() -> void:
 	if not inventory:
 		print("InventorySlotHUD: No inventory to refresh")
 		return
-	
+
 	if slot_scenes.is_empty():
 		print("InventorySlotHUD: No slots created yet")
 		return
-	
+
 	# Clear all slots and slot_items first
 	for i in range(SLOT_COUNT):
 		if i < slot_items.size():
@@ -132,7 +165,7 @@ func _refresh_slots() -> void:
 		if label:
 			label.text = ""
 			label.visible = false
-	
+
 	# Fill slots with inventory items (up to 5)
 	var items = inventory.items
 	print("InventorySlotHUD: Refreshing %d items into slots" % items.size())
@@ -141,7 +174,7 @@ func _refresh_slots() -> void:
 		if content_item and content_item.item:
 			# Cache item reference for tooltip
 			slot_items[i] = content_item.item
-			
+
 			var slot = slot_scenes[i]
 			var icon = slot.get_node_or_null("ItemIcon")
 			var label = slot.get_node_or_null("QuantityLabel")
@@ -153,7 +186,7 @@ func _refresh_slots() -> void:
 				label.text = str(content_item.quantity)
 				label.visible = true  # Always show quantity
 			print("InventorySlotHUD: Slot %d filled with %s x%d" % [i, content_item.item.resource_name, content_item.quantity])
-	
+
 	# Update tooltip if a slot is currently hovered
 	_update_hovered_tooltip()
 
@@ -166,11 +199,11 @@ func _create_slot(index: int) -> Control:
 	slot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	slot.visible = true
 	slot.mouse_filter = Control.MOUSE_FILTER_STOP  # Enable mouse interaction for hover
-	
+
 	# Connect mouse hover signals for tooltip display
 	slot.mouse_entered.connect(_on_slot_mouse_entered.bind(index))
 	slot.mouse_exited.connect(_on_slot_mouse_exited.bind(index))
-	
+
 	# Background panel
 	var panel = Panel.new()
 	panel.name = "Background"
@@ -187,7 +220,7 @@ func _create_slot(index: int) -> Control:
 	style_box.border_width_bottom = 3
 	panel.add_theme_stylebox_override("panel", style_box)
 	panel.visible = true
-	
+
 	# Selection glow (initially hidden)
 	var glow = ColorRect.new()
 	glow.name = "SelectionGlow"
@@ -196,7 +229,7 @@ func _create_slot(index: int) -> Control:
 	slot.add_child(glow)
 	glow.set_anchors_preset(Control.PRESET_FULL_RECT)
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
+
 	# Item icon
 	var icon = TextureRect.new()
 	icon.name = "ItemIcon"
@@ -209,7 +242,7 @@ func _create_slot(index: int) -> Control:
 	icon.offset_right = -8.0
 	icon.offset_bottom = -24.0
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
+
 	# Quantity label
 	var quantity_label = Label.new()
 	quantity_label.name = "QuantityLabel"
@@ -225,7 +258,7 @@ func _create_slot(index: int) -> Control:
 	quantity_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	quantity_label.add_theme_constant_override("outline_size", 2)
 	quantity_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
+
 	return slot
 
 ## Update which slot is highlighted.
@@ -240,14 +273,14 @@ func _update_slot_selection() -> void:
 func _use_selected_item() -> void:
 	if not inventory or inventory.items.is_empty():
 		return
-	
+
 	if selected_slot_index >= inventory.items.size():
 		return
-	
+
 	var content_item: ContentItem = inventory.items[selected_slot_index]
 	if not content_item or content_item.quantity <= 0:
 		return
-	
+
 	if not content_item.item is DataMaskItem:
 		push_error("Inventory use only supports mask items; got: %s" % content_item.item)
 		return
@@ -264,26 +297,73 @@ func _on_slot_mouse_exited(index: int) -> void:
 		hovered_slot_index = -1
 		_update_hovered_tooltip()
 
+## Update active-mask display when equipped mask changes.
+func _on_active_mask_changed(texture: Texture2D, mask_name: String) -> void:
+	if not is_instance_valid(active_mask_display):
+		return
+	var has_mask := mask_name.is_empty() == false or texture != null
+	active_mask_display.visible = has_mask
+	if has_mask:
+		if mask_name_label:
+			mask_name_label.text = mask_name
+		if mask_texture_rect:
+			mask_texture_rect.texture = texture
+
 ## Update tooltip to show info for currently hovered slot.
 func _update_hovered_tooltip() -> void:
 	if hovered_slot_index < 0 or hovered_slot_index >= slot_items.size():
 		if item_tooltip:
 			item_tooltip.visible = false
 		return
-	
+
 	var item = slot_items[hovered_slot_index]
 	if not item:
 		# No item in hovered slot, hide tooltip
 		if item_tooltip:
 			item_tooltip.visible = false
 		return
-	
+
 	# Update tooltip content
 	if tooltip_name_label:
 		tooltip_name_label.text = item.resource_name
 	if tooltip_desc_label:
 		tooltip_desc_label.text = item.description if item.description else ""
-	
+
 	# Show tooltip
 	if item_tooltip:
 		item_tooltip.visible = true
+
+## Called when a mask effect starts with its duration.
+func _on_mask_started(duration: float) -> void:
+	_mask_time_remaining = duration
+	_mask_total_duration = duration
+	_mask_countdown_active = true
+	_update_countdown_display()
+	if mask_countdown_label:
+		mask_countdown_label.visible = true
+	if mask_progress_bar:
+		mask_progress_bar.value = 1.0
+		mask_progress_bar.visible = true
+
+## Called when a mask effect ends.
+func _on_mask_ended() -> void:
+	_stop_countdown()
+
+## Stop the countdown and hide the label.
+func _stop_countdown() -> void:
+	_mask_countdown_active = false
+	_mask_time_remaining = 0.0
+	_mask_total_duration = 0.0
+	if mask_countdown_label:
+		mask_countdown_label.visible = false
+	if mask_progress_bar:
+		mask_progress_bar.visible = false
+
+## Update the countdown label text and progress bar.
+func _update_countdown_display() -> void:
+	if mask_countdown_label:
+		# Display as whole seconds
+		var seconds := ceili(_mask_time_remaining)
+		mask_countdown_label.text = "%ds" % seconds
+	if mask_progress_bar and _mask_total_duration > 0.0:
+		mask_progress_bar.value = _mask_time_remaining / _mask_total_duration

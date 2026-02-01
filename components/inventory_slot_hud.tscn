@@ -14,6 +14,21 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="MaskProgressBar" type="ProgressBar" parent="Control" unique_id=1758148950]
+visible = false
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.25
+anchor_right = 0.75
+offset_top = 8.0
+offset_bottom = 26.0
+grow_horizontal = 2
+mouse_filter = 2
+modulate = Color(1, 0.85, 0.3, 0.6)
+max_value = 1.0
+value = 1.0
+show_percentage = false
+
 [node name="MarginContainer" type="MarginContainer" parent="Control" unique_id=382633839]
 layout_mode = 1
 anchors_preset = 15
@@ -95,13 +110,16 @@ vertical_alignment = 1
 
 [node name="MovementHint" type="VBoxContainer" parent="Control" unique_id=1758148944]
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = 3
+anchor_left = 1.0
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
+offset_left = -100.0
 offset_top = -100.0
-offset_right = 120.0
+offset_right = -20.0
 offset_bottom = -20.0
+grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 4
@@ -187,6 +205,48 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Move"
 horizontal_alignment = 1
+
+[node name="ActiveMaskDisplay" type="VBoxContainer" parent="Control" unique_id=1758148945]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -196.0
+offset_right = 148.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_constants/separation = 4
+
+[node name="MaskCountdownLabel" type="Label" parent="Control/ActiveMaskDisplay" unique_id=1758148949]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_constants/outline_size = 2
+text = "10s"
+horizontal_alignment = 1
+
+[node name="MaskNameLabel" type="Label" parent="Control/ActiveMaskDisplay" unique_id=1758148946]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="MaskIconPanel" type="Panel" parent="Control/ActiveMaskDisplay" unique_id=1758148947]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MaskTextureRect" type="TextureRect" parent="Control/ActiveMaskDisplay/MaskIconPanel" unique_id=1758148948]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ItemTooltip" type="PanelContainer" parent="Control" unique_id=1670570923]
 visible = false

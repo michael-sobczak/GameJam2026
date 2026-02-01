@@ -39,7 +39,17 @@ enum FiringBehavior {
 @export_group("Muzzle Settings")
 @export var muzzle_offset: float = 16.0 ## Distance from center to muzzle tip in local X direction.
 
+@export_group("Destruction Settings")
+@export var time_to_destroy: float = 0.5 ## Seconds of continuous reflection needed to destroy the turret.
+@export var paired_turret: NodePath = NodePath() ## Optional. When this turret is destroyed, the paired turret is destroyed after PAIR_DESTRUCTION_DELAY seconds. Leave empty for no pair. Set per instance in the level.
+
+const PAIR_DESTRUCTION_DELAY: float = 0.5 ## Delay before chained destruction of paired turret.
+const DESTRUCTION_LIGHT_RADIUS: float = 200.0 ## Radius of the temporary light when turret is destroyed.
+const DESTRUCTION_LIGHT_DURATION: float = 1.0 ## How long the light fades out (seconds).
+const DESTRUCTION_LIGHT_ENERGY: float = 0.5 ## Initial energy (partial lighting); fades to 0.
 const LASER_IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/LaserImpactParticles.tscn")
+const REFLECTION_TICK_SFX: AudioStream = preload("res://Kenny Audio Pack/Audio/tick_001.ogg")
+const EXPLOSION_SFX: AudioStream = preload("res://DownloadedAssets/explosion.mp3")
 
 @onready var vision_sensor: VisionConeSensor = $VisionConeSensor
 @onready var laser_line: Line2D = $LaserLine
@@ -54,6 +64,11 @@ var _detected_target: Node2D = null
 var _wave_time: float = 0.0 ## Time accumulator for traveling wave effect.
 var _has_triggered_defeat: bool = false ## Prevents multiple defeat triggers.
 var _width_curve: Curve ## Curve for varying beam width along its length.
+var _is_disabled: bool = false ## True when turret has been destroyed by reflected laser.
+var _reflection_audio: AudioStreamPlayer2D = null ## Looping tick sound during reflection.
+var _is_reflecting: bool = false ## True while player is actively reflecting the laser.
+var _reflection_time: float = 0.0 ## Accumulated time laser has been reflecting back at turret.
+var _explosion_particles: GPUParticles2D = null ## Explosion effect when turret is destroyed.
 
 
 func _notification(what: int) -> void:
@@ -105,6 +120,15 @@ func _ready():
 		# Add to parent (level/world) so particles don't rotate with turret
 		call_deferred("_add_particles_to_parent")
 	
+	# Create looping audio player for reflection tick sound
+	_reflection_audio = AudioStreamPlayer2D.new()
+	_reflection_audio.stream = REFLECTION_TICK_SFX
+	_reflection_audio.bus = &"SFX"
+	_reflection_audio.max_distance = 500.0
+	add_child(_reflection_audio)
+	# Connect finished signal to loop the sound
+	_reflection_audio.finished.connect(_on_reflection_audio_finished)
+	
 	# Set initial vision facing
 	_update_vision_facing()
 
@@ -143,11 +167,15 @@ func _process(delta: float):
 	
 	# Update laser visuals and damage if firing
 	if _is_firing:
-		_update_laser()
+		_update_laser(delta)
 
 
 ## Check if the turret should be firing based on current behavior mode.
 func _should_fire() -> bool:
+	# Disabled turrets never fire
+	if _is_disabled:
+		return false
+	
 	match firing_behavior:
 		FiringBehavior.ON_DETECTION:
 			return _detected_target != null
@@ -172,6 +200,8 @@ func _stop_firing():
 	# Stop impact particles
 	if _impact_particles:
 		_impact_particles.stop_emission()
+	# Stop reflection sound
+	_stop_reflection_sound()
 
 
 ## Add impact particles to parent node (called deferred).
@@ -182,7 +212,7 @@ func _add_particles_to_parent() -> void:
 
 
 ## Update laser beam visual and check for hits.
-func _update_laser():
+func _update_laser(delta: float):
 	if not laser_raycast or not laser_line:
 		return
 	
@@ -206,23 +236,59 @@ func _update_laser():
 		laser_end = to_local(laser_raycast.get_collision_point())
 		var collision_point_global := laser_raycast.get_collision_point()
 		
-		# Update impact particles at collision point
-		if _impact_particles:
-			_impact_particles.set_impact_position(collision_point_global)
-			# Spray direction is opposite of laser direction (sparks fly back)
-			_impact_particles.set_spray_direction(-_current_facing)
-			_impact_particles.start_emission()
-		
-		# Check if we hit a player (vision_target group) - trigger defeat
+		# Check if we hit a player (vision_target group)
 		var collider = laser_raycast.get_collider()
+		var player_has_reflection := false
+		
 		if collider and collider.is_in_group(&"vision_target"):
-			_trigger_player_defeat(collider)
-		elif collider and collider.has_method("take_damage"):
-			collider.take_damage(laser_damage)
+			# Check if player has reflection mask active
+			player_has_reflection = _check_player_reflection(collider)
+			
+			if player_has_reflection:
+				# Player reflects laser - show particles at player and don't defeat
+				if _impact_particles:
+					_impact_particles.set_impact_position(collision_point_global)
+					_impact_particles.set_spray_direction(-_current_facing)
+					_impact_particles.start_emission()
+				
+				# Show glowing aura on player matching laser color
+				_show_player_reflection_glow(collider, laser_color)
+				
+				# Start reflection tick sound loop
+				_start_reflection_sound()
+				
+				# Accumulate reflection time and check if turret should be destroyed
+				_check_reflected_laser_hit(delta)
+			else:
+				# No reflection - stop effects, reset timer, and trigger defeat
+				_stop_reflection_sound()
+				_reset_reflection_time()
+				_hide_player_reflection_glow(collider)
+				if _impact_particles:
+					_impact_particles.set_impact_position(collision_point_global)
+					_impact_particles.set_spray_direction(-_current_facing)
+					_impact_particles.start_emission()
+				_trigger_player_defeat(collider)
+		else:
+			# Hit a surface (not player) - show impact particles, stop reflection effects
+			_stop_reflection_sound()
+			_reset_reflection_time()
+			_hide_all_player_reflection_glows()
+			if _impact_particles:
+				_impact_particles.set_impact_position(collision_point_global)
+				# Spray direction is opposite of laser direction (sparks fly back)
+				_impact_particles.set_spray_direction(-_current_facing)
+				_impact_particles.start_emission()
+			
+			if collider and collider.has_method("take_damage"):
+				collider.take_damage(laser_damage)
 	else:
 		# No collision - laser extends to full range from muzzle
 		laser_end = muzzle_local + Vector2(laser_range, 0)
-		# Stop particles when no collision
+		# Stop particles and reflection effects when no collision
+		_stop_reflection_sound()
+		_reset_reflection_time()
+		_hide_all_player_reflection_glows()
 		if _impact_particles:
 			_impact_particles.stop_emission()
 	
@@ -230,7 +296,7 @@ func _update_laser():
 	laser_line.clear_points()
 	laser_line.add_point(muzzle_local)
 	laser_line.add_point(laser_end)
-	
+
 	# Create traveling wave width curve
 	_update_width_curve()
 
@@ -267,6 +333,251 @@ func _update_width_curve() -> void:
 		
 		# Add point to curve (x = position along beam, y = width multiplier)
 		_width_curve.add_point(Vector2(t, width_multiplier))
+
+
+## Check if a player node has reflection mask active.
+func _check_player_reflection(player_node: Node2D) -> bool:
+	if not player_node:
+		return false
+	
+	# Try to get MaskEffectManager from the player
+	var mask_manager: MaskEffectManager = player_node.get_node_or_null("MaskEffectManager") as MaskEffectManager
+	if mask_manager and mask_manager.reflection_active:
+		return true
+	
+	return false
+
+
+## Start the looping tick sound for laser reflection.
+func _start_reflection_sound() -> void:
+	if _is_reflecting:
+		return  # Already playing
+	_is_reflecting = true
+	if _reflection_audio and not _reflection_audio.playing:
+		_reflection_audio.play()
+
+
+## Stop the looping tick sound for laser reflection.
+func _stop_reflection_sound() -> void:
+	if not _is_reflecting:
+		return
+	_is_reflecting = false
+	if _reflection_audio:
+		_reflection_audio.stop()
+
+
+## Callback to loop the reflection tick sound.
+func _on_reflection_audio_finished() -> void:
+	if _is_reflecting and _reflection_audio:
+		_reflection_audio.play()
+
+
+## Show reflection glow on a player node.
+func _show_player_reflection_glow(player_node: Node2D, color: Color) -> void:
+	if not player_node:
+		return
+	var mask_manager: MaskEffectManager = player_node.get_node_or_null("MaskEffectManager") as MaskEffectManager
+	if mask_manager:
+		mask_manager.show_reflection_glow(color)
+
+
+## Hide reflection glow on a player node.
+func _hide_player_reflection_glow(player_node: Node2D) -> void:
+	if not player_node:
+		return
+	var mask_manager: MaskEffectManager = player_node.get_node_or_null("MaskEffectManager") as MaskEffectManager
+	if mask_manager:
+		mask_manager.hide_reflection_glow()
+
+
+## Hide reflection glow on all players (used when laser stops hitting player).
+func _hide_all_player_reflection_glows() -> void:
+	var players = get_tree().get_nodes_in_group(&"player")
+	for player in players:
+		_hide_player_reflection_glow(player)
+
+
+## Check if the reflected laser hits the turret back and accumulate destruction time.
+## Called each frame while laser is being reflected.
+func _check_reflected_laser_hit(delta: float) -> void:
+	# The laser is being reflected by the player, which means it bounces back toward the turret
+	# Accumulate reflection time
+	_reflection_time += delta
+	
+	# Check if enough time has passed to destroy the turret
+	if _reflection_time >= time_to_destroy and not _is_disabled:
+		_disable_turret()
+
+
+## Reset the reflection time accumulator (called when reflection stops).
+func _reset_reflection_time() -> void:
+	_reflection_time = 0.0
+
+
+## Permanently disable the turret (destroyed by reflected laser).
+func _disable_turret() -> void:
+	if _is_disabled:
+		return
+	_is_disabled = true
+	
+	# Stop firing
+	_stop_firing()
+	_stop_reflection_sound()
+	_reset_reflection_time()
+	_hide_all_player_reflection_glows()
+	
+	# Play explosion sound
+	AudioManager.play_stream(EXPLOSION_SFX)
+	
+	# Create and trigger explosion particle effect
+	_create_explosion_particles()
+	
+	# Temporary light circle that fades off over 1 second
+	_create_destruction_light()
+	
+	# Turn turret dark gray
+	var sprite: Sprite2D = get_node_or_null("Sprite2D") as Sprite2D
+	if sprite:
+		sprite.modulate = Color(0.3, 0.3, 0.3, 1.0)
+	
+	# Also gray out any other visual children (except particles)
+	for child in get_children():
+		if child is CanvasItem and child != _impact_particles and child != _explosion_particles:
+			(child as CanvasItem).modulate = Color(0.3, 0.3, 0.3, 1.0)
+	
+	# Emit signal so level knows turret was destroyed
+	player_detected.emit(null)  # Reusing signal with null to indicate destruction
+	
+	print("LaserTurret: Destroyed by reflected laser!")
+	
+	# Chain destruction: after delay, destroy paired turret if configured
+	if paired_turret.is_empty():
+		return
+	var paired: Node = get_node_or_null(paired_turret)
+	if not paired is LaserTurretEntity:
+		return
+	var paired_entity: LaserTurretEntity = paired as LaserTurretEntity
+	var timer := get_tree().create_timer(PAIR_DESTRUCTION_DELAY)
+	timer.timeout.connect(func() -> void:
+		if is_instance_valid(paired_entity):
+			paired_entity.destroy_by_chain()
+	)
+
+
+## Call this to destroy the turret from chain (e.g. when its pair was destroyed). Same as _disable_turret.
+func destroy_by_chain() -> void:
+	_disable_turret()
+
+
+## Create a temporary PointLight2D at the turret that fades out over DESTRUCTION_LIGHT_DURATION.
+func _create_destruction_light() -> void:
+	var light := PointLight2D.new()
+	light.name = "DestructionLight"
+	light.blend_mode = Light2D.BLEND_MODE_ADD
+	light.shadow_enabled = false
+	light.color = Color(1.0, 0.95, 0.85, 1.0)
+	light.energy = DESTRUCTION_LIGHT_ENERGY
+	# Texture: radial gradient; we use a 64px-radius texture and scale to get DESTRUCTION_LIGHT_RADIUS
+	var tex_size := 64
+	light.texture = _create_radial_light_texture(tex_size)
+	light.texture_scale = DESTRUCTION_LIGHT_RADIUS / float(tex_size)
+	add_child(light)
+	var tween := create_tween()
+	tween.tween_property(light, "energy", 0.0, DESTRUCTION_LIGHT_DURATION).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(light.queue_free)
+
+
+## Create a soft radial gradient texture for the destruction light.
+func _create_radial_light_texture(size: int) -> Texture2D:
+	var img := Image.create(size * 2, size * 2, false, Image.FORMAT_RGBA8)
+	var center := Vector2(size, size)
+	for x in size * 2:
+		for y in size * 2:
+			var dist := Vector2(x, y).distance_to(center)
+			var alpha := clampf(1.0 - (dist / float(size)), 0.0, 1.0)
+			alpha = alpha * alpha  # Softer falloff
+			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
+	return ImageTexture.create_from_image(img)
+
+
+## Create and trigger explosion particle effect at the turret's position.
+func _create_explosion_particles() -> void:
+	_explosion_particles = GPUParticles2D.new()
+	_explosion_particles.name = "ExplosionParticles"
+	_explosion_particles.emitting = false
+	_explosion_particles.amount = 30
+	_explosion_particles.lifetime = 0.8
+	_explosion_particles.one_shot = true
+	_explosion_particles.explosiveness = 1.0
+	_explosion_particles.z_index = 20  # Render above turret
+	
+	# Create particle material
+	var mat := ParticleProcessMaterial.new()
+	
+	# Direction - explode outward in all directions
+	mat.direction = Vector3(0, 0, 0)
+	mat.spread = 180.0
+	
+	# Speed
+	mat.initial_velocity_min = 100.0
+	mat.initial_velocity_max = 250.0
+	
+	# Gravity - slight downward pull
+	mat.gravity = Vector3(0, 200.0, 0)
+	
+	# Damping
+	mat.damping_min = 50.0
+	mat.damping_max = 100.0
+	
+	# Scale
+	mat.scale_min = 0.8
+	mat.scale_max = 1.5
+	
+	# Scale curve - shrink over lifetime
+	var scale_curve := Curve.new()
+	scale_curve.add_point(Vector2(0.0, 1.0))
+	scale_curve.add_point(Vector2(0.5, 0.6))
+	scale_curve.add_point(Vector2(1.0, 0.0))
+	var scale_curve_tex := CurveTexture.new()
+	scale_curve_tex.curve = scale_curve
+	mat.scale_curve = scale_curve_tex
+	
+	# Color gradient - orange to red to dark fade
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1.0, 0.8, 0.2, 1.0))  # Bright yellow-orange
+	gradient.add_point(0.2, Color(1.0, 0.5, 0.1, 1.0))  # Orange
+	gradient.add_point(0.5, Color(0.9, 0.2, 0.1, 0.9))  # Red-orange
+	gradient.add_point(0.8, Color(0.4, 0.1, 0.05, 0.6))  # Dark red
+	gradient.add_point(1.0, Color(0.2, 0.05, 0.02, 0.0))  # Fade out
+	var gradient_tex := GradientTexture1D.new()
+	gradient_tex.gradient = gradient
+	mat.color_ramp = gradient_tex
+	
+	# Emission shape - small sphere at center
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	mat.emission_sphere_radius = 10.0
+	
+	_explosion_particles.process_material = mat
+	
+	# Create glowing particle texture
+	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
+	var center := Vector2(16, 16)
+	for x in range(32):
+		for y in range(32):
+			var dist := Vector2(x, y).distance_to(center)
+			var core := clampf(1.0 - (dist / 8.0), 0.0, 1.0)
+			var glow := clampf(1.0 - (dist / 16.0), 0.0, 1.0)
+			glow = glow * glow
+			var brightness := maxf(core, glow * 0.6)
+			var alpha := clampf(1.0 - (dist / 16.0), 0.0, 1.0)
+			img.set_pixel(x, y, Color(brightness, brightness, brightness, alpha))
+	_explosion_particles.texture = ImageTexture.create_from_image(img)
+	
+	add_child(_explosion_particles)
+	
+	# Start explosion
+	_explosion_particles.restart()
+	_explosion_particles.emitting = true
 
 
 ## Trigger player defeat when hit by laser (same as being caught by guard).

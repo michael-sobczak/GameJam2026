@@ -14,7 +14,7 @@ tile_bit_tools/output/show_user_messages=false
 
 [application]
 
-config/name="Heist Mask Game"
+config/name="Mask King"
 config/version="1.0.0"
 config/tags=PackedStringArray("template")
 run/main_scene="res://scenes/menus/start_screen.tscn"

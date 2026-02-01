@@ -11,6 +11,8 @@ var sfx_disguise_on: AudioStream = preload("res://assets/audio/sfx/disguise_on.o
 var sfx_disguise_off: AudioStream = preload("res://assets/audio/sfx/disguise_off.ogg")
 var sfx_guard_alert: AudioStream = preload("res://assets/audio/sfx/guard_alert.ogg")
 var sfx_flashlight_toggle: AudioStream = preload("res://assets/audio/sfx/flashlight_toggle.ogg")
+var sfx_treasure_pickup: AudioStream = preload(
+	"res://Kenny Audio Pack/Audio/confirmation_002.ogg")
 
 # Audio player pool for overlapping sounds
 var _audio_players: Array[AudioStreamPlayer] = []
@@ -47,6 +49,8 @@ func play_sfx(sfx_name: String, volume_db: float = 0.0) -> void:
 			stream = sfx_guard_alert
 		"flashlight_toggle":
 			stream = sfx_flashlight_toggle
+		"treasure_pickup":
+			stream = sfx_treasure_pickup
 		_:
 			push_warning("AudioManager: Unknown SFX name: %s" % sfx_name)
 			return

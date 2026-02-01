@@ -8,7 +8,7 @@ signal aim_changed(angle: float)
 
 @export_group("Settings")
 @export var enabled: bool = true ## Whether the flashlight is currently active.
-@export var energy: float = 1.5 ## Light energy/intensity.
+@export var energy: float = 2.25 ## Light energy/intensity.
 @export var color: Color = Color(1.0, 0.95, 0.8, 1.0) ## Light color (warm white default).
 @export var local_offset: Vector2 = Vector2(0, -10) ## Offset from parent where light originates.
 
@@ -63,6 +63,10 @@ func _create_cone_texture() -> Texture2D:
 	var half_fov_rad = deg_to_rad(cone_profile.fov_degrees / 2.0)
 	var max_dist = size / 2.0
 	
+	# Soft edge zone - 30% of the FOV will be a gradient falloff
+	var edge_falloff_ratio = 0.3
+	var inner_fov_rad = half_fov_rad * (1.0 - edge_falloff_ratio)
+	
 	# Draw cone shape pointing UP (angle = -PI/2) in texture space
 	for y in range(size):
 		for x in range(size):
@@ -84,12 +88,23 @@ func _create_cone_texture() -> Texture2D:
 			if angle_diff > PI:
 				angle_diff = 2 * PI - angle_diff
 			
-			if angle_diff <= half_fov_rad:
-				# Fade from center to edge with smooth falloff
-				var normalized_dist = dist / max_dist
-				var alpha = 1.0 - normalized_dist
-				alpha = pow(alpha, 1.2)  # Smooth falloff curve
-				image.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
+			# Calculate angular falloff (soft edges)
+			var angular_alpha = 1.0
+			if angle_diff > half_fov_rad:
+				continue  # Outside cone entirely
+			elif angle_diff > inner_fov_rad:
+				# In the soft edge zone - gradual falloff
+				var edge_progress = (angle_diff - inner_fov_rad) / (half_fov_rad - inner_fov_rad)
+				angular_alpha = 1.0 - pow(edge_progress, 1.5)  # Smooth falloff curve
+			
+			# Distance falloff (center to edge of range)
+			var normalized_dist = dist / max_dist
+			var dist_alpha = 1.0 - normalized_dist
+			dist_alpha = pow(dist_alpha, 1.2)  # Smooth falloff curve
+			
+			# Combine angular and distance falloff
+			var alpha = angular_alpha * dist_alpha
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
 	
 	var texture = ImageTexture.create_from_image(image)
 	return texture

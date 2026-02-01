@@ -8,7 +8,7 @@ script = ExtResource("1_flashlight")
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=635446091]
 texture_filter = 1
 color = Color(1, 0.95, 0.8, 1)
-energy = 1.5
+energy = 2.25
 shadow_enabled = true
 shadow_filter = 1
 shadow_filter_smooth = 2.0
