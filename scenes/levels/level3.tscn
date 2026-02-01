@@ -5,12 +5,14 @@
 [ext_resource type="PackedScene" path="res://entities/enemies/guard.tscn" id="3_f5jb5"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_sru4k"]
-vertices = PackedVector2Array(790, 310, 202, 310, 202, 170, 790, 170)
+vertices = PackedVector2Array(795.9375, 310, 202, 310, 202, 170, 795.0625, 170)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 800, 160, 800, 320, 192, 320)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 805, 160, 806, 320, 192, 320)])
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_sru4k")]
 next_level = "res://scenes/menus/win_screen.tscn"
+allowed_mask_types = Array[String](["night_vision"])
+usages_per_mask = 5
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 navigation_polygon = SubResource("NavigationPolygon_sru4k")
@@ -28,7 +30,7 @@ position = Vector2(788.99994, 159.99998)
 position = Vector2(224, 189)
 
 [node name="Guard" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="2" unique_id=1924956250 instance=ExtResource("3_f5jb5")]
-position = Vector2(640, 234)
+position = Vector2(640, 243)
 patrol_points = Array[NodePath]([])
 home_position = Vector2(640, 234)
 sentry_scan_rotation_speed = 0.0

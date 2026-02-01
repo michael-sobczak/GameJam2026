@@ -15,6 +15,12 @@ var player_id: int ## Used when moving between levels to save the player facing 
 ## Path to the scene to load when the goal is reached. Set per-level in the inspector (e.g. level1 → level2).
 @export_file("*.tscn") var next_level := ""
 
+## Mask types the player can have on this level. Empty = all masks. Use "night_vision" and/or "disguise". E.g. level 3 = ["night_vision"] only.
+@export var allowed_mask_types: Array[String] = []
+
+## Starting usages per allowed mask when inventory is initialized.
+@export var usages_per_mask: int = 3  # default
+
 @export var darkness_modulation: Color = Color(0.05, 0.05, 0.05, 1.0)
 
 ## Intro text settings

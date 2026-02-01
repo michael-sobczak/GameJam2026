@@ -45,6 +45,9 @@ func _ready():
 	if inventory and inventory.items.is_empty():
 		_initialize_starting_inventory()
 	
+	# Apply level mask restrictions (e.g. level 3 = no disguise mask); strip disallowed masks
+	call_deferred("_apply_level_mask_restrictions")
+	
 	# Refresh HUD after inventory is set up
 	if inventory_slot_hud and inventory:
 		inventory_slot_hud._refresh_slots()
@@ -133,41 +136,44 @@ const NIGHT_VISION_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/glitch
 const DISGUISE_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/maximize_008.ogg")
 const DISGUISE_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/minimize_008.ogg")
 
-## Initialize player's starting inventory with mask items.
+## Initialize player's starting inventory with the appropriate mask items for the level.
 func _initialize_starting_inventory():
 	if not inventory:
 		print("PlayerEntity: Cannot initialize inventory - inventory is null")
 		return
 	
+	var allowed := _get_level_allowed_mask_types()
+	var qty_per_mask: int = _get_usages_per_mask()
 	print("PlayerEntity: Initializing starting inventory...")
 	
-	# Create Night Vision Mask item
-	var night_vision_mask = DataMaskItem.new()
-	night_vision_mask.resource_name = "Night Vision Mask"
-	night_vision_mask.description = "See clearly in the dark for a short time."
-	night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
-	night_vision_mask.effect_duration = 5.0
-	night_vision_mask.icon = _create_atlas_from_texture(NIGHT_VISION_MASK_TEXTURE)
-	night_vision_mask.mask_texture = NIGHT_VISION_MASK_TEXTURE
-	night_vision_mask.activate_sound = NIGHT_VISION_ACTIVATE_SFX
-	night_vision_mask.deactivate_sound = NIGHT_VISION_DEACTIVATE_SFX
-	print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
+	# Create Night Vision Mask item (add only if allowed)
+	if allowed.is_empty() or "night_vision" in allowed:
+		var night_vision_mask = DataMaskItem.new()
+		night_vision_mask.resource_name = "Night Vision Mask"
+		night_vision_mask.description = "See clearly in the dark for a short time."
+		night_vision_mask.mask_type = DataMaskItem.MaskType.NIGHT_VISION
+		night_vision_mask.effect_duration = 5.0
+		night_vision_mask.icon = _create_atlas_from_texture(NIGHT_VISION_MASK_TEXTURE)
+		night_vision_mask.mask_texture = NIGHT_VISION_MASK_TEXTURE
+		night_vision_mask.activate_sound = NIGHT_VISION_ACTIVATE_SFX
+		night_vision_mask.deactivate_sound = NIGHT_VISION_DEACTIVATE_SFX
+		inventory.add_item(night_vision_mask, qty_per_mask)
+		print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
 	
-	# Create Disguise Mask item
-	var disguise = DataMaskItem.new()
-	disguise.resource_name = "Disguise Mask"
-	disguise.description = "Blend in with enemies and avoid detection."
-	disguise.mask_type = DataMaskItem.MaskType.DISGUISE
-	disguise.effect_duration = 5.0
-	disguise.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)
-	disguise.mask_texture = DISGUISE_MASK_TEXTURE
-	disguise.activate_sound = DISGUISE_ACTIVATE_SFX
-	disguise.deactivate_sound = DISGUISE_DEACTIVATE_SFX
-	print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
+	# Create Disguise Mask item (add only if allowed)
+	if allowed.is_empty() or "disguise" in allowed:
+		var disguise = DataMaskItem.new()
+		disguise.resource_name = "Disguise Mask"
+		disguise.description = "Blend in with enemies and avoid detection."
+		disguise.mask_type = DataMaskItem.MaskType.DISGUISE
+		disguise.effect_duration = 5.0
+		disguise.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)
+		disguise.mask_texture = DISGUISE_MASK_TEXTURE
+		disguise.activate_sound = DISGUISE_ACTIVATE_SFX
+		disguise.deactivate_sound = DISGUISE_DEACTIVATE_SFX
+		inventory.add_item(disguise, qty_per_mask)
+		print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
 	
-	# Add items to inventory
-	inventory.add_item(night_vision_mask, 3)
-	inventory.add_item(disguise, 3)
 	print("PlayerEntity: Added items to inventory, total items: %d" % inventory.items.size())
 	
 	# Refresh HUD
@@ -176,6 +182,54 @@ func _initialize_starting_inventory():
 		inventory_slot_hud._refresh_slots()
 	else:
 		print("PlayerEntity: Warning - inventory_slot_hud is null, cannot refresh")
+
+## Level that owns this player (ancestor in group LEVEL). Use this instead of get_current_level() so mask config is correct during scene transition when two levels exist in the tree.
+func _get_own_level() -> Node:
+	var n: Node = get_parent()
+	while n:
+		if n.is_in_group(Const.GROUP.LEVEL):
+			return n
+		n = n.get_parent()
+	return null
+
+## Get allowed mask type keys from the level that owns this player. Empty = all masks allowed.
+func _get_level_allowed_mask_types() -> Array[String]:
+	var level = _get_own_level()
+	if not level or not level.get("allowed_mask_types"):
+		return []
+	var arr: Array = level.allowed_mask_types
+	var result: Array[String] = []
+	for s in arr:
+		if s is String:
+			result.append(s as String)
+	return result
+
+## Get starting usages per mask from the level that owns this player. Uses 3 if missing or <= 0.
+func _get_usages_per_mask() -> int:
+	var level = _get_own_level()
+	if not level or not level.get("usages_per_mask"):
+		return 3
+	var q: int = level.usages_per_mask
+	return q if q > 0 else 3
+
+## Remove from inventory any mask items not allowed on the current level. Call deferred so level is ready.
+func _apply_level_mask_restrictions():
+	if not inventory:
+		return
+	var allowed := _get_level_allowed_mask_types()
+	if allowed.is_empty():
+		return
+	var to_remove: Array[Dictionary] = []
+	for content in inventory.items:
+		if content.item is DataMaskItem:
+			var mask_item := content.item as DataMaskItem
+			var type_key := DataMaskItem.type_to_string(mask_item.mask_type)
+			if type_key not in allowed:
+				to_remove.append({ "name": mask_item.resource_name, "qty": content.quantity })
+	for entry in to_remove:
+		inventory.remove_item(entry.name, entry.qty)
+	if not to_remove.is_empty() and inventory_slot_hud:
+		inventory_slot_hud._refresh_slots()
 
 ## Create an AtlasTexture from a full texture for use as an icon.
 func _create_atlas_from_texture(texture: Texture2D) -> AtlasTexture:
