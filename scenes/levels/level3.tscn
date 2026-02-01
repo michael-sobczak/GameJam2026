@@ -11,7 +11,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 805, 160, 806
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_sru4k")]
 initial_camera_zoom = 2.5
-next_level = "res://scenes/menus/win_screen.tscn"
+next_level = "res://scenes/levels/level4.tscn"
 allowed_mask_types = Array[String](["night_vision"])
 usages_per_mask = 5
 
