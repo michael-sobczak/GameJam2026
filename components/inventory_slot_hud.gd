@@ -15,8 +15,13 @@ const SLOT_COUNT := 5
 @onready var active_mask_display: VBoxContainer = $Control/ActiveMaskDisplay
 @onready var mask_name_label: Label = $Control/ActiveMaskDisplay/MaskNameLabel
 @onready var mask_texture_rect: TextureRect = $Control/ActiveMaskDisplay/MaskIconPanel/MaskTextureRect
+@onready var mask_countdown_label: Label = $Control/ActiveMaskDisplay/MaskCountdownLabel
+@onready var mask_progress_bar: ProgressBar = $Control/MaskProgressBar
 
 var selected_slot_index: int = 0
+var _mask_time_remaining: float = 0.0 ## Remaining time for active mask effect.
+var _mask_total_duration: float = 0.0 ## Total duration of the mask effect.
+var _mask_countdown_active: bool = false ## Whether countdown is currently running.
 var inventory: Inventory = null
 var slot_items: Array[DataItem] = [] ## Cached item references per slot for tooltip lookup.
 var hovered_slot_index: int = -1 ## Currently hovered slot index for tooltip display.
@@ -72,6 +77,13 @@ func _ready() -> void:
 	if mask_mgr:
 		mask_mgr.active_mask_changed.connect(_on_active_mask_changed)
 		_on_active_mask_changed(mask_mgr.active_mask_texture, mask_mgr.active_mask_name)
+		# Connect to mask duration signals for countdown timer
+		mask_mgr.night_vision_started.connect(_on_mask_started)
+		mask_mgr.night_vision_ended.connect(_on_mask_ended)
+		mask_mgr.disguise_started.connect(_on_mask_started)
+		mask_mgr.disguise_ended.connect(_on_mask_ended)
+		mask_mgr.reflection_started.connect(_on_mask_started)
+		mask_mgr.reflection_ended.connect(_on_mask_ended)
 	elif active_mask_display:
 		active_mask_display.visible = false
 
@@ -110,6 +122,17 @@ func _input(event: InputEvent) -> void:
 			_update_slot_selection()
 			_use_selected_item()
 			get_viewport().set_input_as_handled()
+
+func _process(delta: float) -> void:
+	if not _mask_countdown_active:
+		return
+	
+	_mask_time_remaining -= delta
+	if _mask_time_remaining <= 0.0:
+		_mask_time_remaining = 0.0
+		_stop_countdown()
+	else:
+		_update_countdown_display()
 
 ## Set the inventory to display.
 func set_inventory(inv: Inventory) -> void:
@@ -309,3 +332,38 @@ func _update_hovered_tooltip() -> void:
 	# Show tooltip
 	if item_tooltip:
 		item_tooltip.visible = true
+
+## Called when a mask effect starts with its duration.
+func _on_mask_started(duration: float) -> void:
+	_mask_time_remaining = duration
+	_mask_total_duration = duration
+	_mask_countdown_active = true
+	_update_countdown_display()
+	if mask_countdown_label:
+		mask_countdown_label.visible = true
+	if mask_progress_bar:
+		mask_progress_bar.value = 1.0
+		mask_progress_bar.visible = true
+
+## Called when a mask effect ends.
+func _on_mask_ended() -> void:
+	_stop_countdown()
+
+## Stop the countdown and hide the label.
+func _stop_countdown() -> void:
+	_mask_countdown_active = false
+	_mask_time_remaining = 0.0
+	_mask_total_duration = 0.0
+	if mask_countdown_label:
+		mask_countdown_label.visible = false
+	if mask_progress_bar:
+		mask_progress_bar.visible = false
+
+## Update the countdown label text and progress bar.
+func _update_countdown_display() -> void:
+	if mask_countdown_label:
+		# Display as whole seconds
+		var seconds := ceili(_mask_time_remaining)
+		mask_countdown_label.text = "%ds" % seconds
+	if mask_progress_bar and _mask_total_duration > 0.0:
+		mask_progress_bar.value = _mask_time_remaining / _mask_total_duration
