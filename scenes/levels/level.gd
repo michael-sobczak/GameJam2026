@@ -16,7 +16,7 @@ var player_id: int ## Used when moving between levels to save the player facing 
 
 func _ready():
 	if not Engine.is_editor_hint():
-		darkness.color = Color.BLACK
+		darkness.color = Color(0.1, 0.1, 0.1, 1.0)
 
 	# Ensure NavigationRegion2D exists for guard pathfinding
 	var nav_region: NavigationRegion2D = get_node_or_null("NavigationRegion2D")
