@@ -195,11 +195,29 @@ size_flags_vertical = 3
 theme_override_constants/separation = 15
 alignment = 1
 
+[node name="Play" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=132437384]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
+text = "Play"
+
+[node name="LevelButtonsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=540754703]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
 [node name="Continue" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=792994229]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
@@ -208,6 +226,7 @@ text = "Continue"
 [node name="Settings" type="Button" parent="MarginContainer/VBoxContainer/ButtonsContainer/Buttons" unique_id=1723596936]
 custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
@@ -217,11 +236,13 @@ text = "Settings"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 75)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_r03hu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_ng4jn")
 text = "Quit"
 
+[connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Play" to="." method="_on_play_button_up"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Continue" to="." method="_on_continue_button_up"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Settings" to="." method="_on_settings_button_up"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/ButtonsContainer/Buttons/Quit" to="." method="_on_quit_button_up"]

@@ -6,7 +6,8 @@ const LEVEL_NAME_FORMAT := "Level %s"
 
 var user_prefs: UserPrefs
 
-@onready var level_container: Control = %Buttons
+@onready var level_container: Control = %LevelButtonsContainer
+@onready var play_button: Button = %Play
 @onready var continue_button: Button = %Continue
 @onready var quit_button: Button = %Quit
 
@@ -15,6 +16,8 @@ func _ready() -> void:
 	user_prefs = UserPrefs.load_or_create()
 	_create_level_buttons()
 	_check_continue()
+	if play_button and play_button.visible:
+		play_button.grab_focus()
 
 ## Creates buttons for each level file found.
 func _create_level_buttons():
@@ -48,7 +51,7 @@ func _create_level_buttons():
 		# Format level name nicely (e.g., "level1" -> "Level 1", "playground_01" -> "Playground 01")
 		button.text = level_name
 		button.name = "level::%s" % level_path.get_file().get_basename()
-		button.custom_minimum_size = Vector2(300, 75)
+		button.custom_minimum_size = Vector2(150, 75)
 		button.add_theme_font_size_override("font_size", 20)
 
 		# Apply same styles as other buttons
@@ -100,6 +103,16 @@ func _check_continue():
 					break
 			if first_level_button:
 				first_level_button.grab_focus()
+
+func _on_play_button_up() -> void:
+	level_container.visible = true
+	play_button.visible = false
+	if level_container.get_child_count() > 0:
+		var first = level_container.get_child(0)
+		if first is Button:
+			first.grab_focus()
+		elif continue_button.visible:
+			continue_button.grab_focus()
 
 func _on_continue_button_up() -> void:
 	DataManager.load_file_data()
