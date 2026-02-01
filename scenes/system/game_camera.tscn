@@ -6,6 +6,7 @@
 [node name="GameCamera2D" type="Camera2D" unique_id=808405578 node_paths=PackedStringArray("target_manager")]
 process_mode = 3
 position = Vector2(320, 184.001)
+zoom = Vector2(4, 4)
 script = ExtResource("1_eihhq")
 target_manager = NodePath("TargetManager")
 
