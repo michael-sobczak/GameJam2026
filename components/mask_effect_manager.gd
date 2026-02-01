@@ -18,6 +18,14 @@ var _disguise_deactivate_sound: AudioStream = null
 
 @onready var mask_sprite: Sprite2D = get_parent().get_node_or_null("MaskSprite")
 
+## True if night vision can be applied (not already active).
+func can_apply_night_vision() -> bool:
+	return not night_vision_active
+
+## True if disguise can be applied (not already active).
+func can_apply_disguise() -> bool:
+	return not disguise_active
+
 ## Apply night vision effect for specified duration.
 func apply_night_vision(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null):
 	if night_vision_active:
