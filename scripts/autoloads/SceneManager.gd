@@ -92,7 +92,8 @@ func _add_loading_screen(transition_type:String="fade_to_black"):
 ## [b][color=plum]load_into[/color][/b] - [Node] Node you'd like to load the resource into[br]
 ## [b][color=plum]scene_to_unload[/color][/b] - [Node] scene you're unloading, leave null to skip unloading step thought YRMV - use with caution[br]
 ## [b][color=plum]transition_type[/color][/b] - [String] name of transition[br] see top of [Door] class for options
-func swap_scenes(scene_to_load:String, load_into:Node=null, scene_to_unload:Node=null, transition_type:String="fade_to_black") -> void:
+## [b][color=plum]show_loading_screen[/color][/b] - [bool] if false, load and swap without showing the loading UI (e.g. when returning from community service to start screen)
+func swap_scenes(scene_to_load:String, load_into:Node=null, scene_to_unload:Node=null, transition_type:String="fade_to_black", show_loading_screen:bool=true) -> void:
 	
 	if _loading_in_progress:
 		push_warning("SceneManager is already loading something")
@@ -103,7 +104,11 @@ func swap_scenes(scene_to_load:String, load_into:Node=null, scene_to_unload:Node
 	_load_scene_into = load_into
 	_scene_to_unload = scene_to_unload
 	
-	_add_loading_screen(transition_type)
+	if show_loading_screen:
+		_add_loading_screen(transition_type)
+	else:
+		_loading_screen = null
+		_transition = "no_transition"
 	_load_content(scene_to_load)	
 
 ## Slight variation on swap_scenes that will result in a sliding, Zelda-dungeon-style transition between scenes[br][br]
@@ -134,8 +139,8 @@ func _load_content(content_path:String) -> void:
 	
 	load_start.emit(_loading_screen)
 	
-	# zelda transition doesn't use a loading screen
-	if _transition != "zelda":
+	# zelda and no_transition (silent swap) don't wait for loading screen
+	if _loading_screen != null and _transition != "zelda":
 		await _loading_screen.transition_in_complete
 		
 	_content_path = content_path
@@ -243,7 +248,7 @@ func _on_content_finished_loading(incoming_scene) -> void:
 	if _loading_screen != null:
 		_loading_screen.finish_transition()
 		
-		# Wait or loading animation to finish
+		# Wait for loading animation to finish
 		await _loading_screen.anim_player.animation_finished
 
 	# if your incoming scene implements init_scene() > call it here

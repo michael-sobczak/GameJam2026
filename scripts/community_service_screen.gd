@@ -26,4 +26,5 @@ func _on_animation_finished(_anim_name: StringName) -> void:
 
 
 func _go_to_main_menu() -> void:
-	SceneManager.swap_scenes(START_SCREEN_PATH, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
+	# Silent swap: no loading screen so "Loading... (very slow on Firefox)" only appears on initial start-screen load
+	SceneManager.swap_scenes(START_SCREEN_PATH, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE, false)
