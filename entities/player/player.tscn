@@ -680,6 +680,7 @@ health_controller = NodePath("../HealthController")
 disabled = false
 
 [node name="FlashlightCone" parent="." index="14" unique_id=1733046864 instance=ExtResource("16_flashlight")]
+local_offset = Vector2(0, 0)
 
 [node name="MaskSprite" type="Sprite2D" parent="." index="15"]
 visible = false

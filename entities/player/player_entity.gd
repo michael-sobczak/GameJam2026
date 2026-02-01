@@ -93,10 +93,28 @@ func disable_entity(value: bool, delay = 0.0):
 	stop()
 	input_enabled = !value
 
-## Update flashlight aim direction when player facing changes.
+## Update flashlight aim direction and position when player facing changes.
 func _update_flashlight_aim(direction: Vector2):
-	if flashlight:
-		flashlight.set_aim_direction(direction)
+	if not flashlight:
+		return
+	
+	flashlight.set_aim_direction(direction)
+	
+	# Offset flashlight position based on facing direction (torch held in right hand)
+	var offset := Vector2.ZERO
+	if direction == Vector2.DOWN:
+		offset = Vector2(8, 0)  # Torch visible on right side
+	elif direction == Vector2.UP:
+		offset = Vector2(-8, -10)  # Torch behind, slightly left
+	elif direction == Vector2.LEFT:
+		offset = Vector2(0, -5)  # Torch behind player
+	elif direction == Vector2.RIGHT:
+		offset = Vector2(8, -5)  # Torch in front on right
+	else:
+		# Diagonal directions
+		offset = Vector2(direction.x * 6, direction.y * 3 - 5)
+	
+	flashlight.position = offset
 
 ## Handle flashlight toggle input.
 func _unhandled_input(event: InputEvent):
