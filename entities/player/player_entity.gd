@@ -127,6 +127,12 @@ func _unhandled_input(event: InputEvent):
 const NIGHT_VISION_MASK_TEXTURE = preload("res://DownloadedAssets/a-stunning-masquerade-mask-featuring-elaborate-detailing-and-a-rich-palette-of-purple-green-and-pink-hues-evoking-mystery-and-festivity-png.png")
 const DISGUISE_MASK_TEXTURE = preload("res://DownloadedAssets/elaborate-venetian-mask-with-wings-gold-details-and-gems-on-transparent-background-png.png")
 
+## Preloaded mask sound effects (distinct for each mask type).
+const NIGHT_VISION_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/glitch_003.ogg")
+const NIGHT_VISION_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/glitch_001.ogg")
+const DISGUISE_ACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/maximize_008.ogg")
+const DISGUISE_DEACTIVATE_SFX = preload("res://Kenny Audio Pack/Audio/minimize_008.ogg")
+
 ## Initialize player's starting inventory with mask items.
 func _initialize_starting_inventory():
 	if not inventory:
@@ -143,6 +149,8 @@ func _initialize_starting_inventory():
 	night_vision_mask.effect_duration = 5.0
 	night_vision_mask.icon = _create_atlas_from_texture(NIGHT_VISION_MASK_TEXTURE)
 	night_vision_mask.mask_texture = NIGHT_VISION_MASK_TEXTURE
+	night_vision_mask.activate_sound = NIGHT_VISION_ACTIVATE_SFX
+	night_vision_mask.deactivate_sound = NIGHT_VISION_DEACTIVATE_SFX
 	print("PlayerEntity: Created Night Vision Mask, icon: %s" % night_vision_mask.icon)
 	
 	# Create Disguise Mask item
@@ -153,6 +161,8 @@ func _initialize_starting_inventory():
 	disguise.effect_duration = 5.0
 	disguise.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)
 	disguise.mask_texture = DISGUISE_MASK_TEXTURE
+	disguise.activate_sound = DISGUISE_ACTIVATE_SFX
+	disguise.deactivate_sound = DISGUISE_DEACTIVATE_SFX
 	print("PlayerEntity: Created Disguise Mask, icon: %s" % disguise.icon)
 	
 	# Add items to inventory
@@ -185,6 +195,16 @@ func _on_mask_item_used(item: DataItem):
 	
 	match mask_item.mask_type:
 		DataMaskItem.MaskType.NIGHT_VISION:
-			mask_effect_manager.apply_night_vision(mask_item.effect_duration, mask_item.mask_texture)
+			mask_effect_manager.apply_night_vision(
+				mask_item.effect_duration,
+				mask_item.mask_texture,
+				mask_item.activate_sound,
+				mask_item.deactivate_sound
+			)
 		DataMaskItem.MaskType.DISGUISE:
-			mask_effect_manager.apply_disguise(mask_item.effect_duration, mask_item.mask_texture)
+			mask_effect_manager.apply_disguise(
+				mask_item.effect_duration,
+				mask_item.mask_texture,
+				mask_item.activate_sound,
+				mask_item.deactivate_sound
+			)

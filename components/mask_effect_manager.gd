@@ -13,17 +13,25 @@ var night_vision_overlay: CanvasLayer = null
 var ambient_darkness_node: CanvasModulate = null
 var original_darkness_color: Color = Color.BLACK
 var active_mask_texture: Texture2D = null
+var _night_vision_deactivate_sound: AudioStream = null
+var _disguise_deactivate_sound: AudioStream = null
 
 @onready var mask_sprite: Sprite2D = get_parent().get_node_or_null("MaskSprite")
 
 ## Apply night vision effect for specified duration.
-func apply_night_vision(duration: float, mask_tex: Texture2D = null):
+func apply_night_vision(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null):
 	if night_vision_active:
 		return  # Already active
 	
 	night_vision_active = true
 	night_vision_started.emit(duration)
-	AudioManager.play_sfx("night_vision_on")
+	_night_vision_deactivate_sound = deactivate_sfx
+	
+	# Play custom sound if provided, otherwise fall back to default
+	if activate_sfx:
+		AudioManager.play_stream(activate_sfx)
+	else:
+		AudioManager.play_sfx("night_vision_on")
 	
 	# Show mask on player's head
 	_show_mask_sprite(mask_tex)
@@ -65,7 +73,13 @@ func _remove_night_vision():
 	
 	night_vision_active = false
 	night_vision_ended.emit()
-	AudioManager.play_sfx("night_vision_off")
+	
+	# Play custom deactivate sound if set, otherwise fall back to default
+	if _night_vision_deactivate_sound:
+		AudioManager.play_stream(_night_vision_deactivate_sound)
+		_night_vision_deactivate_sound = null
+	else:
+		AudioManager.play_sfx("night_vision_off")
 	
 	if night_vision_overlay:
 		night_vision_overlay.queue_free()
@@ -79,13 +93,19 @@ func _remove_night_vision():
 	_hide_mask_sprite()
 
 ## Apply disguise effect for specified duration.
-func apply_disguise(duration: float, mask_tex: Texture2D = null):
+func apply_disguise(duration: float, mask_tex: Texture2D = null, activate_sfx: AudioStream = null, deactivate_sfx: AudioStream = null):
 	if disguise_active:
 		return  # Already active
 	
 	disguise_active = true
 	disguise_started.emit(duration)
-	AudioManager.play_sfx("disguise_on")
+	_disguise_deactivate_sound = deactivate_sfx
+	
+	# Play custom sound if provided, otherwise fall back to default
+	if activate_sfx:
+		AudioManager.play_stream(activate_sfx)
+	else:
+		AudioManager.play_sfx("disguise_on")
 	
 	# Show mask on player's head
 	_show_mask_sprite(mask_tex)
@@ -107,7 +127,13 @@ func _remove_disguise():
 	
 	disguise_active = false
 	disguise_ended.emit()
-	AudioManager.play_sfx("disguise_off")
+	
+	# Play custom deactivate sound if set, otherwise fall back to default
+	if _disguise_deactivate_sound:
+		AudioManager.play_stream(_disguise_deactivate_sound)
+		_disguise_deactivate_sound = null
+	else:
+		AudioManager.play_sfx("disguise_off")
 	
 	# Re-add player to vision_target group
 	var players = Globals.get_players()
