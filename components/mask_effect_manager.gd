@@ -48,11 +48,6 @@ func apply_night_vision(duration: float, mask_tex: Texture2D = null, activate_sf
 	night_vision_overlay = CanvasLayer.new()
 	night_vision_overlay.name = "NightVisionOverlay"
 	
-	var canvas_modulate = CanvasModulate.new()
-	canvas_modulate.name = "NightVisionModulate"
-	canvas_modulate.color = Color(1.3, 1.4, 1.3, 1.0)  # Green tint + brightness boost
-	night_vision_overlay.add_child(canvas_modulate)
-	
 	var color_rect = ColorRect.new()
 	color_rect.name = "GreenTint"
 	color_rect.color = Color(0.1, 0.6, 0.1, 0.3)
