@@ -1,7 +1,8 @@
 extends Node
 
-@onready var SFX_BUS_ID = AudioServer.get_bus_index("SFX")
-@onready var MUSIC_BUS_ID = AudioServer.get_bus_index("Music")
+@onready var MASTER_BUS_ID: int = AudioServer.get_bus_index("Master")
+@onready var SFX_BUS_ID: int = AudioServer.get_bus_index("SFX")
+@onready var MUSIC_BUS_ID: int = AudioServer.get_bus_index("Music")
 
 var user_prefs: UserPrefs
 
@@ -21,6 +22,8 @@ signal destination_found(destination_path: String)
 
 func _ready():
 	user_prefs = UserPrefs.load_or_create()
+	AudioServer.set_bus_volume_db(MASTER_BUS_ID, linear_to_db(user_prefs.master_volume))
+	AudioServer.set_bus_mute(MASTER_BUS_ID, user_prefs.master_volume < .05)
 	AudioServer.set_bus_volume_db(SFX_BUS_ID, linear_to_db(user_prefs.sfx_volume))
 	AudioServer.set_bus_mute(SFX_BUS_ID, user_prefs.sfx_volume < .05)
 	AudioServer.set_bus_volume_db(MUSIC_BUS_ID, linear_to_db(user_prefs.music_volume))
