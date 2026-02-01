@@ -23,6 +23,9 @@ var player_id: int ## Used when moving between levels to save the player facing 
 
 @export var darkness_modulation: Color = Color(0.05, 0.05, 0.05, 1.0)
 
+## Camera zoom at level start. Use 4 for first level, 2.5 after completing a level.
+@export var initial_camera_zoom: float = 4.0
+
 ## Intro text settings
 @export_group("Intro Text")
 @export var show_intro_text: bool = false ## Show intro text when level starts
@@ -32,6 +35,8 @@ var player_id: int ## Used when moving between levels to save the player facing 
 var _intro_text: LevelIntroText
 
 const SIREN_STREAM: AudioStream = preload("res://DownloadedAssets/Siren-Sound.mp3")
+const IMPACT_PARTICLES_SCENE: PackedScene = preload("res://vfx/scenes/ImpactParticles.tscn")
+const GOAL_PARTICLE_WAIT_AFTER_BURST: float = 0.6
 var _defeat_siren_player: AudioStreamPlayer = null
 var _defeat_siren_play_count: int = 0
 var _defeat_siren_stopping: bool = false
@@ -61,6 +66,11 @@ func init_scene():
 
 ## Called by SceneManager after level is fully loaded and transition complete
 func start_scene() -> void:
+	var cam: Camera2D = get_node_or_null("GameCamera2D") as Camera2D
+	if cam:
+		cam.zoom = Vector2(initial_camera_zoom, initial_camera_zoom)
+	if darkness:
+		darkness.color = darkness_modulation
 	if show_intro_text:
 		_show_intro_text()
 
@@ -167,7 +177,29 @@ func end_level() -> void:
 	SceneManager.swap_scenes(next_level, get_tree().root, self, Const.TRANSITION.FADE_TO_WHITE)
 
 
-func _on_goal_reached() -> void:
+const GOAL_ZOOM_TARGET: float = 2.5
+const GOAL_ZOOM_DURATION: float = 0.8
+
+func _on_goal_reached(art_global_pos: Vector2 = Vector2.ZERO) -> void:
+	# 1) Restore light to the whole map
+	if darkness:
+		darkness.color = Color.WHITE
+	# 2) Brief particle burst at the art
+	var particles: ImpactParticles = IMPACT_PARTICLES_SCENE.instantiate() as ImpactParticles
+	add_child(particles)
+	particles.global_position = art_global_pos
+	particles.emit_burst()
+	await particles.burst_finished
+	await get_tree().create_timer(GOAL_PARTICLE_WAIT_AFTER_BURST).timeout
+	particles.queue_free()
+	# 3) Zoom out 4 -> 2.5
+	var cam: Camera2D = get_node_or_null("GameCamera2D") as Camera2D
+	if cam:
+		var tween := create_tween()
+		tween.tween_property(cam, "zoom", Vector2(GOAL_ZOOM_TARGET, GOAL_ZOOM_TARGET), GOAL_ZOOM_DURATION)
+		await tween.finished
+	await get_tree().create_timer(1.0).timeout
+	# 4) Then go to next level
 	if level_complete_overlay:
 		level_complete_overlay.visible = true
 		await get_tree().create_timer(1.0).timeout

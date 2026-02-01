@@ -10,6 +10,7 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(192, 160, 608, 160, 608, 320, 192, 320)])
 
 [node name="Level" unique_id=1461630359 instance=ExtResource("1_hfmxa")]
+initial_camera_zoom = 2.5
 next_level = "res://scenes/levels/level3.tscn"
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
