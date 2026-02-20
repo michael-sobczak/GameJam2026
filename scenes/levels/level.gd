@@ -29,7 +29,7 @@ var player_id: int ## Used when moving between levels to save the player facing 
 ## Intro text settings
 @export_group("Intro Text")
 @export var show_intro_text: bool = false ## Show intro text when level starts
-@export var intro_message: String = "FIND THE TREASURE\nDON'T GET CAUGHT"
+@export var intro_message: String = "FIND THE TREASURE\nDON'T GET CAUGHT\nUse your power up masks to help!"
 @export var intro_fade_duration: float = 5.0
 
 var _intro_text: LevelIntroText

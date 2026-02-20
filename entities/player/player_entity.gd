@@ -187,7 +187,7 @@ func _initialize_starting_inventory():
 	if allowed.is_empty() or "reflection" in allowed:
 		var reflection = DataMaskItem.new()
 		reflection.resource_name = "Mask of Reflection"
-		reflection.description = "Reflect laser beams back at their source."
+		reflection.description = "Reflect laser beams back at their source - potentially with explosive results!"
 		reflection.mask_type = DataMaskItem.MaskType.REFLECTION
 		reflection.effect_duration = 5.0
 		reflection.icon = _create_atlas_from_texture(REFLECTION_MASK_TEXTURE)
@@ -201,7 +201,7 @@ func _initialize_starting_inventory():
 	if allowed.is_empty() or "phase" in allowed:
 		var phase = DataMaskItem.new()
 		phase.resource_name = "Phase Mask"
-		phase.description = "Walk through walls for a short time. Expels you when it ends if you're inside a wall."
+		phase.description = "Walk through walls."
 		phase.mask_type = DataMaskItem.MaskType.PHASE
 		phase.effect_duration = 5.0
 		phase.icon = _create_atlas_from_texture(DISGUISE_MASK_TEXTURE)

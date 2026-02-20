@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b0b0jp36dubff" path="res://scenes/levels/Level.tscn" id="1_fjlvv"]
 [ext_resource type="PackedScene" uid="uid://cx8qj3k2m5lta" path="res://entities/enemies/laser_turret.tscn" id="2_fjlvv"]
-[ext_resource type="PackedScene" path="res://scenes/props/goal/moon.tscn" id="2_o34q2"]
+[ext_resource type="PackedScene" uid="uid://cq27sjmxhse63" path="res://scenes/props/goal/moon.tscn" id="2_o34q2"]
 [ext_resource type="PackedScene" path="res://entities/enemies/guard.tscn" id="4_o34q2"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_o34q2"]
@@ -15,6 +15,8 @@ next_level = "res://scenes/levels/level5.tscn"
 allowed_mask_types = Array[String](["reflection", "night_vision"])
 usages_per_mask = 1
 initial_camera_zoom = 2.5
+intro_message = "FIND THE TREASURE
+DON'T GET CAUGHT"
 
 [node name="NavigationRegion2D" parent="." index="2" unique_id=1286608618]
 position = Vector2(-149, 112.000015)
@@ -34,8 +36,8 @@ position = Vector2(726, 100)
 patrol_points = Array[NodePath]([])
 home_position = Vector2(0, 0)
 sentry_scan_rotation_speed = 0.0
-sentry_sequence_directions = Array[Vector2]([])
-sentry_sequence_durations = Array[float]([])
+sentry_sequence_directions = Array[NodePath]([])
+sentry_sequence_durations = Array[NodePath]([])
 
 [node name="Marker2D" type="Marker2D" parent="Entities/Guard2" index="14" unique_id=1960588380]
 position = Vector2(103, -10)
@@ -43,46 +45,32 @@ position = Vector2(103, -10)
 [node name="Marker2D2" type="Marker2D" parent="Entities/Guard2" index="15" unique_id=1117369199]
 position = Vector2(101, 99)
 
-[node name="Guard" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="1" unique_id=825960211 instance=ExtResource("4_o34q2")]
-position = Vector2(755, 298)
-patrol_points = Array[NodePath]([])
-home_position = Vector2(0, 0)
-sentry_scan_rotation_speed = 0.0
-sentry_sequence_directions = Array[Vector2]([])
-sentry_sequence_durations = Array[float]([])
-
-[node name="Marker2D" type="Marker2D" parent="Entities/Guard" index="14" unique_id=195784497]
-position = Vector2(136, -10)
-
-[node name="Marker2D2" type="Marker2D" parent="Entities/Guard" index="15" unique_id=423412710]
-position = Vector2(80, 89)
-
-[node name="LaserTurret4" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="2" unique_id=878338727 instance=ExtResource("2_fjlvv")]
+[node name="LaserTurret4" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="1" unique_id=878338727 instance=ExtResource("2_fjlvv")]
 position = Vector2(411, 226)
 rotation = 4.712389
 laser_color = Color(0.8627451, 0, 0.99215686, 0.9019608)
 paired_turret = NodePath("../LaserTurret3")
 
-[node name="LaserTurret3" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="3" unique_id=1343803268 instance=ExtResource("2_fjlvv")]
+[node name="LaserTurret3" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="2" unique_id=1343803268 instance=ExtResource("2_fjlvv")]
 position = Vector2(411, 257)
 rotation = 1.5707964
 laser_color = Color(0.8627451, 0, 0.99215686, 0.9019608)
 paired_turret = NodePath("../LaserTurret4")
 
-[node name="LaserTurret2" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="4" unique_id=403977225 instance=ExtResource("2_fjlvv")]
+[node name="LaserTurret2" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="3" unique_id=403977225 instance=ExtResource("2_fjlvv")]
 position = Vector2(253, 226)
 rotation = -1.5707964
 paired_turret = NodePath("../LaserTurret")
 
-[node name="LaserTurret" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="5" unique_id=971019543 instance=ExtResource("2_fjlvv")]
+[node name="LaserTurret" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="4" unique_id=971019543 instance=ExtResource("2_fjlvv")]
 position = Vector2(253, 257)
 rotation = 1.5707964
 paired_turret = NodePath("../LaserTurret2")
 
-[node name="Moon" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="6" instance=ExtResource("2_o34q2")]
+[node name="Moon" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="5" unique_id=1555942704 instance=ExtResource("2_o34q2")]
 position = Vector2(144, 117.000015)
 
-[node name="P1" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="7" unique_id=397110786]
+[node name="P1" parent="Entities" parent_id_path=PackedInt32Array(421077312) index="6" unique_id=397110786]
 position = Vector2(72, 435)
 
 [connection signal="goal_reached" from="Entities/Moon" to="." method="_on_goal_reached"]

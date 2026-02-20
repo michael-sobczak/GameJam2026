@@ -6,7 +6,7 @@ extends CanvasLayer
 
 signal intro_finished
 
-@export var intro_text: String = "FIND THE TREASURE\nDON'T GET CAUGHT"
+@export var intro_text: String = "FIND THE TREASURE\nDON'T GET CAUGHT\nUse your power up masks to help!"
 @export var fade_duration: float = 5.0
 @export var hold_duration: float = 1.0 ## Time to hold before starting fade
 @export var text_color: Color = Color(1.0, 1.0, 1.0, 1.0)

@@ -36,6 +36,6 @@ patrol_points = Array[NodePath]([])
 home_position = Vector2(640, 234)
 sentry_scan_rotation_speed = 0.0
 sentry_sequence_directions = Array[Vector2]([Vector2(0, -1), Vector2(1, 0)])
-sentry_sequence_durations = Array[float]([20.0, 2.0])
+sentry_sequence_durations = Array[float]([6.0, 2.0])
 
 [connection signal="goal_reached" from="Entities/MoneyBag" to="." method="_on_goal_reached"]
